@@ -13,7 +13,7 @@ Tags: Added, Changed, Deprecated, Removed, Fixed, Security
 
 ---
 
-## [v1.0.0-beta.1] - 2018-02-18
+## v1.0.0-beta.1 - 2018-02-18
 
 ### Added
 * Graduated from Alpha version
