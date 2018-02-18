@@ -1,4 +1,9 @@
 
+vendor/
+
+phpunit.xml
+composer.json
+
 
 #--------------------------------------------------
 # https://github.com/github/gitignore
@@ -84,7 +89,6 @@ $RECYCLE.BIN/
 # IDE / Development Files
 #-------------------------
 
-phpunit.xml
 _dev/
 
 # phpenv local config
