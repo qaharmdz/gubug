@@ -89,7 +89,6 @@ $RECYCLE.BIN/
 # IDE / Development Files
 #-------------------------
 
-phpunit.xml
 _dev/
 
 # phpenv local config
