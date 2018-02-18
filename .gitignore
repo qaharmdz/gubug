@@ -1,4 +1,9 @@
 
+vendor/
+
+phpunit.xml
+composer.json
+
 
 #--------------------------------------------------
 # https://github.com/github/gitignore
