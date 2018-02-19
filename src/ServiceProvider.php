@@ -59,8 +59,7 @@ class ServiceProvider implements ServiceProviderInterface
             return new Routing\Generator\UrlGenerator($c['router.collection'], $c['router.context']);
         };
         $container['router'] = function ($c) {
-            return new Library\Router($c['router.collection'], $c['router.route'], $c['router.matcher'],
-                $c['router.generator'], $c['config.factory']);
+            return new Library\Router($c['router.collection'], $c['router.route'], $c['router.matcher'], $c['router.generator'], $c['config.factory']);
         };
 
         // === Dispatcher
@@ -93,6 +92,5 @@ class ServiceProvider implements ServiceProviderInterface
         $container['session'] = function ($c) {
             return new Library\Session();
         };
-
     }
 }

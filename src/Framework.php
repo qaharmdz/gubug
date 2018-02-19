@@ -68,7 +68,7 @@ class Framework
      */
     public $session;
 
-    public function __construct(bool $init=true)
+    public function __construct(bool $init = true)
     {
         $this->container = new \Pimple\Container;
         $this->container->register(new ServiceProvider());
@@ -104,7 +104,7 @@ class Framework
      *
      * @param  array  $options Key at http://php.net/session.configuration, omit 'session.'
      */
-    public function startSession(array $options=[])
+    public function startSession(array $options = [])
     {
         $this->session = $this->container['session'];
 
