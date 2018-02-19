@@ -163,7 +163,7 @@ class Response extends HttpFoundation\Response
      * Basic PHP templating
      *
      * Variables is not escaped automatically
-     * I suggest you to use more secure templating engine like Twig, Blade, Mustache etc
+     * Suggested to use more secure templating engine like Twig, Blade, Mustache etc
      *
      * @param  array  $data     Variables passed to template
      * @param  string $template Full Path to template file
@@ -172,6 +172,7 @@ class Response extends HttpFoundation\Response
      */
     public function render(string $template, array $variables)
     {
+        // Todo: library/presenter or templating
         if (is_file($template)) {
             extract($variables, EXTR_SKIP);
 

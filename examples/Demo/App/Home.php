@@ -13,7 +13,7 @@ class Home extends ServiceContainer
         return $this->use('response')->setContent($message);
     }
 
-    public function post(...$args)
+    public function post($args=[])
     {
         !d('Arguments passed to method', $args);
         d('All request attribute', $this->use('request')->attributes->all());
@@ -65,7 +65,7 @@ class Home extends ServiceContainer
     }
 
 
-    public function render(...$args)
+    public function render($args=[])
     {
         d($args);
         $data = [];

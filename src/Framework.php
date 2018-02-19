@@ -111,19 +111,4 @@ class Framework
         $this->session->setOptions($options);
         $this->session->start();
     }
-
-    /**
-     * Escapes a text for HTML.
-     *
-     * @param string $text         The input text to be escaped
-     * @param int    $flags        The flags (@see htmlspecialchars)
-     * @param string $charset      The charset
-     * @param bool   $doubleEncode Whether to try to avoid double escaping or not
-     *
-     * @return string Escaped text
-     */
-    public function htmlEscape($text, $flags=ENT_QUOTES, $charset='UTF-8', $doubleEncode=true)
-    {
-        return trim(htmlspecialchars($text, $flags, $charset, $doubleEncode));
-    }
 }

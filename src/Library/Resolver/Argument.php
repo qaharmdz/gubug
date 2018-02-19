@@ -26,15 +26,15 @@ Use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
  */
 class Argument implements ArgumentResolverInterface
 {
-	protected $resolver;
+    protected $resolver;
 
-	public function __construct()
+    public function __construct()
     {
-    	$this->resolver = new ArgumentResolver();
+        $this->resolver = new ArgumentResolver();
     }
 
     public function getArguments(Request $request, $controller)
     {
-    	return $request->attributes->get('_route_args') ?: $this->resolver->getArguments($request, $controller);
+        return $request->attributes->get('_route_args') ? [$request->attributes->get('_route_args')] : $this->resolver->getArguments($request, $controller);
     }
 }
