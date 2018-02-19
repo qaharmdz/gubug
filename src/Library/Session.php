@@ -33,11 +33,13 @@ class Session extends HttpFoundation\Session\Session
 
     public function setOptions(array $options)
     {
-        $this->storage->setOptions($options);
+        if ($this->storage instanceof HttpFoundation\Session\Storage\NativeSessionStorage) {
+            $this->storage->setOptions($options);
+        }
     }
 
     public function flash()
     {
-        return $this->getBag($this->flashName);
+        return $this->getFlashBag();
     }
 }

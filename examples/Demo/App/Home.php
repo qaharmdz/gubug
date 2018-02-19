@@ -8,12 +8,12 @@ class Home extends ServiceContainer
 {
     public function index()
     {
-        $message = $this->use('config')->get('locale') == 'id' ? 'Selamat datang di "Gubug"' : 'Welcome to Gubug';
+        $message = $this->use('request')->getLocale() == 'id' ? 'Selamat datang di "Gubug"' : 'Welcome to Gubug';
 
         return $this->use('response')->setContent($message);
     }
 
-    public function post($args=[])
+    public function post($args = [])
     {
         !d('Arguments passed to method', $args);
         d('All request attribute', $this->use('request')->attributes->all());
@@ -48,7 +48,7 @@ class Home extends ServiceContainer
             'dynamic'    => $this->use('router')->urlBuild('app/home/render', [], false),
         ];
 
-        // Automatically recognise route name based on path (this is reason why we recommend: $routeName == $param['_path'] )
+        // Automatically recognise route name based on path (reason why we recommend: $routeName == $param['_path'] )
         $data['urlGenerate()'] = [
             // $this->use('router')->urlGenerate($path, $parameters, $extraParam),
 
@@ -65,7 +65,7 @@ class Home extends ServiceContainer
     }
 
 
-    public function render($args=[])
+    public function render($args = [])
     {
         d($args);
         $data = [];
@@ -81,10 +81,6 @@ class Home extends ServiceContainer
             'address'   => $this->use('faker')->address,
             'phone'     => $this->use('faker')->tollFreePhoneNumber,
         ];
-
-        //=== $response->send(true) stop script execution with exit()
-        // $this->use('response')->setContent('Hijack');
-        // $this->use('response')->send(true);
 
         //=== $response->abort() halt script by throwing HTTP error
         // $this->use('response')->abort(500, 'Oops! Script halted due the internal server error.');

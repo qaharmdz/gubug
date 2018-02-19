@@ -105,7 +105,7 @@ class Config extends ParameterBag
      *
      * @see   https://github.com/adbario/php-dot-notation
      *
-     * @param string $key   Key in dot-notation
+     * @param string $keys   Key in dot-notation
      * @param mixed  $value The value
      */
     public function setDot($keys, $value)

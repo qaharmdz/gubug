@@ -102,20 +102,6 @@ class Response extends HttpFoundation\Response
     }
 
     /**
-     * Sends HTTP headers and content.
-     *
-     * @return $this
-     */
-    public function send(bool $exit = false)
-    {
-        parent::send();
-
-        if ($exit) {
-            exit();
-        }
-    }
-
-    /**
      * Helper to send file.
      *
      * @param  string $file Path to file
@@ -165,8 +151,8 @@ class Response extends HttpFoundation\Response
      * Variables is not escaped automatically
      * Suggested to use more secure templating engine like Twig, Blade, Mustache etc
      *
-     * @param  array  $data     Variables passed to template
-     * @param  string $template Full Path to template file
+     * @param  string $template  Full Path to template file
+     * @param  array  $variables Variables passed to template
      *
      * @return string
      */

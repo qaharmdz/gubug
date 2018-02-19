@@ -33,23 +33,23 @@ class ServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         // === Request
-        $container['request.stack'] = function ($c) {
+        $container['request.stack'] = function () {
             return new HttpFoundation\RequestStack();
         };
-        $container['request'] = function ($c) {
+        $container['request'] = function () {
             return Library\Request::createFromGlobals();
         };
 
         // === Router
-        $container['router.collection'] = function ($c) {
+        $container['router.collection'] = function () {
             return new Routing\RouteCollection();
         };
-        $container['router.route'] = function ($c) {
+        $container['router.route'] = function () {
             return function (...$params) {
                 return new \Symfony\Component\Routing\Route(...$params);
             };
         };
-        $container['router.context'] = function ($c) {
+        $container['router.context'] = function () {
             return new Routing\RequestContext();
         };
         $container['router.matcher'] = function ($c) {
@@ -66,30 +66,30 @@ class ServiceProvider implements ServiceProviderInterface
         $container['resolver.controller'] = function ($c) {
             return new Library\Resolver\Controller($c['config.factory']);
         };
-        $container['resolver.argument'] = function ($c) {
+        $container['resolver.argument'] = function () {
             return new Library\Resolver\Argument();
         };
         $container['dispatcher'] = function ($c) {
             return new Library\Dispatcher($c['event'], $c['resolver.controller'], $c['request.stack'], $c['resolver.argument'], $c['config.factory']);
         };
-        $container['event'] = function ($c) {
+        $container['event'] = function () {
             return new Library\Event();
         };
 
         // Response
-        $container['response'] = function ($c) {
+        $container['response'] = function () {
             return new Library\Response();
         };
 
         // Tools
-        $container['config.factory'] = $container->factory(function ($c) {
+        $container['config.factory'] = $container->factory(function () {
             return new Library\Config();
         });
         $container['config'] = function ($c) {
             return $c['config.factory'];
         };
 
-        $container['session'] = function ($c) {
+        $container['session'] = function () {
             return new Library\Session();
         };
     }

@@ -20,7 +20,7 @@ namespace Gubug\Library;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Request as libRequest;
 
 /**
  * @author Mudzakkir <qaharmdz@gmail.com>
@@ -44,9 +44,11 @@ class Dispatcher extends HttpKernel
         ]);
     }
 
-    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+    public function handle(libRequest $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
-        $this->resolver->param->set('pathNamespace', $this->param->get('namespace'));
+        if ($this->resolver instanceof Resolver\Controller) {
+            $this->resolver->param->set('pathNamespace', $this->param->get('namespace'));
+        }
 
         return parent::handle($request, $type, $catch);
     }
