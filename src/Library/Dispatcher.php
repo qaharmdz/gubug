@@ -17,24 +17,24 @@
 
 namespace Gubug\Library;
 
-Use Symfony\Component\HttpKernel\HttpKernel;
-Use Symfony\Component\HttpKernel\HttpKernelInterface;
-Use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
-class Dispatcher Extends HttpKernel
+class Dispatcher extends HttpKernel
 {
     /**
      * @var \Symfony\Component\HttpFoundation\ParameterBag
      */
     public $param;
 
-    public function __construct($event, $resolver, $requestStack = null, $argumentResolver = null, ParameterBag $param)
+    public function __construct($event, $controllerResolver, $requestStack, $argumentResolver, ParameterBag $param)
     {
-        parent::__construct($event, $resolver, $requestStack, $argumentResolver);
+        parent::__construct($event, $controllerResolver, $requestStack, $argumentResolver);
 
         $this->param = $param;
 

@@ -106,7 +106,7 @@ class Response extends HttpFoundation\Response
      *
      * @return $this
      */
-    public function send(bool $exit=false)
+    public function send(bool $exit = false)
     {
         parent::send();
 
@@ -121,7 +121,7 @@ class Response extends HttpFoundation\Response
      * @param  string $file Path to file
      * @param  string $mask Mask filename
      */
-    public function sendFile(string $file, string $mask='', array $headers=[])
+    public function sendFile(string $file, string $mask = '', array $headers = [])
     {
         $response = new HttpFoundation\BinaryFileResponse($file, 200, $headers, true);
         if ($mask) {
@@ -141,7 +141,7 @@ class Response extends HttpFoundation\Response
      * @param string $url     The URL should be a full URL, with schema etc.
      * @param int    $status  The status code (302 by default)
      */
-    public function redirect(string $url, int $status=302)
+    public function redirect(string $url, int $status = 302)
     {
         HttpFoundation\RedirectResponse::create($url, $status)->send();
     }
@@ -154,7 +154,7 @@ class Response extends HttpFoundation\Response
      *
      * @throws \RuntimeException
      */
-    public function abort(int $statusCode=500, string $message='Internal Server Error')
+    public function abort(int $statusCode = 500, string $message = 'Internal Server Error')
     {
         throw new \RuntimeException($message, $statusCode);
     }

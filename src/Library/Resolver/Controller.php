@@ -18,14 +18,14 @@
 namespace Gubug\Library\Resolver;
 
 use Psr\Log\LoggerInterface;
-Use Symfony\Component\HttpKernel\Controller\ControllerResolver;
-Use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
-class Controller Extends ControllerResolver
+class Controller extends ControllerResolver
 {
     /**
      * @var \Symfony\Component\HttpFoundation\ParameterBag
@@ -42,7 +42,6 @@ class Controller Extends ControllerResolver
         $this->param->add([
             'pathNamespace' => ''
         ]);
-
     }
 
     public function getController(Request $request)
@@ -58,7 +57,7 @@ class Controller Extends ControllerResolver
         return parent::getController($request);
     }
 
-    public function resolve(string $path, array $args=[], string $namespace=''): array
+    public function resolve(string $path, array $args = [], string $namespace = ''): array
     {
         $namespace = $namespace ?: $this->param->get('pathNamespace');
         $segments = explode('/', trim($path, '/'));

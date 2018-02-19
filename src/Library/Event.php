@@ -17,8 +17,7 @@
 
 namespace Gubug\Library;
 
-Use Symfony\Component\EventDispatcher\EventDispatcher;
-
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @author Mudzakkir <qaharmdz@gmail.com>

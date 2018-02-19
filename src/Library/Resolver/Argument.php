@@ -18,8 +18,8 @@
 namespace Gubug\Library\Resolver;
 
 use Symfony\Component\HttpFoundation\Request;
-Use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
-Use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 
 /**
  * @author Mudzakkir <qaharmdz@gmail.com>

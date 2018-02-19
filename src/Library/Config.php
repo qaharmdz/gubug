@@ -36,7 +36,7 @@ class Config extends ParameterBag
      *
      * @return mixed
      */
-    public function get($key, $default=null)
+    public function get($key, $default = null)
     {
         return $this->getDot($key, $default);
     }
@@ -70,7 +70,7 @@ class Config extends ParameterBag
      *
      * @return array
      */
-    public function getArray($key, $default=[])
+    public function getArray($key, $default = [])
     {
         return (array)$this->get($key, $default);
     }
@@ -85,7 +85,7 @@ class Config extends ParameterBag
      *
      * @return mixed
      */
-    public function getDot($key, $default=null)
+    public function getDot($key, $default = null)
     {
         $items = $this->parameters;
 
@@ -134,7 +134,6 @@ class Config extends ParameterBag
     {
         if (isset($this->parameters[$keys])) {
             unset($this->parameters[$keys]);
-
         } else {
             $items = &$this->parameters;
             $segments = explode('.', $keys);

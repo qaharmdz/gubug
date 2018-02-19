@@ -20,7 +20,7 @@ namespace Gubug\Library;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Generator\UrlGenerator;
-Use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Wrap Symfony routing under one roof
@@ -84,8 +84,7 @@ class Router
      * @param string|string[] $schemes      A required URI scheme or an array of restricted schemes
      * @param string          $condition    A condition that should evaluate to true for the route to match
      */
-    public function addRoute(string $name, string $path, array $defaults=[], array $requirements=[], $methods=[],
-                             array $options=['utf8'=>true], ?string $host='', $schemes=[], ?string $condition='')
+    public function addRoute(string $name, string $path, array $defaults = [], array $requirements = [], $methods = [], array $options = ['utf8' => true], ?string $host = '', $schemes = [], ?string $condition = '')
     {
         $route = $this->getRoute($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
 
@@ -134,7 +133,7 @@ class Router
      *
      * @return string
      */
-    public function urlBuild(string $name, array $parameters=[], bool $extraParam=true): string
+    public function urlBuild(string $name, array $parameters = [], bool $extraParam = true): string
     {
         $result = '';
 
@@ -157,7 +156,7 @@ class Router
      *
      * @return string
      */
-    public function urlGenerate(string $path='', array $parameters=[], bool $extraParam=true): string
+    public function urlGenerate(string $path = '', array $parameters = [], bool $extraParam = true): string
     {
         if (!$path) {
             return $this->urlBuild('base', $parameters, $extraParam);

@@ -26,14 +26,14 @@ use Symfony\Component\HttpFoundation;
  */
 class Session extends HttpFoundation\Session\Session
 {
-    public function __construct(SessionStorageInterface $storage=null, AttributeBagInterface $attributes=null, FlashBagInterface $flashes=null)
+    public function __construct(SessionStorageInterface $storage = null, AttributeBagInterface $attributes = null, FlashBagInterface $flashes = null)
     {
         parent::__construct($storage, $attributes, $flashes);
     }
 
     public function setOptions(array $options)
     {
-    	$this->storage->setOptions($options);
+        $this->storage->setOptions($options);
     }
 
     public function flash()
