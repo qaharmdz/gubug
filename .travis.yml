@@ -1,13 +1,21 @@
 language: php
 
 php:
-  - '7.1'
+  - hhvm
+  - 7.2
+  - 7.1
+
+env: # important!
+
+matrix:
+  allow_failures:
+    - php: hhvm
+  fast_finish: true
 
 before_script:
   - composer self-update
-  - composer install --dev --prefer-dist --no-interaction
-  - pear install pear/PHP_CodeSniffer
+  - composer install --prefer-dist
 
 script:
-  - vendor/bin/phpunit --coverage-text
-  - phpcs
+  - php vendor/phpunit/phpunit/phpunit --coverage-text
+  - php vendor/squizlabs/php_codesniffer/bin/phpcs --standard=PSR2 -n ./src

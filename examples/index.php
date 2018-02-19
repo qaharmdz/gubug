@@ -11,7 +11,7 @@
 
 // =========== Lets begin
 
-$loader = require '../vendor/autoload.php';
+$loader = require realpath(__DIR__ . '/../vendor/') . DIRECTORY_SEPARATOR . 'autoload.php';
 $loader->addPsr4('Contoh\\', realpath(__DIR__ . '/Demo/'));  // Example of namespace in deep folder
 
 $gubug = new Gubug\Framework();
