@@ -62,10 +62,10 @@ ul {
                 <li><a href="<?php echo $baseUri; ?>app/home/render"><?php echo $baseUri; ?>app/home/render</a></li>
                 <li><a href="<?php echo $baseUri; ?>app/home/render/args/pair/key/val"><?php echo $baseUri; ?>app/home/render/args/pair/key/val</a></li>
                 <li><a href="<?php echo $baseUri; ?>app/home/render/product/11/category/21_31"><?php echo $baseUri; ?>app/home/render/product/11/category/21_31</a></li>
-                <li><a href='<?php echo $baseUri; ?>app/home/render/args/pair/key/v<b style="font-size:21px;color:red">alue'>Warning: Variables not escaped automatically</a></li>
+                <li><a href='<?php echo $baseUri; ?>app/home/render/args/pair/unescape/v<b style="font-size:21px;color:red">alue'>Warning: Variables not escaped automatically</a></li>
             </ul>
 
-            <?php echo htmlspecialchars(($param['arguments']['key'])); ?>
+            <?php echo htmlspecialchars(($param['arguments']['unescape'])); ?>
 
             <p>Arguments passed to method:</p>
             <pre><code><?php print_r($param['arguments']); ?></code></pre>

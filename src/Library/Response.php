@@ -178,7 +178,7 @@ class Response extends HttpFoundation\Response
             ob_start();
             require $template;
 
-            return ob_get_clean();
+            return $this->setContent(ob_get_clean());
         }
 
         throw new \RuntimeException(sprintf('Template "%s" not found.', $template));

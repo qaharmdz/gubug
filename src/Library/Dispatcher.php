@@ -17,128 +17,37 @@
 
 namespace Gubug\Library;
 
+Use Symfony\Component\HttpKernel\HttpKernel;
+Use Symfony\Component\HttpKernel\HttpKernelInterface;
 Use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Simple controller and arguments resolver
- *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
-class Dispatcher
+class Dispatcher Extends HttpKernel
 {
     /**
      * @var \Symfony\Component\HttpFoundation\ParameterBag
      */
     public $param;
 
-    public function __construct(ParameterBag $param)
+    public function __construct($event, $resolver, $requestStack = null, $argumentResolver = null, ParameterBag $param)
     {
+        parent::__construct($event, $resolver, $requestStack, $argumentResolver);
+
         $this->param = $param;
 
         // Default parameter
         $this->param->add([
-            'pathNamespace' => ''
+            'namespace' => ''
         ]);
     }
 
-    /**
-     * Handles attributes Request and call related controller
-     *
-     * @param  array  $attributes Request attributes
-     *
-     * @return mixed
-     */
-    public function handle($attributes)
+    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
-        if (!empty($attributes['_controller'] && is_callable($attributes['_controller']))) {
-            return call_user_func($attributes['_controller'], $this->cleanArgs($attributes));
-        }
+        $this->resolver->param->set('pathNamespace', $this->param->get('namespace'));
 
-        if (!$attributes['_path']) {
-            throw new \LogicException('Unable to look for the controller as the "_path" parameter is missing.');
-        }
-
-        list($controller, $arguments) = $this->resolve($attributes['_path'], $attributes);
-
-        return call_user_func($controller, $arguments);
-    }
-
-    /**
-     * Controller and arguments resolver
-     *
-     * @param  string $path      Request '_path' parameter
-     * @param  array  $args      Request attrbutes
-     * @param  string $namespace Override param pathNamespace
-     *
-     * @return array
-     *
-     * @throws \LogicException  Fail to act resolver
-     */
-    public function resolve(string $path, array $args=[], string $namespace=''): array
-    {
-        $namespace = $namespace ?: $this->param->get('pathNamespace');
-        $segments = explode('/', trim($path, '/'));
-
-        if (empty($segments[0])) {
-            throw new \LogicException('The "_path" parameter is empty.');
-        }
-
-        // ==== Controller resolver
-        $folder = $class = ucwords(array_shift($segments));
-        if (!empty($segments[0])) {
-            $class = ucwords(array_shift($segments));
-        }
-
-        $class = implode('\\', [rtrim($namespace, '\\'), $folder, $class]);
-
-        if (!class_exists($class)) {
-            throw new \LogicException(sprintf('Unable to find controller "%s" for path "%s".', $class, $path));
-        }
-
-        $controller = new $class();
-
-        // Find method
-        $method = 'index';
-        if (!empty($segments[0])
-            && count($segments) % 2 === 1
-            && !is_numeric($segments[0][0])
-            && substr($segments[0], 0, 2) !== '__') {
-            $method = array_shift($segments);
-        }
-
-        if (!is_callable([$controller, $method])) {
-            throw new \LogicException(sprintf('The controller "%s" for URI "%s" is not available.', $class . '::' . $method, $path));
-        }
-
-        // ==== Arguments resolver
-        $args = $this->cleanArgs($args);
-
-        // Remaining segments as args
-        if (!empty($segments[0])) {
-            $_args = [];
-            foreach (array_chunk($segments, 2) as $pair) {
-                $_args[$pair[0]] = $pair[1];
-            }
-            $args = array_replace($_args, $args);
-        }
-
-        return [
-            [$controller, $method],
-            $args
-        ];
-    }
-
-    /**
-     * Remove arguments member that start with underscore (private)
-     *
-     * @param  array $args
-     *
-     * @return array
-     */
-    public function cleanArgs(array $args)
-    {
-        return array_filter($args, function ($key) {
-            return $key[0] !== '_';
-        }, ARRAY_FILTER_USE_KEY);
+        return parent::handle($request, $type, $catch);
     }
 }

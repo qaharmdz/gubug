@@ -54,8 +54,7 @@ class Router
      */
     public $param;
 
-    public function __construct(RouteCollection $collection, $route, UrlMatcher $urlMatcher,
-                                UrlGenerator $urlGenerator, ParameterBag $param)
+    public function __construct(RouteCollection $collection, $route, UrlMatcher $urlMatcher, UrlGenerator $urlGenerator, ParameterBag $param)
     {
         $this->collection = $collection;
         $this->route = $route;
@@ -111,7 +110,7 @@ class Router
     /**
      * Match URL path with a route in collection then extract their attribute.
      *
-     * @return array
+     * @return \Symfony\Component\Routing\Matcher\UrlMatcher
      *
      * @throws \RuntimeException  If routing collection or resource not found
      */
@@ -121,7 +120,9 @@ class Router
             throw new \RuntimeException('No routes in collection.');
         }
 
-        return $this->urlMatcher->match($path);
+        $this->urlMatcher->match($path);
+
+        return $this->urlMatcher;
     }
 
     /**

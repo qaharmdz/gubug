@@ -14,7 +14,7 @@
         "pimple/pimple": "^3.0",
         "symfony/http-foundation": "^4.0",
         "symfony/routing": "^4.0",
-        "league/event": "^2.1"
+        "symfony/http-kernel": "^4.0"
     },
     "require-dev": {
         "kint-php/kint": "^2.0",

@@ -8,15 +8,17 @@ class Home extends ServiceContainer
 {
     public function index()
     {
-        return $this->use('config')->get('locale') == 'id' ? 'Selamat datang di "Gubug"' : 'Welcome to Gubug';
+        $message = $this->use('config')->get('locale') == 'id' ? 'Selamat datang di "Gubug"' : 'Welcome to Gubug';
+
+        return $this->use('response')->setContent($message);
     }
 
-    public function post($args)
+    public function post(...$args)
     {
         !d('Arguments passed to method', $args);
-        !d('All request attribute', $this->use('request')->attributes->all());
+        d('All request attribute', $this->use('request')->attributes->all());
 
-        return 'Post #' . $args['pid'] . ' Content';
+        return $this->use('response')->setContent('Post #' . $args['pid'] . ' Content');
     }
 
     public function url()
@@ -59,12 +61,13 @@ class Home extends ServiceContainer
 
         !d($data);
 
-        return 'urlBuild require to know the exact route name or it will fail';
+        return $this->use('response')->setContent('urlBuild require to know the exact route name or it will fail');
     }
 
 
-    public function render($args)
+    public function render(...$args)
     {
+        d($args);
         $data = [];
         $data['baseUri'] = $this->use('request')->getBaseUri();
 

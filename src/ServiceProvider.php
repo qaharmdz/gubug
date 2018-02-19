@@ -20,6 +20,7 @@ namespace Gubug;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Symfony\Component\Routing;
+use Symfony\Component\HttpFoundation;
 
 /**
  * Register all library to container
@@ -31,10 +32,15 @@ class ServiceProvider implements ServiceProviderInterface
 
     public function register(Container $container)
     {
+        // === Request
+        $container['request.stack'] = function ($c) {
+            return new HttpFoundation\RequestStack();
+        };
         $container['request'] = function ($c) {
             return Library\Request::createFromGlobals();
         };
 
+        // === Router
         $container['router.collection'] = function ($c) {
             return new Routing\RouteCollection();
         };
@@ -57,14 +63,26 @@ class ServiceProvider implements ServiceProviderInterface
                 $c['router.generator'], $c['config.factory']);
         };
 
+        // === Dispatcher
+        $container['resolver.controller'] = function ($c) {
+            return new Library\Resolver\Controller($c['config.factory']);
+        };
+        $container['resolver.argument'] = function ($c) {
+            return new Library\Resolver\Argument();
+        };
         $container['dispatcher'] = function ($c) {
-            return new Library\Dispatcher($c['config.factory']);
+            return new Library\Dispatcher($c['event'], $c['resolver.controller'], null, $c['resolver.argument'], $c['config.factory']);
+        };
+        $container['event'] = function ($c) {
+            return new Library\Event();
         };
 
+        // Response
         $container['response'] = function ($c) {
             return new Library\Response();
         };
 
+        // Tools
         $container['config.factory'] = $container->factory(function ($c) {
             return new Library\Config();
         });
@@ -76,8 +94,5 @@ class ServiceProvider implements ServiceProviderInterface
             return new Library\Session();
         };
 
-        $container['event'] = function ($c) {
-            return new Library\Event();
-        };
     }
 }

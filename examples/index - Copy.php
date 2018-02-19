@@ -19,7 +19,7 @@ $gubug = new Gubug\Framework();
 
 // =========== Namespace prefix
 
-$gubug->dispatcher->param->set('namespace', 'Contoh'); // Match added Psr4 prefix
+$gubug->dispatcher->param->set('pathNamespace', 'Contoh'); // Match added Psr4 prefix
 // Namespace result for _path "app/home" is "Contoh\App\Home" map to path "Example/Demo/App/Home.php"
 
 
@@ -132,28 +132,76 @@ $gubug->container['faker'] = function ($c) {
 
 // =========== Front controller
 
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
-use Symfony\Component\HttpKernel\EventListener\LocaleListener;
+try {
+    // d($gubug->router->extract($gubug->request->getPathInfo())); // Uncomment to see router extract result
 
-$gubug->event->addSubscriber(
-    new RouterListener(
-        $gubug->router->extract($gubug->request->getPathInfo()),
-        $gubug->container['request.stack']
-    )
-);
-$gubug->event->addSubscriber(
-    new LocaleListener(
-        $gubug->container['request.stack'], 'en',
-        $gubug->container['router.generator']
-    )
-);
+    $gubug->request->attributes->add(
+        $gubug->router->extract(
+            $gubug->request->getPathInfo()
+        )
+    );
+
+    // TODO: Event - No need to be polite, things was made to be broken.
+    if ($gubug->request->attributes->get('_path') == 'app/home/post') {
+
+        switch ($gubug->request->attributes->get('pid'))
+        {
+            case 21: // http://localhost:8080/post/21
+                $gubug->response->redirect($gubug->request->getBaseUri() . 'app/home/post/pid/21');
+                break;
+
+            case 31: // http://localhost:8080/post/31
+                // Abort request and send HTTP error
+                $gubug->response->abort(500, 'Oops! Not allowed to visit post with #id 31');
+                break;
+        }
+    }
+
+    // Update locale for consistency
+    $gubug->request->setLocale($gubug->request->attributes->get('_locale'));
+    $gubug->config->set('locale', $gubug->request->getLocale());
 
 
-$gubug->dispatcher->handle($gubug->request);
+    // Set response content
+    $gubug->response->setContent(
+        // Controller and argument resolver
+        $gubug->dispatcher->handle($gubug->request->attributes->all())
+    );
 
-$gubug->response->send();
 
-$gubug->dispatcher->terminate($gubug->request, $gubug->response);
+
+// } catch (\LogicException $e) {
+// } catch (\RuntimeException $e) {
+
+// Just catch all exception
+} catch (\Exception $e) {
+
+    if ($e->getCode()) {
+
+        // 98,7% because of $response->abort()
+        $gubug->response->setStatusCode($e->getCode())
+                        ->setContent($e->getMessage());
+
+    } else {
+
+        $gubug->response->setStatusCode(404)
+                        ->setContent('
+                            <h1>Oops! An Error Occured</h1>
+                            <h3>The server return a "404 Not Found" message.</h3>
+                        ')
+                        ->appendContent('<br>Exception: ' . $e->getMessage());
+    }
+
+    /*
+    // Use controller to handle 404 Not Found
+    $gubug->response->setContent(
+        $gubug->dispatcher->handle(['_path' => 'error/notfound']])
+    );
+     */
+}
+
+
+echo $gubug->response->send();
 
 
 // Uncomment to see $gubug instance
