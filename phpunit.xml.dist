@@ -13,6 +13,9 @@
          convertWarningsToExceptions="true">
 
     <testsuites>
+        <testsuite>
+            <directory>./tests/src</directory>
+        </testsuite>
     </testsuites>
 
     <filter>
