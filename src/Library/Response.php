@@ -154,7 +154,7 @@ class Response extends HttpFoundation\Response
      * @param  string $template  Full Path to template file
      * @param  array  $variables Variables passed to template
      *
-     * @return string
+     * @return Response
      */
     public function render(string $template, array $variables)
     {

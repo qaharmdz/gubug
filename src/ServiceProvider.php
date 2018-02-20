@@ -19,8 +19,8 @@ namespace Gubug;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use Symfony\Component\Routing;
 use Symfony\Component\HttpFoundation;
+use Symfony\Component\Routing;
 
 /**
  * Register all library to container
