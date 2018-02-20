@@ -17,6 +17,7 @@
 
 namespace Gubug;
 
+use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\EventListener\LocaleListener;
 
@@ -30,6 +31,8 @@ use Symfony\Component\HttpKernel\EventListener\LocaleListener;
 class Framework
 {
     const VERSION = '1.0.0-beta.0';
+
+    public $environment;
 
     /**
      * @var \Pimple\Container
@@ -71,13 +74,18 @@ class Framework
      */
     public $session;
 
-    public function __construct(bool $init = true)
+    public function __construct(string $environment = 'live', bool $init = true)
     {
+        $this->environment =  $environment; // live, dev, test;
+
         $this->container = new \Pimple\Container;
         $this->container->register(new ServiceProvider());
 
+        // Make it easy to use separately
         if ($init) {
             $this->init();
+            $this->initConfig();
+            $this->initEvent();
         }
     }
 
@@ -90,6 +98,13 @@ class Framework
         $this->config     = $this->container['config'];
         $this->event      = $this->container['event'];
 
+        if (in_array($this->environment, ['dev', 'test'])) {
+            Debug::enable();
+        }
+    }
+
+    public function initConfig()
+    {
         // Service configuration
         $this->container['router.context']->fromRequest($this->request);
         $this->container['router.context']->setBaseUrl($this->request->getBasePath());
@@ -105,7 +120,7 @@ class Framework
         ServiceContainer::setContainer($this->container);
     }
 
-    public function subcribeEvent()
+    public function initEvent()
     {
         $this->event->addSubscriber(
             new RouterListener(
@@ -124,8 +139,6 @@ class Framework
 
     public function run()
     {
-        $this->subcribeEvent();
-
         $this->dispatcher->handle($this->request);
 
         $this->response->send();

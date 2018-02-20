@@ -158,7 +158,6 @@ class Response extends HttpFoundation\Response
      */
     public function render(string $template, array $variables)
     {
-        // Todo: library/presenter or templating
         if (is_file($template)) {
             extract($variables, EXTR_SKIP);
 

@@ -47,7 +47,7 @@ class Controller extends ControllerResolver
     public function getController(Request $request)
     {
         $attributes = $request->attributes->all();
-        if (!$attributes['_controller'] && $attributes['_path']) {
+        if (empty($attributes['_controller']) && $attributes['_path']) {
             list($controller, $arguments) = $this->resolve($attributes['_path'], $attributes);
 
             $request->attributes->set('_controller', $controller);

@@ -11,6 +11,12 @@ Tags: Added, Changed, Deprecated, Removed, Fixed, Security
 
 ## [NEXT] - YYYY-MM-DD
 
+### Added
+- Symfony HttpKernel, Event, Debug
+
+### Changed
+- Dispatcher extends HttpKernel
+
 ---
 
 ## v1.0.0-beta.1 - 2018-02-18

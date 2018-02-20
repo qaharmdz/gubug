@@ -49,7 +49,6 @@ ul {
 }
 </style>
 </head>
-<?php echo $var; ?>
 
 <body>
     <div class="wrapper">
@@ -65,7 +64,7 @@ ul {
                 <li><a href='<?php echo $baseUri; ?>app/home/render/args/pair/unescape/v<b style="font-size:21px;color:red">alue'>Warning: Variables not escaped automatically</a></li>
             </ul>
 
-            <?php echo $param['arguments']['unescape'] ?? htmlspecialchars($param['arguments']['unescape']); ?>
+            <?php echo isset($param['arguments']['unescape']) ? $param['arguments']['unescape'] : htmlspecialchars($param['arguments']['unescape']); ?>
 
             <p>Arguments passed to method:</p>
             <pre><code><?php print_r($param['arguments']); ?></code></pre>
