@@ -15,7 +15,7 @@ Tags: Added, Changed, Deprecated, Removed, Fixed, Security
 - Symfony HttpKernel, Event, Debug
 
 ### Changed
-- Dispatcher extends HttpKernel
+- HttpKernel replace Dispacher
 
 ---
 
