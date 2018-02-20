@@ -23,4 +23,4 @@ checks:
 tools:
     external_code_coverage:
         timeout: 600
-        runs: 2
+        runs: 2 # must match the numbers of .travis.yml php version to test

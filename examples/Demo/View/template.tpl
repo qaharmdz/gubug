@@ -41,8 +41,14 @@ pre {
     margin-bottom:40px;
     box-shadow: inset 0 0 5px rgba(0,0,0,.2);
 }
+pre code {
+    background: transparent;
+    padding: 0;
+}
 code {
     font-size: 13px;
+    background: #eee;
+    padding: 2px 5px;
 }
 ul {
     margin: 30px 0 40px;
@@ -64,7 +70,11 @@ ul {
                 <li><a href='<?php echo $baseUri; ?>app/home/render/args/pair/unescape/v<b style="font-size:21px;color:red">alue'>Warning: Variables not escaped automatically</a></li>
             </ul>
 
-            <?php echo isset($param['arguments']['unescape']) ? $param['arguments']['unescape'] : htmlspecialchars($param['arguments']['unescape']); ?>
+            <?php
+            if (!empty($param['arguments']['unescape'])) {
+                echo 'Escaped: <code>' . htmlspecialchars($param['arguments']['unescape']) . '</code>';
+            }
+            ?>
 
             <p>Arguments passed to method:</p>
             <pre><code><?php print_r($param['arguments']); ?></code></pre>
