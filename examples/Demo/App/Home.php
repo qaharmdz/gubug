@@ -67,7 +67,6 @@ class Home extends ServiceContainer
 
     public function render($args = [])
     {
-        d($args);
         $data = [];
         $data['baseUri'] = $this->use('request')->getBaseUri();
 
