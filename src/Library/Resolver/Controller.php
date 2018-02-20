@@ -66,7 +66,22 @@ class Controller extends ControllerResolver
             throw new \LogicException('The "_path" parameter is empty.');
         }
 
-        // ==== Controller resolver
+        $controller = $this->resolveController($path, $namespace, $segments);
+        $method     = empty($segments[0]) ? 'index' : $this->resolveMethod($path, $segments);
+        $arguments  = $this->resolveArguments($args, $segments);
+
+        if (!is_callable([$controller, $method])) {
+            throw new \LogicException(sprintf('The controller "%s" for URI "%s" is not available.', $class . '::' . $method, $path));
+        }
+
+        return [
+            [$controller, $method],
+            $arguments
+        ];
+    }
+
+    protected function resolveController($path, $namespace, &$segments)
+    {
         $folder = $class = ucwords(array_shift($segments));
         if (!empty($segments[0])) {
             $class = ucwords(array_shift($segments));
@@ -78,37 +93,31 @@ class Controller extends ControllerResolver
             throw new \LogicException(sprintf('Unable to find controller "%s" for path "%s".', $class, $path));
         }
 
-        $controller = new $class();
+        return new $class();
+    }
 
-        // Find method
-        $method = 'index';
-        if (!empty($segments[0])
-            && count($segments) % 2 === 1
-            && !is_numeric($segments[0][0])
-            && substr($segments[0], 0, 2) !== '__') {
-            $method = array_shift($segments);
+    protected function resolveMethod($path, &$segments)
+    {
+        if (count($segments) % 2 === 1 && !is_numeric($segments[0][0]) && substr($segments[0], 0, 2) !== '__') {
+            return array_shift($segments);
         }
+    }
 
-        if (!is_callable([$controller, $method])) {
-            throw new \LogicException(sprintf('The controller "%s" for URI "%s" is not available.', $class . '::' . $method, $path));
-        }
-
-        // ==== Arguments resolver
+    protected function resolveArguments($args, &$segments)
+    {
         $args = $this->cleanArgs($args);
 
-        // Remaining segments as args
+        // Remaining segments as arguments
         if (!empty($segments[0])) {
             $_args = [];
             foreach (array_chunk($segments, 2) as $pair) {
                 $_args[$pair[0]] = $pair[1];
             }
+
             $args = array_replace($_args, $args);
         }
 
-        return [
-            [$controller, $method],
-            $args
-        ];
+        return $args;
     }
 
     /**
