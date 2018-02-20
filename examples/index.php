@@ -25,27 +25,23 @@ $gubug->dispatcher->param->set('namespace', 'Contoh'); // Match added Psr4 prefi
 
 // =========== Configuration
 
-// Session example
+// === Session example
 $gubug->startSession(['name' => '_gubug']);
 if (!$gubug->session->has('token')) {
     $gubug->session->set('token', md5(uniqid()));
 }
 
-// Config example
+// === Config example
 $gubug->config->add([
     'default' => [
         'token' => $gubug->session->get('token'),
         'path'  => 'app/home'
     ],
-    'locale'  => 'en'
+    'locale'  => 'en' // assuming default locale
 ]);
 $gubug->config->set('basePath', realpath(__DIR__ . '/Demo') . DIRECTORY_SEPARATOR);
 
-
-// =========== Router
-// Route collection used to generate url and map the incoming request.
-
-// ======= Router setting
+// === Router setting
 
 $gubug->router->param->add([
     'routeDefaults'     => ['_locale' => $gubug->config->get('locale')],        // Set default locale; auto inject to addRoute()
@@ -55,7 +51,9 @@ $gubug->router->param->add([
 ]);
 
 
-// ======= Add route into collection
+// =========== Router
+// Route collection used to generate url and map the incoming request.
+
 // === Base route
 
 $gubug->router->addRoute('base', '/', ['_path' => $gubug->config->get('default.path')]); // http://localhost:8080
@@ -82,7 +80,6 @@ $gubug->router->addRoute(
     []                                  // Methods (GET, POST, PUT, DELETE) allowed. All allowed if pass empty array
 );
 
-
 // === Custom route with locale
 
 $gubug->router->addRoute('app/home/render', '/render', ['_path' => 'app/home/render']); // http://localhost:8080/render
@@ -94,8 +91,8 @@ $gubug->router->addRoute( // http://localhost:8080/closure
     '/closure/{test}',
     [
         'test' => '',
-        '_controller' => function($args) use ($gubug) {
-            return 'Gubug encourage to use _path mapping to controller class to provide response, but valid callable is fine.';
+        '_controller' => function () use ($gubug) {
+            return $gubug->response->setContent('Gubug encourage to use _path mapping to controller class to provide response, but valid callable is fine.');
         }
     ]
 );
@@ -132,29 +129,9 @@ $gubug->container['faker'] = function ($c) {
 
 // =========== Front controller
 
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
-use Symfony\Component\HttpKernel\EventListener\LocaleListener;
-
-$gubug->event->addSubscriber(
-    new RouterListener(
-        $gubug->router->extract($gubug->request->getPathInfo()),
-        $gubug->container['request.stack']
-    )
-);
-$gubug->event->addSubscriber(
-    new LocaleListener(
-        $gubug->container['request.stack'], 'en',
-        $gubug->container['router.generator']
-    )
-);
 
 
-$gubug->dispatcher->handle($gubug->request);
-
-$gubug->response->send();
-
-$gubug->dispatcher->terminate($gubug->request, $gubug->response);
-
+$gubug->run();
 
 // Uncomment to see $gubug instance
 /*

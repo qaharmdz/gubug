@@ -17,6 +17,9 @@
 
 namespace Gubug;
 
+use Symfony\Component\HttpKernel\EventListener\RouterListener;
+use Symfony\Component\HttpKernel\EventListener\LocaleListener;
+
 /**
  * The Gubug framework class.
  *
@@ -95,8 +98,39 @@ class Framework
         $this->response->loadHeaders('html');
         $this->response->setStatusCode(200);
 
+        // Basic configuration
+        $this->config->set('locale', 'en');
+
         // Container as base controller
         ServiceContainer::setContainer($this->container);
+    }
+
+    public function subcribeEvent()
+    {
+        $this->event->addSubscriber(
+            new RouterListener(
+                $this->router->extract($this->request->getPathInfo()),
+                $this->container['request.stack']
+            )
+        );
+        $this->event->addSubscriber(
+            new LocaleListener(
+                $this->container['request.stack'],
+                $this->config->get('locale'),
+                $this->container['router.generator']
+            )
+        );
+    }
+
+    public function run()
+    {
+        $this->subcribeEvent();
+
+        $this->dispatcher->handle($this->request);
+
+        $this->response->send();
+
+        $this->dispatcher->terminate($this->request, $this->response);
     }
 
     /**
