@@ -61,7 +61,7 @@ class Home extends ServiceContainer
 
         !d($data);
 
-        return $this->use('response')->setContent('urlBuild require to know the exact route name or it will fail');
+        return $this->use('response')->setContent('<b>urlGenerate</b> check the path and map automatically, while <b>urlBuild</b> require to know the exact route name or it will fail');
     }
 
 
@@ -74,11 +74,6 @@ class Home extends ServiceContainer
         $data['param'] = [
             'arguments'     => $args,
             'attributes'    => $this->use('request')->attributes->all()
-        ];
-        $data['extraservice'] = [
-            'name'      => $this->use('faker')->name,
-            'address'   => $this->use('faker')->address,
-            'phone'     => $this->use('faker')->tollFreePhoneNumber,
         ];
 
         //=== $response->abort() halt script by throwing HTTP error

@@ -18,8 +18,7 @@
 namespace Gubug;
 
 use Symfony\Component\Debug\Debug;
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
-use Symfony\Component\HttpKernel\EventListener\LocaleListener;
+use Symfony\Component\HttpKernel\EventListener;
 
 /**
  * The Gubug framework class.
@@ -31,8 +30,6 @@ use Symfony\Component\HttpKernel\EventListener\LocaleListener;
 class Framework
 {
     const VERSION = '1.0.0-beta.0';
-
-    public $environment;
 
     /**
      * @var \Pimple\Container
@@ -74,72 +71,141 @@ class Framework
      */
     public $session;
 
-    public function __construct(string $environment = 'live', bool $init = true)
-    {
-        $this->environment =  $environment; // live, dev, test;
+    /**
+     * @var \Symfony\Component\HttpKernel\Log\Logger
+     */
+    public $log;
 
+    public function __construct()
+    {
         $this->container = new \Pimple\Container;
         $this->container->register(new ServiceProvider());
-
-        // Make it easy to use separately
-        if ($init) {
-            $this->init();
-            $this->initConfig();
-            $this->initEvent();
-        }
     }
 
-    public function init()
+    /**
+     * Initiialize process section
+     *
+     * Process separated into different method make it easy to use them separately
+     *
+     * @return [type] [description]
+     */
+    public function init(array $config = [])
     {
+        $this->initService($config);
+        $this->initSession();
+        $this->initApp();
+    }
+
+    public function initService(array $config = [])
+    {
+        // Configuration
+        $this->config = $this->container['config'];
+        $this->config->add(array_replace(
+            [
+                'locale'        => 'en',                    // Default locale
+                'locales'       => ['en'],                  // Avalaible languages
+                'environment'   => 'live',                  // live, dev, test
+                'session'       => [                        // Key at http://php.net/session.configuration, omit 'session.'
+                    'name' => '_gubug'
+                ],
+                'route'         => [
+                    '_path'         => 'app/init',          // Default URL _path for base and dynamic route
+                ],
+                'dispatcher'    => [
+                    'namespace'     => '',
+                    'error'         => 'app/error/handle'   // Fully qualified namespace
+                ],
+                'logfile'       => ''
+            ],
+            $config
+        ));
+        $this->config->set('debug', in_array($this->config->get('environment'), ['dev', 'test']));
+
+        // Service parameter
+        $this->container['log.output'] = $this->config->get('logfile');
+        $this->container['resolver.controller']->param->set('namespace', $this->config->get('dispatcher.namespace'));
+        // $this->dispatcher->param->set('namespace', $this->config->get('dispatcher.namespace'));
+
+        // Services
         $this->request    = $this->container['request'];
         $this->router     = $this->container['router'];
         $this->dispatcher = $this->container['dispatcher'];
         $this->response   = $this->container['response'];
-        $this->config     = $this->container['config'];
-        $this->event      = $this->container['event'];
 
-        if (in_array($this->environment, ['dev', 'test'])) {
-            Debug::enable();
-        }
+        $this->session    = $this->container['session'];
+        $this->event      = $this->container['event'];
+        $this->log        = $this->container['log'];
     }
 
-    public function initConfig()
+    /**
+     * Start session
+     */
+    public function initSession()
     {
-        // Service configuration
+        $this->session->setOptions($this->config->get('session', []));
+        $this->session->start();
+    }
+
+    public function initApp()
+    {
+        // Service parameter
         $this->container['router.context']->fromRequest($this->request);
         $this->container['router.context']->setBaseUrl($this->request->getBasePath());
 
-        $this->response->prepare($this->request);
-        $this->response->loadHeaders('html');
-        $this->response->setStatusCode(200);
+        $this->router->param->set('routeDefaults', ['_locale' => $this->config->get('locale')]);
+        $this->router->param->set('routeRequirements', ['_locale' => implode('|', $this->config->get('locales'))]);
 
-        // Basic configuration
-        $this->config->set('locale', 'en');
+        $this->response->prepare($this->request);
+        $this->response->headers->set('Content-Type', 'text/html;');
+        $this->response->setStatusCode(200);
 
         // Container as base controller
         ServiceContainer::setContainer($this->container);
+
+        // Environment
+        if ($this->config->get('debug')) {
+            // Debug::enable();
+        }
+
+        // First citizen of routeCollection
+        $this->baseRoute();
     }
 
-    public function initEvent()
+    public function coreEvent()
     {
+        // Register last as route fallback
+        $this->dynamicRoute();
+
         $this->event->addSubscriber(
-            new RouterListener(
+            new EventListener\RouterListener(
                 $this->router->extract($this->request->getPathInfo()),
-                $this->container['request.stack']
+                $this->container['request.stack'],
+                $this->container['router.context']
             )
         );
+
         $this->event->addSubscriber(
-            new LocaleListener(
+            new EventListener\LocaleListener(
                 $this->container['request.stack'],
                 $this->config->get('locale'),
                 $this->container['router.generator']
+            )
+        );
+
+        $this->event->addSubscriber(
+            new EventListener\ExceptionListener(
+                $this->config->get('dispatcher.errorHandler'),
+                $this->log,
+                $this->config->get('debug')
             )
         );
     }
 
     public function run()
     {
-        $this->dispatcher->handle($this->request);
+        $this->coreEvent();
+
+        $this->response = $this->dispatcher->handle($this->request);
 
         $this->response->send();
 
@@ -147,15 +213,20 @@ class Framework
     }
 
     /**
-     * Start session with configured options
-     *
-     * @param  array  $options Key at http://php.net/session.configuration, omit 'session.'
+     * Must be first registered into routeCollection
      */
-    public function startSession(array $options = [])
+    public function baseRoute()
     {
-        $this->session = $this->container['session'];
+        $this->router->addRoute('base', '/', ['_path' => $this->config->get('route._path')]);
+        $this->router->addRoute('base_locale', '/{_locale}/', ['_path' => $this->config->get('route._path')]);
+    }
 
-        $this->session->setOptions($options);
-        $this->session->start();
+    /**
+     * Fallback must be last registered at routeCollection
+     */
+    public function dynamicRoute()
+    {
+        $this->router->addRoute('dynamic_locale', '/{_locale}/{_path}', ['_path' => $this->config->get('route._path')], ['_path' => '.*']);
+        $this->router->addRoute('dynamic', '/{_path}', ['_path' => $this->config->get('route._path')], ['_path' => '.*']);
     }
 }

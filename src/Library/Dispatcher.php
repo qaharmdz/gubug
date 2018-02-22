@@ -37,18 +37,11 @@ class Dispatcher extends HttpKernel
         parent::__construct($event, $controllerResolver, $requestStack, $argumentResolver);
 
         $this->param = $param;
-
-        // Default parameter
-        $this->param->add([
-            'namespace' => ''
-        ]);
     }
 
     public function handle(libRequest $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
-        if ($this->resolver instanceof Resolver\Controller) {
-            $this->resolver->param->set('pathNamespace', $this->param->get('namespace'));
-        }
+        $request->attributes->set('_master_request', $type === HttpKernelInterface::MASTER_REQUEST);
 
         return parent::handle($request, $type, $catch);
     }

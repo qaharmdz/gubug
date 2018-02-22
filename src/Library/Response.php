@@ -65,47 +65,43 @@ class Response extends HttpFoundation\Response
     }
 
     /**
-     * Ready use HTTP headers.
+     * Redirects to another URL.
      *
-     * @param  string $name Profile name
+     * 301 Permanently redirect from old url to new url
+     * 302 Temporary redirect to new url
+     * 303 In response to a POST, redirect to new url with GET method. Redirect after form submission.
+     *
+     * @param  string $url     The URL should be a full URL, with schema etc.
+     * @param  int    $status  The status code (302 by default)
+     *
+     * @return Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function loadHeaders(string $name)
+    public function redirect(string $url, int $status = 302)
     {
-        switch (strtolower($name)) {
-            case 'html':
-                $this->headers->set('Content-Type', 'text/html;');
-                break;
-
-            case 'json':
-                $this->headers->set('Expires', '0');
-                $this->headers->set('Pragma', 'no-cache');
-                $this->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate, post-check=0, pre-check=0');
-                $this->headers->set('Content-Type', 'application/json;');
-                break;
-
-            case 'xml':
-                $this->headers->set('Content-Type', 'application/xml, text/xml');
-                break;
-
-            case 'rss':
-                $this->headers->set('Content-Type', 'application/rss+xml, application/xml, text/xml; charset=ISO-8859-1');
-                break;
-
-            case 'pdf':
-                $this->headers->set('Content-Type', 'application/pdf');
-                break;
-
-            default:
-                $this->headers->set('Content-Type', 'text/plain');
-                break;
-        }
+        return new HttpFoundation\RedirectResponse($url, $status);
     }
 
     /**
-     * Helper to send file.
+     * Return a JSON response.
+     *
+     * @param  mixed $data    The response data
+     * @param  int   $status  The response status code
+     * @param  array $headers An array of response headers
+     *
+     * @return Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function json($data = [], $status = 200, array $headers = [])
+    {
+        return new HttpFoundation\JsonResponse($data, $status, $headers);
+    }
+
+    /**
+     * Send a file.
      *
      * @param  string $file Path to file
      * @param  string $mask Mask filename
+     *
+     * @return Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function sendFile(string $file, string $mask = '', array $headers = [])
     {
@@ -114,22 +110,7 @@ class Response extends HttpFoundation\Response
             $response->setContentDisposition('attachment', $mask);
         }
 
-        $response->send();
-    }
-
-    /**
-     * Redirects to another URL.
-     *
-     * 301 Permanently redirect from old url to new url
-     * 302 Temporary redirect to new url
-     * 303 In response to a POST, redirect to new url with GET method. Redirect after form submission.
-     *
-     * @param string $url     The URL should be a full URL, with schema etc.
-     * @param int    $status  The status code (302 by default)
-     */
-    public function redirect(string $url, int $status = 302)
-    {
-        HttpFoundation\RedirectResponse::create($url, $status)->send();
+        return $response;
     }
 
     /**
@@ -154,7 +135,7 @@ class Response extends HttpFoundation\Response
      * @param  string $template  Full Path to template file
      * @param  array  $variables Variables passed to template
      *
-     * @return Response
+     * @return Symfony\Component\HttpFoundation\Response
      */
     public function render(string $template, array $variables)
     {

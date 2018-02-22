@@ -56,18 +56,18 @@ class Router
 
     public function __construct(RouteCollection $collection, $route, UrlMatcher $urlMatcher, UrlGenerator $urlGenerator, ParameterBag $param)
     {
-        $this->collection = $collection;
-        $this->route = $route;
-        $this->urlMatcher = $urlMatcher;
+        $this->collection   = $collection;
+        $this->route        = $route;
+        $this->urlMatcher   = $urlMatcher;
         $this->urlGenerator = $urlGenerator;
-        $this->param = $param;
+        $this->param        = $param;
 
         // Default parameter
         $this->param->add([
-            'routeDefaults' => ['_locale' => 'en'],
-            'routeRequirements' => ['_locale' => 'en'],
-            'buildLocale' => false,
-            'buildParameters' => []
+            'routeDefaults'     => ['_locale' => 'en'], // Default addRoute
+            'routeRequirements' => ['_locale' => 'en'], // Requirement addRoute, multi-language en|id|fr
+            'buildLocale'       => false,               // Force urlBuild to use "_locale"
+            'buildParameters'   => []                   // Force urlBuld to add extra parameter
         ]);
     }
 
@@ -86,10 +86,16 @@ class Router
      */
     public function addRoute(string $name, string $path, array $defaults = [], array $requirements = [], $methods = [], array $options = ['utf8' => true], ?string $host = '', $schemes = [], ?string $condition = '')
     {
-        $route = $this->getRoute($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
-
-        $route->addDefaults($this->param->get('routeDefaults'));
-        $route->addRequirements($this->param->get('routeRequirements'));
+        $route = $this->getRoute(
+            $path,
+            array_replace($defaults, $this->param->get('routeDefaults')),
+            array_replace($requirements, $this->param->get('routeRequirements')),
+            $options,
+            $host,
+            $schemes,
+            $methods,
+            $condition
+        );
 
         $this->collection->add($name, $route);
     }
@@ -133,7 +139,7 @@ class Router
      *
      * @return string
      */
-    public function urlBuild(string $name, array $parameters = [], bool $extraParam = true): string
+    public function urlBuild(string $name, array $parameters = [], bool $extraParam = true)
     {
         $result = '';
 
@@ -156,7 +162,7 @@ class Router
      *
      * @return string
      */
-    public function urlGenerate(string $path = '', array $parameters = [], bool $extraParam = true): string
+    public function urlGenerate(string $path = '', array $parameters = [], bool $extraParam = true)
     {
         if (!$path) {
             return $this->urlBuild('base', $parameters, $extraParam);

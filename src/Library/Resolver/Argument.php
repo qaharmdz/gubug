@@ -35,6 +35,54 @@ class Argument implements ArgumentResolverInterface
 
     public function getArguments(Request $request, $controller)
     {
-        return $request->attributes->get('_route_args') ? [$request->attributes->get('_route_args')] : $this->resolver->getArguments($request, $controller);
+        $attributes = $request->attributes->all();
+
+        if (isset($attributes['_route_params']) && isset($attributes['_path_params'])) {
+            $attributes = array_replace($attributes, $attributes['_path_params']);
+            $attributes['_route_params'] = $this->cleanArgs(
+                array_replace(
+                    $attributes['_route_params'],
+                    $attributes['_path_params']
+                )
+            );
+            $attributes['_sysinfo'] = [
+                '_path'           => $attributes['_path'],
+                '_route'          => $attributes['_route'],
+                '_controller'     => $attributes['_controller'],
+                '_master_request' => $attributes['_master_request'],
+            ];
+
+            // Consistent with Event Listener Route
+            unset(
+                $attributes['_path'],
+                $attributes['_route'],
+                $attributes['_controller'],
+                $attributes['_master_request'],
+                $attributes['_path_params']
+            );
+
+            $request->attributes->replace($attributes);
+
+            $arguments = [$attributes['_route_params']];
+        } else {
+            $arguments = $this->resolver->getArguments($request, $controller);
+        }
+
+        return $arguments;
+    }
+
+
+    /**
+     * Remove arguments with underscore key
+     *
+     * @param  array $args
+     *
+     * @return array
+     */
+    public function cleanArgs(array $args)
+    {
+        return array_filter($args, function ($key) {
+            return $key[0] !== '_';
+        }, ARRAY_FILTER_USE_KEY);
     }
 }

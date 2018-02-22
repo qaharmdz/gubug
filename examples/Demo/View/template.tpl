@@ -82,8 +82,6 @@ ul {
             <p>All request attribute:</p>
             <pre><code><?php print_r($param['attributes']); ?></code></pre>
 
-            <p>Extra service "Faker":</p>
-            <pre><code><?php print_r($extraservice); ?></code></pre>
         </div>
     </div>
 </body>

@@ -28,42 +28,69 @@ use Symfony\Component\HttpFoundation\Request;
 class Controller extends ControllerResolver
 {
     /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var \Symfony\Component\HttpFoundation\ParameterBag
      */
     public $param;
 
-    public function __construct(ParameterBag $param, LoggerInterface $logger = null)
+    public function __construct(LoggerInterface $logger, ParameterBag $param)
     {
         parent::__construct($logger);
 
+        $this->logger = $logger;
         $this->param = $param;
 
         // Default parameter
         $this->param->add([
-            'pathNamespace' => ''
+            'namespace' => ''
         ]);
     }
 
     public function getController(Request $request)
     {
-        $attributes = $request->attributes->all();
-        if (empty($attributes['_controller']) && $attributes['_path']) {
-            list($controller, $arguments) = $this->resolve($attributes['_path'], $attributes);
+        if ($path = $request->attributes->get('_path')) {
+            try {
+                list($controller, $arguments) = $this->resolve($path, $request->attributes->all());
 
-            $request->attributes->set('_controller', $controller);
-            $request->attributes->set('_route_args', $arguments);
+                $request->attributes->set('_controller', $controller);
+                $request->attributes->set('_path_params', $arguments);
+
+                return $controller;
+            } catch (\Exception $e) {
+                if ($this->logger !== null) {
+                    $this->logger->warning($e->getMessage());
+                }
+
+                return false;
+            }
+        }
+
+        if (!$request->attributes->get('_master_request')) {
+            try {
+                list($controller, $arguments) = $this->resolve($request->attributes->get('_controller'), $request->attributes->all());
+
+                return $controller;
+            } catch (\Exception $e) {
+                if ($this->logger !== null) {
+                    $this->logger->warning($e->getMessage());
+                }
+            }
         }
 
         return parent::getController($request);
     }
 
-    public function resolve(string $path, array $args = [], string $namespace = ''): array
+    public function resolve(string $path, array $args = [], string $namespace = '')
     {
-        $namespace = $namespace ?: $this->param->get('pathNamespace');
+        $namespace = $namespace ?: $this->param->get('namespace');
         $segments = explode('/', trim($path, '/'));
 
         if (empty($segments[0])) {
-            throw new \LogicException('The "_path" parameter is empty.');
+            throw new \InvalidArgumentException('The "_path" parameter is empty.');
         }
 
         $controller = $this->resolveController($path, $namespace, $segments);
@@ -71,7 +98,7 @@ class Controller extends ControllerResolver
         $arguments  = $this->resolveArguments($args, $segments);
 
         if (!is_callable([$controller, $method])) {
-            throw new \LogicException(sprintf('The controller "%s" for URI "%s" is not available.', $class . '::' . $method, $path));
+            throw new \InvalidArgumentException(sprintf('The controller "%s" for URI "%s" is not available.', $class . '::' . $method, $path));
         }
 
         return [
@@ -90,7 +117,7 @@ class Controller extends ControllerResolver
         $class = implode('\\', [rtrim($namespace, '\\'), $folder, $class]);
 
         if (!class_exists($class)) {
-            throw new \LogicException(sprintf('Unable to find controller "%s" for path "%s".', $class, $path));
+            throw new \InvalidArgumentException(sprintf('Unable to find controller "%s" for path "%s".', $class, $path));
         }
 
         return new $class();
@@ -105,7 +132,6 @@ class Controller extends ControllerResolver
 
     protected function resolveArguments($args, &$segments)
     {
-        $args = $this->cleanArgs($args);
 
         // Remaining segments as arguments
         if (!empty($segments[0])) {
@@ -118,19 +144,5 @@ class Controller extends ControllerResolver
         }
 
         return $args;
-    }
-
-    /**
-     * Remove arguments with underscore key
-     *
-     * @param  array $args
-     *
-     * @return array
-     */
-    public function cleanArgs(array $args)
-    {
-        return array_filter($args, function ($key) {
-            return $key[0] !== '_';
-        }, ARRAY_FILTER_USE_KEY);
     }
 }

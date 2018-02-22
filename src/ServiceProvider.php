@@ -21,6 +21,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation;
 use Symfony\Component\Routing;
+use Symfony\Component\HttpKernel;
 
 /**
  * Register all library to container
@@ -64,7 +65,7 @@ class ServiceProvider implements ServiceProviderInterface
 
         // === Dispatcher
         $container['resolver.controller'] = function ($c) {
-            return new Library\Resolver\Controller($c['config.factory']);
+            return new Library\Resolver\Controller($c['log'], $c['config.factory']);
         };
         $container['resolver.argument'] = function () {
             return new Library\Resolver\Argument();
@@ -91,6 +92,11 @@ class ServiceProvider implements ServiceProviderInterface
 
         $container['session'] = function () {
             return new Library\Session();
+        };
+
+        $container['log.output'] = '';
+        $container['log'] = function ($c) {
+            return new HttpKernel\Log\Logger(\Psr\Log\LogLevel::DEBUG, $c['log.output']);
         };
     }
 }

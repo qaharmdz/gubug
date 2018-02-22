@@ -12,52 +12,73 @@
 // =========== Lets begin
 
 $loader = require realpath(__DIR__ . '/../vendor/') . DIRECTORY_SEPARATOR . 'autoload.php';
+
+$gubug = new Gubug\Framework();
+
+/*
+$gubug->init();
+$gubug->router->addRoute('base', '/', [
+    'app'         => 'Gubug',
+    '_controller' => function ($app) use ($gubug) {
+        return $gubug->response->setContent($app . ' encourage to use dynamic route "_path", but valid callable as "_controller" is fine.');
+    }
+]);
+$gubug->run();
+exit();
+//*/
+
 $loader->addPsr4('Contoh\\', realpath(__DIR__ . '/Demo/'));  // Example of namespace in deep folder
 
-$gubug = new Gubug\Framework('dev');
-
-
-// =========== Namespace prefix
-
-$gubug->dispatcher->param->set('namespace', 'Contoh'); // Match added Psr4 prefix
+$gubug->init([
+    'locale'      => 'en',                  // Default locale
+    'locales'     => ['en','id','fr'],      // Avalaible languages
+    'environment' => 'dev',                 // live, dev, test
+    'route'       => [
+        '_path'         => 'app/home',      // Default _path for base and dynamic route
+    ],
+    'dispatcher'  => [
+        'namespace'     => 'Contoh',            // Match added Psr4 prefix
+        'errorHandler'  => 'app/error/handle'   // Handle error
+    ],
+    'logfile'     => __DIR__ . DIRECTORY_SEPARATOR . 'error.log', // Log filepath
+]);
 // Namespace result for _path "app/home" is "Contoh\App\Home" map to path "Example/Demo/App/Home.php"
 
 
 // =========== Configuration
 
 // === Session example
-$gubug->startSession(['name' => '_gubug']);
 if (!$gubug->session->has('token')) {
     $gubug->session->set('token', md5(uniqid()));
 }
 
 // === Config example
-$gubug->config->add([
-    'default' => [
-        'token' => $gubug->session->get('token'),
-        'path'  => 'app/home'
-    ],
-    'locale'  => 'en' // assuming default locale
-]);
+$gubug->config->set('token', $gubug->session->get('token'));
 $gubug->config->set('basePath', realpath(__DIR__ . '/Demo') . DIRECTORY_SEPARATOR);
-
-// === Router setting
-
-$gubug->router->param->add([
-    'routeDefaults'     => ['_locale' => $gubug->config->get('locale')],        // Set default locale; auto inject to addRoute()
-    'routeRequirements' => ['_locale' => 'en|id|fr'],                           // Set accepted locale; auto inject to addRoute()
-    'buildLocale'       => false,                                               // Force url generate to use "_locale"
-    'buildParameters'   => ['token' => $gubug->config->get('default.token')],   // Force url generate to add extra parameter
-]);
 
 
 // =========== Router
 // Route collection used to generate url and map the incoming request.
+// Gubug provide baseRoute for accessing base url and dynamicRoute as fallback
 
-// === Base route
+// _path will use Gubug custom controller and arguments resolver (relative to namespace)
+// _controller use Symfony controller and arguments resolver (callable fully qualified namespace or closure)
+// If both _path and _controller available, resolver will use _path and abandon _controller
 
-$gubug->router->addRoute('base', '/', ['_path' => $gubug->config->get('default.path')]); // http://localhost:8080
-$gubug->router->addRoute('base_locale', '/{_locale}/', ['_path' => $gubug->config->get('default.path')]); // http://localhost:8080/id
+
+// === Dynamic Route
+/*
+- Assumed no "_controller" as default parameter, if no route match the request,
+  dynamic route used to catch URL _path
+- Map the "_path" into: folder/file-class/{method|index}/...args[key, val]
+    - Arguments always in pair of key/value
+    - Thus if separation of _path by "/" is odd number, Gubug assume there is specific method.
+      Otherwise use default method "index"
+- Custom route for:
+  http://localhost:8080/post/11
+    -- is equal to --
+  http://localhost:8080/app/home/post/pid/11/cid/22_33/custom/data
+ */
 
 // === Custom Route
 
@@ -80,12 +101,21 @@ $gubug->router->addRoute(
     []                                  // Methods (GET, POST, PUT, DELETE) allowed. All allowed if pass empty array
 );
 
-// === Custom route with locale
+// === Contain example using simple render
 
 $gubug->router->addRoute('app/home/render', '/render', ['_path' => 'app/home/render']); // http://localhost:8080/render
 $gubug->router->addRoute('app/home/render_locale', '/{_locale}/render', ['_path' => 'app/home/render']); // http://localhost:8080/id/render
 
-// === Custom callback
+// === Contain example generated url
+
+// Generated url will have this parameter automatically (Offcourse there is option to ignore it)
+$gubug->router->param->set('buildParameters', ['token' => $gubug->config->get('token')]);
+
+$gubug->router->addRoute('app/home/url', '/url', ['_path' => 'app/home/url']); // http://localhost:8080/url
+$gubug->router->addRoute('app/home/url_locale', '/{_locale}/url', ['_path' => 'app/home/url']); // http://localhost:8080/id/url
+
+// === Use _controller
+
 $gubug->router->addRoute( // http://localhost:8080/closure
     'closure',
     '/closure/{test}',
@@ -97,39 +127,22 @@ $gubug->router->addRoute( // http://localhost:8080/closure
     ]
 );
 
-// === Dynamic route
-
-$gubug->router->addRoute('dynamic_locale', '/{_locale}/{_path}', ['_path' => $gubug->config->get('default.path')], ['_path' => '.*']);
-$gubug->router->addRoute('dynamic', '/{_path}', ['_path' => $gubug->config->get('default.path')], ['_path' => '.*']);
-
-/*
-Info:
-Gubug dispatcher developed for the Dynamic Route in mind:
-    - If no route match the request, dynamic route used to catch URL path
-    - Map the "_path" into: folder/file-class/{method|index}/...args[key, val]
-        - Arguments always in pair of key/value
-        - Thus if separation of _path by "/" is odd number, Gubug assume there is specific method. Otherwise use default method "index"
-    - Custom route above:
-      http://localhost:8080/post/11
-        -- is equal to --
-      http://localhost:8080/app/home/post/pid/11/cid/22_33/custom/data
- */
-
-// === Generate URL from route
-// @see "app/home/url" or visit http://localhost:8080/app/home/url
-
 
 // =========== Register new service
 // This is how you add 3rd library for database, email, logger or others service you like
 
-$gubug->container['faker'] = function ($c) {
-    return Faker\Factory::create();
-};
+// Assume yu have "fzaninotto/faker" depedency
+// $gubug->container['faker'] = function ($c) {
+//     return Faker\Factory::create();
+// };
+// Usage: $gubug->container['faker']->name;
 
+
+// use Symfony\Component\HttpKernel\Log\Logger;
+// $logger = new Logger(\Psr\Log\LogLevel::DEBUG, __DIR__ . DIRECTORY_SEPARATOR . 'error.log');
+// $logger->log('warning', 'cool');
 
 // =========== Front controller
-
-
 
 $gubug->run();
 
