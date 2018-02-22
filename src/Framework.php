@@ -87,7 +87,7 @@ class Framework
      *
      * Process separated into different method make it easy to use them separately
      *
-     * @return [type] [description]
+     * @param  array  $config
      */
     public function init(array $config = [])
     {
@@ -124,7 +124,6 @@ class Framework
         // Service parameter
         $this->container['log.output'] = $this->config->get('logfile');
         $this->container['resolver.controller']->param->set('namespace', $this->config->get('dispatcher.namespace'));
-        // $this->dispatcher->param->set('namespace', $this->config->get('dispatcher.namespace'));
 
         // Services
         $this->request    = $this->container['request'];
@@ -164,7 +163,7 @@ class Framework
 
         // Environment
         if ($this->config->get('debug')) {
-            // Debug::enable();
+            Debug::enable();
         }
 
         // First citizen of routeCollection

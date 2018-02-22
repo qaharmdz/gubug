@@ -18,9 +18,9 @@
 namespace Gubug\Library\Resolver;
 
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 
 /**
  * @author Mudzakkir <qaharmdz@gmail.com>
@@ -61,29 +61,29 @@ class Controller extends ControllerResolver
 
                 return $controller;
             } catch (\Exception $e) {
-                if ($this->logger !== null) {
-                    $this->logger->warning($e->getMessage());
-                }
-
+                $this->exceptionLog($e->getMessage());
                 return false;
             }
-        }
-
-        if (!$request->attributes->get('_master_request')) {
+        } elseif (!$request->attributes->get('_master_request')) {
             try {
-                list($controller, $arguments) = $this->resolve($request->attributes->get('_controller'), $request->attributes->all());
+                $controller = $this->resolve($request->attributes->get('_controller'));
 
-                return $controller;
+                return $controller[0];
             } catch (\Exception $e) {
-                if ($this->logger !== null) {
-                    $this->logger->warning($e->getMessage());
-                }
+                $this->exceptionLog($e->getMessage());
             }
         }
 
         return parent::getController($request);
     }
 
+    /**
+     * @param  string $path
+     * @param  array  $args
+     * @param  string $namespace
+     *
+     * @return array
+     */
     public function resolve(string $path, array $args = [], string $namespace = '')
     {
         $namespace = $namespace ?: $this->param->get('namespace');
@@ -94,7 +94,7 @@ class Controller extends ControllerResolver
         }
 
         $controller = $this->resolveController($path, $namespace, $segments);
-        $method     = empty($segments[0]) ? 'index' : $this->resolveMethod($path, $segments);
+        $method     = empty($segments[0]) ? 'index' : $this->resolveMethod($segments);
         $arguments  = $this->resolveArguments($args, $segments);
 
         if (!is_callable([$controller, $method])) {
@@ -107,6 +107,13 @@ class Controller extends ControllerResolver
         ];
     }
 
+    /**
+     * @param  string $path
+     * @param  string $namespace
+     * @param  array  &$segments
+     *
+     * @return object
+     */
     protected function resolveController($path, $namespace, &$segments)
     {
         $folder = $class = ucwords(array_shift($segments));
@@ -123,16 +130,26 @@ class Controller extends ControllerResolver
         return new $class();
     }
 
-    protected function resolveMethod($path, &$segments)
+    /**
+     * @param  array  &$segments
+     *
+     * @return string
+     */
+    protected function resolveMethod(&$segments)
     {
         if (count($segments) % 2 === 1 && !is_numeric($segments[0][0]) && substr($segments[0], 0, 2) !== '__') {
             return array_shift($segments);
         }
     }
 
+    /**
+     * @param  array  $args
+     * @param  array  &$segments
+     *
+     * @return string
+     */
     protected function resolveArguments($args, &$segments)
     {
-
         // Remaining segments as arguments
         if (!empty($segments[0])) {
             $_args = [];
@@ -144,5 +161,15 @@ class Controller extends ControllerResolver
         }
 
         return $args;
+    }
+
+    /**
+     * @param  string $message
+     */
+    protected function exceptionLog(string $message)
+    {
+        if ($this->logger !== null) {
+            $this->logger->warning($message);
+        }
     }
 }

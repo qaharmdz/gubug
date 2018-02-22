@@ -38,37 +38,50 @@ class Argument implements ArgumentResolverInterface
         $attributes = $request->attributes->all();
 
         if (isset($attributes['_route_params']) && isset($attributes['_path_params'])) {
-            $attributes = array_replace($attributes, $attributes['_path_params']);
-            $attributes['_route_params'] = $this->cleanArgs(
-                array_replace(
-                    $attributes['_route_params'],
-                    $attributes['_path_params']
-                )
-            );
-            $attributes['_sysinfo'] = [
-                '_path'           => $attributes['_path'],
-                '_route'          => $attributes['_route'],
-                '_controller'     => $attributes['_controller'],
-                '_master_request' => $attributes['_master_request'],
-            ];
+            $request->attributes->replace($this->parseAttributes($attributes));
 
-            // Consistent with Event Listener Route
-            unset(
-                $attributes['_path'],
-                $attributes['_route'],
-                $attributes['_controller'],
-                $attributes['_master_request'],
-                $attributes['_path_params']
-            );
-
-            $request->attributes->replace($attributes);
-
-            $arguments = [$attributes['_route_params']];
+            $arguments = [$request->attributes->get('_route_params')];
         } else {
             $arguments = $this->resolver->getArguments($request, $controller);
         }
 
         return $arguments;
+    }
+
+    /**
+     * Standardize attributes data
+     *
+     * @param  array  $data
+     *
+     * @return array
+     */
+    public function parseAttributes(array $data)
+    {
+        $attributes = array_replace($data, $data['_path_params']);
+        $attributes['_route_params'] = $this->cleanArgs(
+            array_replace(
+                $data['_route_params'],
+                $data['_path_params']
+            )
+        );
+        $attributes['_sysinfo'] = [
+            '_path'           => $data['_path'],
+            '_route'          => $data['_route'],
+            '_controller'     => $data['_controller'],
+            '_master_request' => $data['_master_request'],
+        ];
+
+        unset(
+            // Consistent with Event Listener Route
+            $attributes['_route'],
+            $attributes['_controller'],
+            // Internal attributes
+            $attributes['_path'],
+            $attributes['_master_request'],
+            $attributes['_path_params']
+        );
+
+        return $attributes;
     }
 
 
