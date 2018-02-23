@@ -24,5 +24,5 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class Event extends EventDispatcher
 {
-
+    // Todo: Simple events like wordpress hook: action and filter
 }

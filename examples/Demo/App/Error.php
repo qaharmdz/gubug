@@ -16,7 +16,8 @@ class Error extends ServiceContainer
      */
     public function handle(FlattenException $exception)
     {
-        $msg = 'Something went wrong! ('.$exception->getMessage().')';
+        $msg = '<b style="color:#d00">Oops, bad thing sometime happen.</b><br/>
+                Message: <i>' . $exception->getMessage() . '</i>';
 
         $this->use('response')->setStatusCode($exception->getStatusCode());
         $this->use('response')->setContent($msg);

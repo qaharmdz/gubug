@@ -17,7 +17,7 @@
 
 namespace Gubug;
 
-use Symfony\Component\Debug\Debug;
+use Symfony\Component\Debug;
 use Symfony\Component\HttpKernel\EventListener;
 
 /**
@@ -147,6 +147,10 @@ class Framework
 
     public function initApp()
     {
+        // Converts all errors to exceptions
+        Debug\ErrorHandler::register();
+        Debug\ExceptionHandler::register($this->config->get('debug'));
+
         // Service parameter
         $this->container['router.context']->fromRequest($this->request);
         $this->container['router.context']->setBaseUrl($this->request->getBasePath());
@@ -160,11 +164,6 @@ class Framework
 
         // Container as base controller
         ServiceContainer::setContainer($this->container);
-
-        // Environment
-        if ($this->config->get('debug')) {
-            Debug::enable();
-        }
 
         // First citizen of routeCollection
         $this->baseRoute();

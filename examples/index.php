@@ -54,6 +54,9 @@ if (!$gubug->session->has('token')) {
 
 // === Config example
 $gubug->config->set('token', $gubug->session->get('token'));
+
+// Add new config that not defined before
+$gubug->config->set('baseURL', $gubug->request->getBaseUri());
 $gubug->config->set('basePath', realpath(__DIR__ . '/Demo') . DIRECTORY_SEPARATOR);
 
 
@@ -61,8 +64,8 @@ $gubug->config->set('basePath', realpath(__DIR__ . '/Demo') . DIRECTORY_SEPARATO
 // Route collection used to generate url and map the incoming request.
 // Gubug provide baseRoute for accessing base url and dynamicRoute as fallback
 
-// _path will use Gubug custom controller and arguments resolver (relative to namespace)
-// _controller use Symfony controller and arguments resolver (callable fully qualified namespace or closure)
+// _path use Gubug custom controller and arguments resolver (relative to namespace)
+// _controller use Symfony controller and arguments resolver (fully qualified namespace or closure)
 // If both _path and _controller available, resolver will use _path and abandon _controller
 
 

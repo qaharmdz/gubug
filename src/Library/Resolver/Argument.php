@@ -65,10 +65,10 @@ class Argument implements ArgumentResolverInterface
             )
         );
         $attributes['_sysinfo'] = [
+            '_master_request' => $data['_master_request'],
             '_path'           => $data['_path'],
             '_route'          => $data['_route'],
             '_controller'     => $data['_controller'],
-            '_master_request' => $data['_master_request'],
         ];
 
         unset(
