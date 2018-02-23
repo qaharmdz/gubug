@@ -23,6 +23,8 @@ use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
+ * {@inheritDoc}
+ *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
 class Dispatcher extends HttpKernel

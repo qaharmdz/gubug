@@ -22,6 +22,8 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 
 /**
+ * {@inheritDoc}
+ *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
 class Argument implements ArgumentResolverInterface

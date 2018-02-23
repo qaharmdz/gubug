@@ -20,7 +20,7 @@ namespace Gubug;
 use Pimple\Container;
 
 /**
- * Contain all services which is good as base controller
+ * Container of all services
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */

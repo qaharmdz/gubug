@@ -23,6 +23,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 
 /**
+ * {@inheritDoc}
+ *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
 class Controller extends ControllerResolver
@@ -42,7 +44,7 @@ class Controller extends ControllerResolver
         parent::__construct($logger);
 
         $this->logger = $logger;
-        $this->param = $param;
+        $this->param  = $param;
 
         // Default parameter
         $this->param->add([

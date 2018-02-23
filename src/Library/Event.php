@@ -21,6 +21,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
+ * {@inheritDoc}
+ *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
 class Event extends EventDispatcher

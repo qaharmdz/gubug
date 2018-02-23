@@ -20,7 +20,7 @@ namespace Gubug\Library;
 use Symfony\Component\HttpFoundation;
 
 /**
- * Handling HTTP request
+ * {@inheritDoc}
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
