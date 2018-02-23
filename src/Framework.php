@@ -115,7 +115,7 @@ class Framework
                     'namespace'     => '',
                     'error'         => 'app/error/handle'   // Fully qualified namespace
                 ],
-                'logfile'       => ''
+                'logfile'       => __DIR__ . DIRECTORY_SEPARATOR . 'error.log'
             ],
             $config
         ));

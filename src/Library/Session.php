@@ -18,6 +18,10 @@
 namespace Gubug\Library;
 
 use Symfony\Component\HttpFoundation;
+use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 
 /**
  * Handling HTTP session
@@ -33,11 +37,16 @@ class Session extends HttpFoundation\Session\Session
 
     public function setOptions(array $options)
     {
-        if ($this->storage instanceof HttpFoundation\Session\Storage\NativeSessionStorage) {
+        if ($this->storage instanceof NativeSessionStorage) {
             $this->storage->setOptions($options);
         }
     }
 
+    /**
+     * Message automatically removed once retrieved
+     *
+     * @return HttpFoundation\Session\Flash\Flashbag
+     */
     public function flash()
     {
         return $this->getFlashBag();

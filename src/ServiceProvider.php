@@ -65,10 +65,10 @@ class ServiceProvider implements ServiceProviderInterface
 
         // === Dispatcher
         $container['resolver.controller'] = function ($c) {
-            return new Library\Resolver\Controller($c['log'], $c['config.factory']);
+            return new Resolver\Controller($c['log'], $c['config.factory']);
         };
         $container['resolver.argument'] = function () {
-            return new Library\Resolver\Argument();
+            return new Resolver\Argument();
         };
         $container['dispatcher'] = function ($c) {
             return new Library\Dispatcher($c['event'], $c['resolver.controller'], $c['request.stack'], $c['resolver.argument'], $c['config.factory']);

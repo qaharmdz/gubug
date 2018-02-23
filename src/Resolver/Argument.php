@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Gubug\Library\Resolver;
+namespace Gubug\Resolver;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;

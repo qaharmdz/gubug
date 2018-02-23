@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Gubug\Library\Resolver;
+namespace Gubug\Resolver;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
