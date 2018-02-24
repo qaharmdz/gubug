@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 
 /**
- * {@inheritDoc}
+ * {@inheritdoc}
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */

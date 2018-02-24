@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 
 /**
- * {@inheritDoc}
+ * {@inheritdoc}
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */

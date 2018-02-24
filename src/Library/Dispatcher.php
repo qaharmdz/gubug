@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * {@inheritDoc}
+ * {@inheritdoc}
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
