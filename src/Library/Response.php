@@ -18,6 +18,7 @@
 namespace Gubug\Library;
 
 use Symfony\Component\HttpFoundation;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * {@inheritDoc}
@@ -116,13 +117,17 @@ class Response extends HttpFoundation\Response
     /**
      * Aborts current request by sending a HTTP error.
      *
+     * @param int    $statusCode The HTTP status code
      * @param string $message    The status message
+     * @param array  $headers    An array of HTTP headers
      *
-     * @throws \RuntimeException
+     * @throws HttpException
      */
-    public function abort(string $message = 'Internal Server Error')
+    public function abort(int $statusCode, string $message = null, array $headers = [])
     {
-        throw new \RuntimeException($message, 500);
+        $message = $message ?: parent::$statusTexts[$statusCode] ?? null;
+
+        throw new HttpException($statusCode, $message, null, $headers);
     }
 
     /**
