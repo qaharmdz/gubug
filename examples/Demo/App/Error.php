@@ -16,11 +16,23 @@ class Error extends ServiceContainer
      */
     public function handle(FlattenException $exception)
     {
-        $msg = '<b style="color:#d00">Oops, bad thing sometime happen.</b><br/>
-                Message: <i>' . $exception->getMessage() . '</i>';
+        return $exception->getStatusCode() == 404 ? $this->notFound($exception) : $this->serviceError($exception);
+    }
 
-        $this->use('response')->setStatusCode($exception->getStatusCode());
-        $this->use('response')->setContent($msg);
+    public function notFound($e)
+    {
+        $this->use('response')->setStatusCode($e->getStatusCode());
+        $this->use('response')->setContent('<h2>Page Not Found!</h2>');
+
+        return $this->use('response');
+    }
+
+    public function serviceError($e)
+    {
+        $this->use('response')->setStatusCode($e->getStatusCode());
+        $this->use('response')->setContent(
+            '<h2 style="color:#d00">Oops, bad thing happen.</h2><p>Message: <i>' . $e->getMessage() . '</i></p>'
+        );
 
         return $this->use('response');
     }

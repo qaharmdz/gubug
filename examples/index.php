@@ -27,7 +27,8 @@ $gubug->run();
 exit();
 //*/
 
-$loader->addPsr4('Contoh\\', realpath(__DIR__ . '/Demo/'));  // Example of namespace in deep folder
+// Example of namespace in deep folder
+$loader->addPsr4('Contoh\\', realpath(__DIR__ . '/Demo/'));
 
 $gubug->init([
     'locale'      => 'en',                  // Default locale
@@ -125,7 +126,9 @@ $gubug->router->addRoute( // http://localhost:8080/closure
     [
         'test' => '',
         '_controller' => function () use ($gubug) {
-            return $gubug->response->setContent('Gubug encourage to use _path mapping to controller class to provide response, but valid callable is fine.');
+            return $gubug->response->setContent(
+                'Gubug v' . $gubug::VERSION . ' encourage to use _path mapping to controller class to provide response, but valid callable is fine.'
+            );
         }
     ]
 );
@@ -145,7 +148,16 @@ $gubug->router->addRoute( // http://localhost:8080/closure
 // $logger = new Logger(\Psr\Log\LogLevel::DEBUG, __DIR__ . DIRECTORY_SEPARATOR . 'error.log');
 // $logger->log('warning', 'cool');
 
-// =========== Front controller
+// =========== Register Event Listener
+
+// addListener($eventName, $listener, $priority = 0) The higher priority number, the earlier called
+$gubug->event->addListener('filter.home.renderData', $gubug->config->get('dispatcher.namespace') . '\App\EventListener::onHomeRenderData', 0);
+
+// $gubug->event->addSubscriber(new \Contoh\App\EventSubscriber());
+$class = $gubug->config->get('dispatcher.namespace') . '\App\EventSubscriber';
+$gubug->event->addSubscriber(new $class());
+
+// =========== Start application
 
 $gubug->run();
 

@@ -70,13 +70,16 @@ class Home extends ServiceContainer
         $data = [];
         $data['baseUri'] = $this->use('request')->getBaseUri();
 
-        $data['title'] = 'Gubug Render Example';
+        $data['title'] = 'Template Render Example';
         $data['param'] = [
             'arguments'     => $args,
             'attributes'    => $this->use('request')->attributes->all()
         ];
 
-        //=== $response->abort() halt script by throwing HTTP error
+        // === Uncomment to see 'title' change through filter hook
+        $data = $this->use('event')->filter('home.renderData', $data);
+
+        // === $response->abort() halt script by throwing HTTP error
         // $this->use('response')->abort(500, 'Oops! Script halted due the internal server error.');
 
         $template = $this->use('config')->get('basePath') . 'View/template.tpl';

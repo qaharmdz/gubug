@@ -11,7 +11,7 @@
     box-sizing: border-box;
 }
 html {
-    background: #f8f8f8;
+    background: #f4f4f4;
     font-family: Arial;
     font-size: 15px;
     line-height: 1.5;
@@ -20,15 +20,29 @@ html, body {
     margin: 0;
     padding: 0;
 }
+.upper {
+    background: #1d70d8;
+    border-bottom: 4px solid rgba(0,0,0,.2);
+    height: 225px;
+}
+.lower {
+    margin-top: -300px;
+    background: #444;
+    border-top: 7px solid rgba(0,0,0,.2);
+    height: 400px;
+}
 .wrapper {
+    z-index: 10;
     padding: 0 30px;
+    position: relative;
 }
 .content {
     background: #fff;
-    margin: 40px auto;
-    max-width: 900px;
-    padding: 20px 30px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.4);
+    margin: -175px auto 0;
+    min-width: 600px;
+    max-width: 920px;
+    padding: 30px 40px 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.5);
 }
 h1 {
     font-size: 28px;
@@ -57,6 +71,7 @@ ul {
 </head>
 
 <body>
+    <div class="upper"></div>
     <div class="wrapper">
         <div class="content">
             <h1><?php echo $title; ?></h1>
@@ -84,5 +99,6 @@ ul {
 
         </div>
     </div>
+    <div class="lower"></div>
 </body>
 </html>

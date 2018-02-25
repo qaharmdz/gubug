@@ -56,12 +56,12 @@ class Controller extends ControllerResolver
     {
         if ($path = $request->attributes->get('_path')) {
             try {
-                list($controller, $arguments) = $this->resolve($path, $request->attributes->all());
+                $controller = $this->resolve($path, $request->attributes->all());
 
-                $request->attributes->set('_controller', $controller);
-                $request->attributes->set('_path_params', $arguments);
+                $request->attributes->set('_controller', [$controller['class'], $controller['method']]);
+                $request->attributes->set('_path_params', $controller['arguments']);
 
-                return $controller;
+                return [new $controller['class'], $controller['method']];
             } catch (\Exception $e) {
                 $this->exceptionLog($e->getMessage());
                 return false;
@@ -70,7 +70,7 @@ class Controller extends ControllerResolver
             try {
                 $controller = $this->resolve($request->attributes->get('_controller'));
 
-                return $controller[0];
+                return [new $controller['class'], $controller['method']];
             } catch (\Exception $e) {
                 $this->exceptionLog($e->getMessage());
             }
@@ -95,17 +95,18 @@ class Controller extends ControllerResolver
             throw new \InvalidArgumentException('The "_path" parameter is empty.');
         }
 
-        $controller = $this->resolveController($path, $namespace, $segments);
-        $method     = empty($segments[0]) ? 'index' : $this->resolveMethod($segments);
-        $arguments  = $this->resolveArguments($args, $segments);
+        $class     = $this->resolveClass($path, $namespace, $segments);
+        $method    = empty($segments[0]) ? 'index' : $this->resolveMethod($segments);
+        $arguments = $this->resolveArguments($args, $segments);
 
-        if (!is_callable([$controller, $method])) {
+        if (!is_callable([$class, $method])) {
             throw new \InvalidArgumentException(sprintf('The controller "%s" for URI "%s" is not available.', $class . '::' . $method, $path));
         }
 
         return [
-            [$controller, $method],
-            $arguments
+            'class'     => $class,
+            'method'    => $method,
+            'arguments' => $arguments
         ];
     }
 
@@ -116,7 +117,7 @@ class Controller extends ControllerResolver
      *
      * @return object
      */
-    protected function resolveController($path, $namespace, &$segments)
+    protected function resolveClass($path, $namespace, &$segments)
     {
         $folder = $class = ucwords(array_shift($segments));
         if (!empty($segments[0])) {
@@ -126,10 +127,10 @@ class Controller extends ControllerResolver
         $class = implode('\\', [rtrim($namespace, '\\'), $folder, $class]);
 
         if (!class_exists($class)) {
-            throw new \InvalidArgumentException(sprintf('Unable to find controller "%s" for path "%s".', $class, $path));
+            throw new \InvalidArgumentException(sprintf('Cannot find controller "%s" for path "%s".', $class, $path));
         }
 
-        return new $class();
+        return $class;
     }
 
     /**

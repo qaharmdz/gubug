@@ -18,7 +18,6 @@
 namespace Gubug\Library;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * {@inheritdoc}
@@ -27,46 +26,33 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  */
 class Event extends EventDispatcher
 {
-    // Todo: Simple events like wordpress hook: action and filter
-
-    // $this->event->trigger('action.alpha.init');
-    // $this->event->trigger('filter.alpha.init', [$data]);
-
-    public function trigger($eventType, $eventName, $data, GenericEvent $event = null)
+    public function action(string $eventName, array $data = [])
     {
-        if ($event === null) {
-            if ($eventType == 'action') {
-                $event = new Gubug\Event\Action();
-            } else {
-                $event = new Gubug\Event\Filter();
-            }
-        }
+        return $this->dispatchHook($eventName, $data, 'action');
+    }
 
-        if (!$event instanceof GenericEvent) {
-            throw new \LogicException('The Event must return an instance of Symfony\Component\HttpFoundation\Request.');
-        }
-
-        return parent::dispatch($eventName, $event);
+    public function filter(string $eventName, array $data = [])
+    {
+        return $this->dispatchHook($eventName, $data, 'filter');
     }
 
     /**
-     * [add description]
-     * @param [type]  $eventName
-     * @param [type]  $listener  Callback
-     * @param integer $priority  The higher, the earlier called
+     * Specifically dispatch Gubug\Event\Hook
+     *
+     * @param  string $eventName
+     * @param  array  $data
+     *
+     * @return array
      */
-    public function add($eventName, $listener, $priority = 0)
+    public function dispatchHook(string $eventName, array $data = [], string $type = 'action')
     {
-        parent::addListener($eventName, $listener, $priority);
-    }
+        $eventName = $type . '.' . $eventName;
+        $event     = new \Gubug\Event\Hook($eventName, $data);
 
-    public function has($eventName = null)
-    {
-        return parent::hasListeners($eventName);
-    }
+        parent::dispatch($eventName, $event);
 
-    public function remove($eventName, $listener)
-    {
-        return parent::removeListener($eventName, $listener);
+        if ($type === 'filter') {
+            return $event->getAllData();
+        }
     }
 }

@@ -29,7 +29,7 @@ use Symfony\Component\HttpKernel\EventListener;
  */
 class Framework
 {
-    const VERSION = '1.0.0-beta.0';
+    const VERSION = '1.0.0-beta.2';
 
     /**
      * @var \Pimple\Container
@@ -115,6 +115,9 @@ class Framework
                     'namespace'     => '',
                     'error'         => 'app/error/handle'   // Fully qualified namespace
                 ],
+                // routePath
+                // namespace
+                // errorHandler
                 'logfile'       => __DIR__ . DIRECTORY_SEPARATOR . 'error.log'
             ],
             $config
@@ -202,6 +205,8 @@ class Framework
     public function run()
     {
         $this->coreEvent();
+
+        // d($this->event->getListeners());
 
         $this->response = $this->dispatcher->handle($this->request);
 

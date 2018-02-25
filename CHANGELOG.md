@@ -1,10 +1,10 @@
 # CHANGELOG
 
-Gubug adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) and all notable changes will be documented in this file..
+Gubug adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) and all notable changes will be documented in this file.
 
 **Tags**: Added, Changed, Deprecated, Removed, Fixed, Security  
 
----  
+---
 
 ## [NEXT] - YYYY-MM-DD
 
@@ -12,9 +12,8 @@ Gubug adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) and a
 - Symfony component HttpKernel, Event, Debug
 
 ### Changed
-- HttpKernel replace Dispatcher  
+- HttpKernel replace Dispatcher
 
----  
 
 ## v1.0.0-beta.1 - 2018-02-18
 
