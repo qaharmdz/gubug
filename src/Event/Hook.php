@@ -17,12 +17,12 @@
 
 namespace Gubug\Event;
 
-use Symfony\Component\EventDispatcher\Event as libEvent;
+use Symfony\Component\EventDispatcher;
 
 /**
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
-class Hook extends libEvent
+class Hook extends EventDispatcher\Event
 {
     public $data;
     protected $name;

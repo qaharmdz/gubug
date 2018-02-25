@@ -60,18 +60,18 @@ class ServiceProvider implements ServiceProviderInterface
             return new Routing\Generator\UrlGenerator($c['router.collection'], $c['router.context']);
         };
         $container['router'] = function ($c) {
-            return new Library\Router($c['router.collection'], $c['router.route'], $c['router.matcher'], $c['router.generator'], $c['config.factory']);
+            return new Library\Router($c['router.collection'], $c['router.route'], $c['router.matcher'], $c['router.generator'], $c['paramBag']);
         };
 
         // === Dispatcher
         $container['resolver.controller'] = function ($c) {
-            return new Resolver\Controller($c['log'], $c['config.factory']);
+            return new Resolver\Controller($c['log'], $c['paramBag']);
         };
         $container['resolver.argument'] = function () {
             return new Resolver\Argument();
         };
         $container['dispatcher'] = function ($c) {
-            return new Library\Dispatcher($c['event'], $c['resolver.controller'], $c['request.stack'], $c['resolver.argument'], $c['config.factory']);
+            return new Library\Dispatcher($c['event'], $c['resolver.controller'], $c['request.stack'], $c['resolver.argument']);
         };
         $container['event'] = function () {
             return new Library\Event();
@@ -83,11 +83,11 @@ class ServiceProvider implements ServiceProviderInterface
         };
 
         // Tools
-        $container['config.factory'] = $container->factory(function () {
-            return new Library\Config();
+        $container['paramBag'] = $container->factory(function () {
+            return new HttpFoundation\ParameterBag();
         });
         $container['config'] = function ($c) {
-            return $c['config.factory'];
+            return new Library\Config();
         };
 
         $container['session'] = function () {

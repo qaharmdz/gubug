@@ -17,8 +17,7 @@
 
 namespace Gubug\Library;
 
-use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\HttpFoundation\Request as libRequest;
+use Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -29,19 +28,12 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class Dispatcher extends HttpKernel
 {
-    /**
-     * @var \Symfony\Component\HttpFoundation\ParameterBag
-     */
-    public $param;
-
-    public function __construct($event, $controllerResolver, $requestStack, $argumentResolver, ParameterBag $param)
+    public function __construct($event, $controllerResolver, $requestStack, $argumentResolver)
     {
         parent::__construct($event, $controllerResolver, $requestStack, $argumentResolver);
-
-        $this->param = $param;
     }
 
-    public function handle(libRequest $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+    public function handle(HttpFoundation\Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
         $request->attributes->set('_master_request', $type === HttpKernelInterface::MASTER_REQUEST);
 
