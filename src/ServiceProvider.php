@@ -46,8 +46,8 @@ class ServiceProvider implements ServiceProviderInterface
             return new Routing\RouteCollection();
         };
         $container['router.route'] = function () {
-            return function (...$params) {
-                return new \Symfony\Component\Routing\Route(...$params);
+            return function ($path, $defaults = [], $requirements = [], $options = [], $host = '', $schemes = [], $methods = [], $condition = '') {
+                return new \Symfony\Component\Routing\Route($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
             };
         };
         $container['router.context'] = function () {
@@ -86,7 +86,7 @@ class ServiceProvider implements ServiceProviderInterface
         $container['paramBag'] = $container->factory(function () {
             return new HttpFoundation\ParameterBag();
         });
-        $container['config'] = function ($c) {
+        $container['config'] = function () {
             return new Library\Config();
         };
 

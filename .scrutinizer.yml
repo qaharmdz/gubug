@@ -4,8 +4,7 @@ build:
             project_setup:
                 override: true
             tests:
-                override:
-                    - php-scrutinizer-run --enable-security-analysis
+                override: [php-scrutinizer-run]
 
 filter:
     excluded_paths:
