@@ -49,7 +49,7 @@ class Event extends EventDispatcher
         $eventName = $type . '.' . $eventName;
         $event     = new \Gubug\Event\Hook($eventName, $data);
 
-        parent::dispatch($eventName, $event);
+        $this->dispatch($eventName, $event);
 
         if ($type === 'filter') {
             return $event->getAllData();

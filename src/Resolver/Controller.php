@@ -115,7 +115,7 @@ class Controller extends ControllerResolver
      * @param  string $namespace
      * @param  array  &$segments
      *
-     * @return object
+     * @return string
      */
     protected function resolveClass($path, $namespace, &$segments)
     {
