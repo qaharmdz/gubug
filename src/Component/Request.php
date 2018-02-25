@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Gubug\Library;
+namespace Gubug\Component;
 
 use Symfony\Component\HttpFoundation;
 

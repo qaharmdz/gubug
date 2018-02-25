@@ -38,7 +38,7 @@ class ServiceProvider implements ServiceProviderInterface
             return new HttpFoundation\RequestStack();
         };
         $container['request'] = function () {
-            return Library\Request::createFromGlobals();
+            return Component\Request::createFromGlobals();
         };
 
         // === Router
@@ -60,7 +60,7 @@ class ServiceProvider implements ServiceProviderInterface
             return new Routing\Generator\UrlGenerator($c['router.collection'], $c['router.context']);
         };
         $container['router'] = function ($c) {
-            return new Library\Router($c['router.collection'], $c['router.route'], $c['router.matcher'], $c['router.generator'], $c['paramBag']);
+            return new Component\Router($c['router.collection'], $c['router.route'], $c['router.matcher'], $c['router.generator'], $c['paramBag']);
         };
 
         // === Dispatcher
@@ -71,27 +71,27 @@ class ServiceProvider implements ServiceProviderInterface
             return new Resolver\Argument();
         };
         $container['dispatcher'] = function ($c) {
-            return new Library\Dispatcher($c['event'], $c['resolver.controller'], $c['request.stack'], $c['resolver.argument']);
+            return new Component\Dispatcher($c['event'], $c['resolver.controller'], $c['request.stack'], $c['resolver.argument']);
         };
         $container['event'] = function () {
-            return new Library\Event();
+            return new Component\Event();
         };
 
         // Response
         $container['response'] = function () {
-            return new Library\Response();
+            return new Component\Response();
         };
 
         // Tools
+        $container['session'] = function () {
+            return new Component\Session();
+        };
+
         $container['paramBag'] = $container->factory(function () {
             return new HttpFoundation\ParameterBag();
         });
         $container['config'] = function () {
-            return new Library\Config();
-        };
-
-        $container['session'] = function () {
-            return new Library\Session();
+            return new Component\Config();
         };
 
         $container['log.output'] = '';

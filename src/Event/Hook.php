@@ -34,7 +34,7 @@ class Hook extends EventDispatcher\Event
     public function __construct(string $eventName, array $data = [])
     {
         $this->name = $eventName;
-        $this->data = new \Gubug\Library\Config($data);
+        $this->data = new \Gubug\Component\Config($data);
 
         // All event have chance to access initial data
         if ($this->defaultData === null) {

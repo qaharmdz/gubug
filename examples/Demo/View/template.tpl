@@ -19,28 +19,28 @@ html {
 html, body {
     margin: 0;
     padding: 0;
+    min-width: 600px;
 }
 .upper {
     background: #1d70d8;
     border-bottom: 4px solid rgba(0,0,0,.2);
-    height: 225px;
+    height: 230px;
 }
 .lower {
-    margin-top: -300px;
+    margin-top: -50px;
     background: #444;
-    border-top: 7px solid rgba(0,0,0,.2);
-    height: 400px;
+    border-top: 8px solid rgba(0,0,0,.3);
+    height: 150px;
 }
 .wrapper {
     z-index: 10;
-    padding: 0 30px;
+    padding: 0 15px;
     position: relative;
 }
 .content {
     background: #fff;
-    margin: -175px auto 0;
-    min-width: 600px;
-    max-width: 920px;
+    margin: -100px auto 0;
+    max-width: 980px;
     padding: 30px 40px 20px;
     box-shadow: 0 1px 4px rgba(0,0,0,.5);
 }

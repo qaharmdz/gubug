@@ -154,7 +154,7 @@ class Framework
         Debug\ErrorHandler::register();
         Debug\ExceptionHandler::register($this->config->get('debug'));
 
-        // Service parameter
+        // Service setup
         $this->container['router.context']->fromRequest($this->request);
         $this->container['router.context']->setBaseUrl($this->request->getBasePath());
 
@@ -165,7 +165,7 @@ class Framework
         $this->response->headers->set('Content-Type', 'text/html;');
         $this->response->setStatusCode(200);
 
-        // Container as base controller
+        // Access to container
         ServiceContainer::setContainer($this->container);
 
         // First citizen of routeCollection

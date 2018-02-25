@@ -10,9 +10,12 @@ Gubug adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) and a
 
 ### Added
 - Symfony component HttpKernel, Event, Debug
+- General event hook
+- Logger
 
 ### Changed
 - HttpKernel replace Dispatcher
+- Component folder replace Library
 
 
 ## v1.0.0-beta.1 - 2018-02-18
