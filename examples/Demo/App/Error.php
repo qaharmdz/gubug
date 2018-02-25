@@ -1,20 +1,9 @@
 <?php
 namespace Contoh\App;
 
-use Gubug\ServiceContainer;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Debug\Exception\FlattenException;
-
-class Error extends ServiceContainer
+class Error extends \Gubug\ServiceContainer
 {
-    /**
-     * Error handle
-     *
-     * @param  FlattenException $exception
-     *
-     * @return Response
-     */
-    public function handle(FlattenException $exception)
+    public function handle($exception)
     {
         return $exception->getStatusCode() == 404 ? $this->notFound($exception) : $this->serviceError($exception);
     }

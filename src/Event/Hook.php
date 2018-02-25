@@ -20,17 +20,27 @@ namespace Gubug\Event;
 use Symfony\Component\EventDispatcher;
 
 /**
+ * Hook event for general action and filter event
+ *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
 class Hook extends EventDispatcher\Event
 {
+    /**
+     * @var array Data to store in the event
+     */
     public $data;
-    protected $name;
-    protected $defaultData;
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
+    protected $name;
+
+    /**
+     * @var array Readonly initial data passed to event
+     */
+    protected $defaultData;
+
     public function __construct(string $eventName, array $data = [])
     {
         $this->name = $eventName;
@@ -43,7 +53,7 @@ class Hook extends EventDispatcher\Event
     }
 
     /**
-     * Getter for triggered event name
+     * Get triggered event name
      *
      * @return string
      */
@@ -52,11 +62,21 @@ class Hook extends EventDispatcher\Event
         return $this->name;
     }
 
+    /**
+     * Get initial data
+     *
+     * @return array
+     */
     public function getDefault()
     {
         return $this->defaultData;
     }
 
+    /**
+     * Get all changed data by event listener.
+     *
+     * @return array
+     */
     public function getAllData()
     {
         return $this->data->all();

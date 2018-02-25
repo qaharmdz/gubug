@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
- * {@inheritdoc}
+ * Response represents an HTTP response.
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */

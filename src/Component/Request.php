@@ -20,7 +20,7 @@ namespace Gubug\Component;
 use Symfony\Component\HttpFoundation;
 
 /**
- * {@inheritdoc}
+ * Request represents an HTTP request.
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */

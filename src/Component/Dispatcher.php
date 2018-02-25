@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * {@inheritdoc}
+ * Handles a Request to convert it to a Response.
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
@@ -33,6 +33,15 @@ class Dispatcher extends HttpKernel
         parent::__construct($event, $controllerResolver, $requestStack, $argumentResolver);
     }
 
+    /**
+     * Wrap parent handle to get request type
+     *
+     * @param  Request  $request
+     * @param  int      $type
+     * @param  boolean  $catch
+     *
+     * @return HttpFoundation\Response
+     */
     public function handle(HttpFoundation\Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
         $request->attributes->set('_master_request', $type === HttpKernelInterface::MASTER_REQUEST);

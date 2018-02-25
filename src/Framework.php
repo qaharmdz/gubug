@@ -206,8 +206,6 @@ class Framework
     {
         $this->coreEvent();
 
-        // d($this->event->getListeners());
-
         $this->response = $this->dispatcher->handle($this->request);
 
         $this->response->send();

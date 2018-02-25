@@ -22,12 +22,15 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 
 /**
- * {@inheritdoc}
+ * Determine the arguments passed to controller method.
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
 class Argument implements ArgumentResolverInterface
 {
+    /**
+     * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolver
+     */
     protected $resolver;
 
     public function __construct()
@@ -35,6 +38,14 @@ class Argument implements ArgumentResolverInterface
         $this->resolver = new ArgumentResolver();
     }
 
+    /**
+     * Returns the arguments to pass to the controller.
+     *
+     * @param  Request  $request
+     * @param  callable $controller
+     *
+     * @return array
+     */
     public function getArguments(Request $request, $controller)
     {
         $attributes = $request->attributes->all();

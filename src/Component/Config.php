@@ -23,8 +23,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * Config is a container for key/value pairs.
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
- *
- * @var \Symfony\Component\HttpFoundation\ParameterBag
  */
 class Config extends ParameterBag
 {

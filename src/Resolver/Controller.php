@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 
 /**
- * {@inheritdoc}
+ * Determine the controller from '_path' or 'controler' request attribute.
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
@@ -52,6 +52,13 @@ class Controller extends ControllerResolver
         ]);
     }
 
+    /**
+     * Get controller from request
+     *
+     * @param  Request  $request
+     *
+     * @return callable
+     */
     public function getController(Request $request)
     {
         if ($path = $request->attributes->get('_path')) {
@@ -80,6 +87,8 @@ class Controller extends ControllerResolver
     }
 
     /**
+     * Determine controller from '_path' request attribute
+     *
      * @param  string $path
      * @param  array  $args
      * @param  string $namespace

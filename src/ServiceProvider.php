@@ -82,7 +82,7 @@ class ServiceProvider implements ServiceProviderInterface
             return new Component\Response();
         };
 
-        // Tools
+        // Misc
         $container['session'] = function () {
             return new Component\Session();
         };

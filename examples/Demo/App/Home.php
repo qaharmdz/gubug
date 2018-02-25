@@ -1,10 +1,8 @@
 <?php
 namespace Contoh\App;
 
-use Gubug\ServiceContainer;
-
 // Service available through extending ServiceContainer
-class Home extends ServiceContainer
+class Home extends \Gubug\ServiceContainer
 {
     public function index()
     {

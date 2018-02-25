@@ -20,7 +20,7 @@ namespace Gubug\Component;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
- * {@inheritdoc}
+ * Events central point
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
@@ -37,7 +37,7 @@ class Event extends EventDispatcher
     }
 
     /**
-     * Specifically dispatch Gubug\Event\Hook
+     * Specifically dispatch \Gubug\Event\Hook
      *
      * @param  string $eventName
      * @param  array  $data
