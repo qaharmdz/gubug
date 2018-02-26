@@ -42,7 +42,7 @@ class Framework
     public $request;
 
     /**
-     * @var \Gubug\Component\Request
+     * @var \Gubug\Component\Router
      */
     public $router;
 
@@ -109,15 +109,13 @@ class Framework
                     'name' => '_gubug'
                 ],
                 'route'         => [
-                    '_path'         => 'app/init',          // Default URL _path for base and dynamic route
+                    '_path'         => 'app/home',          // Default URL _path for base and dynamic route
                 ],
                 'dispatcher'    => [
                     'namespace'     => '',
-                    'error'         => 'app/error/handle'   // Fully qualified namespace
+                    'error'         => 'app/error/handle'
                 ],
-                // routePath
-                // namespace
-                // errorHandler
+                // Todo: routePath, namespace, errorHandler
                 'logfile'       => __DIR__ . DIRECTORY_SEPARATOR . 'error.log'
             ],
             $config
