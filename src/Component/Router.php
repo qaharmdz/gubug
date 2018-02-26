@@ -86,7 +86,7 @@ class Router
      */
     public function addRoute(string $name, string $path, array $defaults = [], array $requirements = [], $methods = [], array $options = ['utf8' => true], ?string $host = '', $schemes = [], ?string $condition = '')
     {
-        $route = $this->getRoute(
+        $route = $this->newRoute(
             $path,
             array_replace($defaults, $this->param->get('routeDefaults')),
             array_replace($requirements, $this->param->get('routeRequirements')),
@@ -107,7 +107,7 @@ class Router
      *
      * @return \Symfony\Component\Routing\Route
      */
-    public function getRoute(...$args)
+    public function newRoute(...$args)
     {
         return call_user_func($this->route, ...$args);
     }
@@ -125,9 +125,7 @@ class Router
             throw new \RuntimeException('No routes in collection.');
         }
 
-        $this->urlMatcher->match($path);
-
-        return $this->urlMatcher;
+        return $this->urlMatcher->match($path);
     }
 
     /**
