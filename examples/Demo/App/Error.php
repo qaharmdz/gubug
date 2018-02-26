@@ -11,7 +11,7 @@ class Error extends \Gubug\ServiceContainer
     public function notFound($e)
     {
         $this->use('response')->setStatusCode($e->getStatusCode());
-        $this->use('response')->setContent('<h2>Page Not Found!</h2>' . $e->getMessage());
+        $this->use('response')->setContent('<h2>Page Not Found!</h2> <p>' . $e->getMessage() . '</p>');
 
         return $this->use('response');
     }
