@@ -53,7 +53,7 @@ class Argument implements ArgumentResolverInterface
         if (isset($attributes['_path'])) {
             $request->attributes->replace($this->parseAttributes($attributes));
 
-            $arguments = [$request->attributes->get('params')];
+            $arguments = [$request->attributes->get('_route_params')];
         } else {
             $arguments = $this->resolver->getArguments($request, $controller);
         }
@@ -79,10 +79,10 @@ class Argument implements ArgumentResolverInterface
             '_controller'     => $data['_controller'],
         ];
 
-        return [
-            'params'    => $params,
-            '_sysinfo'  => $sysinfo
-        ];
+        return array_replace($params, [
+            '_route_params' => $params,
+            '_sysinfo'      => $sysinfo
+        ]);
     }
 
 

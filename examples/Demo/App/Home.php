@@ -94,7 +94,6 @@ class Home extends \Gubug\ServiceContainer
 
         // return $this->use('dispatcher')->subRequest('post/56/23_4');
 
-
         // === Directly call controller
 
         return $this->use('dispatcher')->controller('app/home/render/foo/bar', ['baz' => 'world']);
