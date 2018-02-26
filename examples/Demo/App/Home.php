@@ -1,6 +1,8 @@
 <?php
 namespace Contoh\App;
 
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+
 // Service available through extending ServiceContainer
 class Home extends \Gubug\ServiceContainer
 {
@@ -82,5 +84,19 @@ class Home extends \Gubug\ServiceContainer
 
         $template = $this->use('config')->get('basePath') . 'View/template.tpl';
         return $this->use('response')->render($template, $data);
+    }
+
+    public function test($args = [])
+    {
+        // === Sub-request simulates URI request including go through all event middleware
+
+        // return $this->use('dispatcher')->subRequest('id/app/home/render/foo/bar');
+
+        // return $this->use('dispatcher')->subRequest('post/56/23_4');
+
+
+        // === Directly call controller
+
+        return $this->use('dispatcher')->controller('app/home/render/foo/bar', ['baz' => 'world']);
     }
 }

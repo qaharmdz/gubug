@@ -162,8 +162,8 @@ class Framework
         $this->router->param->set('routeRequirements', ['_locale' => implode('|', $this->config->get('locales'))]);
 
         $this->response->prepare($this->request);
-        $this->response->headers->set('Content-Type', 'text/html;');
         $this->response->setStatusCode(200);
+        $this->response->headers->set('Content-Type', 'text/html;');
 
         // Access to container
         ServiceContainer::setContainer($this->container);

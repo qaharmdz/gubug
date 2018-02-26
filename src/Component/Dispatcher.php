@@ -20,9 +20,10 @@ namespace Gubug\Component;
 use Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Handles a Request to convert it to a Response.
+ * Convert request object to response.
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
@@ -47,5 +48,37 @@ class Dispatcher extends HttpKernel
         $request->attributes->set('_master_request', $type === HttpKernelInterface::MASTER_REQUEST);
 
         return parent::handle($request, $type, $catch);
+    }
+
+    /**
+     * Sub-request simulates URI request, including route parameter and event middleware
+     *
+     * @param  string $path [description]
+     *
+     * @return HttpFoundation\Response
+     */
+    public function subRequest(string $path)
+    {
+        return $this->handle(
+            Request::create($path),
+            HttpKernelInterface::SUB_REQUEST,
+            false
+        );
+    }
+
+    /**
+     * Resolve and call controller directly
+     *
+     * @param  string $path
+     * @param  array  $args
+     * @param  string $namespace
+     *
+     * @return mixed
+     */
+    public function controller(string $path, array $args = [], string $namespace = '')
+    {
+        $controller = $this->resolver->resolve($path, $args, $namespace);
+
+        return call_user_func([new $controller['class'], $controller['method']], $controller['arguments']);
     }
 }

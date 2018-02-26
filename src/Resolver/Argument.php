@@ -50,10 +50,10 @@ class Argument implements ArgumentResolverInterface
     {
         $attributes = $request->attributes->all();
 
-        if (isset($attributes['_route_params']) && isset($attributes['_path_params'])) {
+        if (isset($attributes['_path'])) {
             $request->attributes->replace($this->parseAttributes($attributes));
 
-            $arguments = [$request->attributes->get('_route_params')];
+            $arguments = [$request->attributes->get('params')];
         } else {
             $arguments = $this->resolver->getArguments($request, $controller);
         }
@@ -70,31 +70,19 @@ class Argument implements ArgumentResolverInterface
      */
     public function parseAttributes(array $data)
     {
-        $attributes = array_replace($data, $data['_path_params']);
-        $attributes['_route_params'] = $this->cleanArgs(
-            array_replace(
-                $data['_route_params'],
-                $data['_path_params']
-            )
-        );
-        $attributes['_sysinfo'] = [
+        $params  = $this->cleanArgs($data);
+        $sysinfo = [
             '_master_request' => $data['_master_request'],
+            '_locale'         => $data['_locale'],
             '_path'           => $data['_path'],
             '_route'          => $data['_route'],
             '_controller'     => $data['_controller'],
         ];
 
-        unset(
-            // Consistent with Event Listener Route
-            $attributes['_route'],
-            $attributes['_controller'],
-            // Internal attributes
-            $attributes['_path'],
-            $attributes['_master_request'],
-            $attributes['_path_params']
-        );
-
-        return $attributes;
+        return [
+            'params'    => $params,
+            '_sysinfo'  => $sysinfo
+        ];
     }
 
 

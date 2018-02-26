@@ -21,26 +21,14 @@ html, body {
     padding: 0;
     min-width: 600px;
 }
-.upper {
-    background: #1d70d8;
-    border-bottom: 4px solid rgba(0,0,0,.2);
-    height: 230px;
-}
-.lower {
-    margin-top: -50px;
-    background: #444;
-    border-top: 8px solid rgba(0,0,0,.3);
-    height: 150px;
-}
 .wrapper {
-    z-index: 10;
     padding: 0 15px;
     position: relative;
 }
 .content {
     background: #fff;
-    margin: -100px auto 0;
-    max-width: 980px;
+    margin: 50px auto;
+    max-width: 900px;
     padding: 30px 40px 20px;
     box-shadow: 0 1px 4px rgba(0,0,0,.5);
 }
@@ -71,7 +59,6 @@ ul {
 </head>
 
 <body>
-    <div class="upper"></div>
     <div class="wrapper">
         <div class="content">
             <h1><?php echo $title; ?></h1>
@@ -99,6 +86,5 @@ ul {
 
         </div>
     </div>
-    <div class="lower"></div>
 </body>
 </html>

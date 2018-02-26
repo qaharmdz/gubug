@@ -59,4 +59,16 @@ class Request extends HttpFoundation\Request
     {
         return $this->getSchemeAndHttpHost() . $this->getBasePath() . '/';
     }
+
+    /**
+     * Generates URI for the given path.
+     *
+     * @param  string $path
+     *
+     * @return string
+     */
+    public function getUriForPath($path)
+    {
+        return $this->getBaseUri() . ltrim($path, '/');
+    }
 }

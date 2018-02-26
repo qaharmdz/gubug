@@ -65,8 +65,8 @@ class Controller extends ControllerResolver
             try {
                 $controller = $this->resolve($path, $request->attributes->all());
 
+                $request->attributes->replace($controller['arguments']);
                 $request->attributes->set('_controller', [$controller['class'], $controller['method']]);
-                $request->attributes->set('_path_params', $controller['arguments']);
 
                 return [new $controller['class'], $controller['method']];
             } catch (\Exception $e) {

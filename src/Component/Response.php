@@ -28,6 +28,38 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class Response extends HttpFoundation\Response
 {
     /**
+     * @var HttpFoundation\Response
+     */
+    private $output;
+
+    /**
+     * A layer for response content
+     *
+     * @param HttpFoundation\Response $output
+     */
+    public function setOutput(HttpFoundation\Response $output)
+    {
+        $this->output = $output;
+        return $this;
+    }
+
+    /**
+     * @return HttpFoundation\Response
+     */
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hasOutput()
+    {
+        return $this->output ? true : false;
+    }
+
+    /**
      * Check if response has content
      *
      * @return bool
