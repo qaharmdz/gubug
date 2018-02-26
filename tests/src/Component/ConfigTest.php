@@ -1,5 +1,5 @@
 <?php
-namespace Gubug\Test\Library;
+namespace Gubug\Test\Component;
 
 class ConfigTest extends \PHPUnit\Framework\TestCase
 {
@@ -7,7 +7,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $this->config = new \Gubug\Library\Config();
+        $this->config = new \Gubug\Component\Config();
     }
 
     protected function tearDown()
@@ -17,7 +17,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
     public function testInstance()
     {
-        $this->assertInstanceOf('Gubug\Library\Config', $this->config);
+        $this->assertInstanceOf('Gubug\Component\Config', $this->config);
     }
 
     public function testSetGet()
