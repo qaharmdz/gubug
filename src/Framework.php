@@ -37,37 +37,37 @@ class Framework
     public $container;
 
     /**
-     * @var \Gubug\Library\Request
+     * @var \Gubug\Component\Request
      */
     public $request;
 
     /**
-     * @var \Gubug\Library\Request
+     * @var \Gubug\Component\Request
      */
     public $router;
 
     /**
-     * @var \Gubug\Library\Dispatcher
+     * @var \Gubug\Component\Dispatcher
      */
     public $dispatcher;
 
     /**
-     * @var \Gubug\Library\Response
+     * @var \Gubug\Component\Response
      */
     public $response;
 
     /**
-     * @var \Gubug\Library\Config
+     * @var \Gubug\Component\Config
      */
     public $config;
 
     /**
-     * @var \Gubug\Library\Event
+     * @var \Gubug\Component\Event
      */
     public $event;
 
     /**
-     * @var \Gubug\Library\Session
+     * @var \Gubug\Component\Session
      */
     public $session;
 

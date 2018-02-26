@@ -27,7 +27,7 @@ use Symfony\Component\EventDispatcher;
 class Hook extends EventDispatcher\Event
 {
     /**
-     * @var array Data to store in the event
+     * @var \Symfony\Component\HttpFoundation\ParameterBag
      */
     public $data;
 
@@ -41,7 +41,7 @@ class Hook extends EventDispatcher\Event
      */
     protected $defaultData;
 
-    public function __construct(string $eventName, array $data = [])
+    public function __construct(string $eventName, $data = [])
     {
         $this->name = $eventName;
         $this->data = new \Gubug\Component\Config($data);

@@ -78,10 +78,19 @@ $gubug->router->addRoute( // http://localhost:8080/closure
     ]
 );
 
+// =========== Register Event Listener
+
+// addListener($eventName, $listener, $priority = 0) The higher priority number, the earlier called
+$gubug->event->addListener('filter.home.renderData', $gubug->config->get('dispatcher.namespace') . '\App\EventListener::onHomeRenderData', 0);
+
+// $gubug->event->addSubscriber(new \Contoh\App\EventSubscriber());
+$class = $gubug->config->get('dispatcher.namespace') . '\App\EventSubscriber';
+$gubug->event->addSubscriber(new $class());
+
+
+// =========== Start application
 
 $gubug->coreEvent();
-
-// $masterAgent = new \Contoh\Init\Init();
 
 $controller = $gubug->container['resolver.controller']->resolve('init');
 

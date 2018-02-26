@@ -107,7 +107,7 @@ class Response extends HttpFoundation\Response
      * @param  string $url     The URL should be a full URL, with schema etc.
      * @param  int    $status  The status code (302 by default)
      *
-     * @return Symfony\Component\HttpFoundation\RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function redirect(string $url, int $status = 302)
     {
@@ -121,7 +121,7 @@ class Response extends HttpFoundation\Response
      * @param  int   $status  The response status code
      * @param  array $headers An array of response headers
      *
-     * @return Symfony\Component\HttpFoundation\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function json($data = [], $status = 200, array $headers = [])
     {
@@ -134,7 +134,7 @@ class Response extends HttpFoundation\Response
      * @param  string $file Path to file
      * @param  string $mask Mask filename
      *
-     * @return Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function sendFile(string $file, string $mask = '', array $headers = [])
     {
@@ -171,7 +171,7 @@ class Response extends HttpFoundation\Response
      * @param  string $template  Full Path to template file
      * @param  array  $variables Variables passed to template
      *
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function render(string $template, array $variables)
     {

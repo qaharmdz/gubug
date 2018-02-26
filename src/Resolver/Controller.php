@@ -32,7 +32,7 @@ class Controller extends ControllerResolver
     /**
      * @var \Psr\Log\LoggerInterface
      */
-    private $logger;
+    private $log;
 
     /**
      * @var \Symfony\Component\HttpFoundation\ParameterBag
@@ -43,8 +43,8 @@ class Controller extends ControllerResolver
     {
         parent::__construct($logger);
 
-        $this->logger = $logger;
-        $this->param  = $param;
+        $this->log   = $logger;
+        $this->param = $param;
 
         // Default parameter
         $this->param->add([
@@ -180,8 +180,8 @@ class Controller extends ControllerResolver
      */
     protected function exceptionLog(string $message)
     {
-        if ($this->logger !== null) {
-            $this->logger->warning($message);
+        if ($this->log !== null) {
+            $this->log->warning($message);
         }
     }
 }

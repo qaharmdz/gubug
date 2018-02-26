@@ -20,7 +20,6 @@ namespace Gubug\Component;
 use Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Convert request object to response.
@@ -60,7 +59,7 @@ class Dispatcher extends HttpKernel
     public function subRequest(string $path)
     {
         return $this->handle(
-            Request::create($path),
+            HttpFoundation\Request::create($path),
             HttpKernelInterface::SUB_REQUEST,
             false
         );
