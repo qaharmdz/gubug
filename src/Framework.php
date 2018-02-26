@@ -177,7 +177,7 @@ class Framework
 
         $this->event->addSubscriber(
             new EventListener\RouterListener(
-                $this->router->extract($this->request->getPathInfo()),
+                $this->router->urlMatcher,
                 $this->container['request.stack'],
                 $this->container['router.context']
             )
