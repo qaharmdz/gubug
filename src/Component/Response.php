@@ -35,11 +35,14 @@ class Response extends HttpFoundation\Response
     /**
      * A layer for response content
      *
-     * @param HttpFoundation\Response $output
+     * @param  HttpFoundation\Response $output
+     *
+     * @return $this  Response instance (redirect, json, file etc)
      */
-    public function setOutput(HttpFoundation\Response $output)
+    public function setOutput(HttpFoundation\Response $output = null)
     {
-        $this->output = $output;
+        $this->output = $output === null ? $this : $output;
+
         return $this;
     }
 
@@ -78,9 +81,7 @@ class Response extends HttpFoundation\Response
      */
     public function prependContent(string $content)
     {
-        $this->setContent($content . $this->content);
-
-        return $this;
+        return $this->setContent($content . $this->content);
     }
 
     /**
@@ -92,9 +93,7 @@ class Response extends HttpFoundation\Response
      */
     public function appendContent(string $content)
     {
-        $this->setContent($this->content . $content);
-
-        return $this;
+        return $this->setContent($this->content . $content);
     }
 
     /**
@@ -107,11 +106,11 @@ class Response extends HttpFoundation\Response
      * @param  string $url     The URL should be a full URL, with schema etc.
      * @param  int    $status  The status code (302 by default)
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return $this
      */
     public function redirect(string $url, int $status = 302)
     {
-        return new HttpFoundation\RedirectResponse($url, $status);
+        return $this->setOutput(new HttpFoundation\RedirectResponse($url, $status));
     }
 
     /**
@@ -121,11 +120,11 @@ class Response extends HttpFoundation\Response
      * @param  int   $status  The response status code
      * @param  array $headers An array of response headers
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return $this
      */
-    public function json($data = [], $status = 200, array $headers = [])
+    public function jsonOutput($data = [], $status = 200, array $headers = [])
     {
-        return new HttpFoundation\JsonResponse($data, $status, $headers);
+        return $this->setOutput(new HttpFoundation\JsonResponse($data, $status, $headers));
     }
 
     /**
@@ -134,16 +133,16 @@ class Response extends HttpFoundation\Response
      * @param  string $file Path to file
      * @param  string $mask Mask filename
      *
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return $this
      */
-    public function sendFile(string $file, string $mask = '', array $headers = [])
+    public function fileOutput(string $file, string $mask = '', array $headers = [])
     {
         $response = new HttpFoundation\BinaryFileResponse($file, 200, $headers, true);
         if ($mask) {
             $response->setContentDisposition('attachment', $mask);
         }
 
-        return $response;
+        return $this->setOutput($response);
     }
 
     /**

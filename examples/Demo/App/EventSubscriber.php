@@ -22,6 +22,6 @@ class EventSubscriber extends ServiceContainer implements EventSubscriberInterfa
         $event->data->set('title', 'Basic PHP Render (1)');
 
         // uncomment to stop eventistener.php for being called
-        $event->stopPropagation();
+        // $event->stopPropagation();
     }
 }

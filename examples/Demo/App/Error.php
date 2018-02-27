@@ -10,19 +10,17 @@ class Error extends \Gubug\ServiceContainer
 
     public function notFound($e)
     {
-        $this->use('response')->setStatusCode($e->getStatusCode());
-        $this->use('response')->setContent('<h2>Page Not Found!</h2> <p>' . $e->getMessage() . '</p>');
-
-        return $this->use('response');
+        return $this->use('response')
+                    ->setStatusCode($e->getStatusCode())
+                    ->setContent('<h2>Page Not Found!</h2> <p>' . $e->getMessage() . '</p>');
     }
 
     public function serviceError($e)
     {
-        $this->use('response')->setStatusCode($e->getStatusCode());
-        $this->use('response')->setContent(
-            '<h2 style="color:#d00">Oops, bad thing happen.</h2><p>Message: <i>' . $e->getMessage() . '</i></p>'
-        );
-
-        return $this->use('response');
+        return $this->use('response')
+                    ->setStatusCode($e->getStatusCode())
+                    ->setContent(
+                        '<h2 style="color:#d00">Oops, bad thing happen.</h2><p>Message: <i>' . $e->getMessage() . '</i></p>'
+                    );
     }
 }

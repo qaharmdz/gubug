@@ -15,7 +15,7 @@ class EventListener extends ServiceContainer
         // d($event->data);
         // d($event->data->get('param.data.product')); // Dot notation
 
-        $event->data->set('title', 'Basic PHP Render');
+        $event->data->set('title', 'Basic PHP Render (2)');
 
         // d($event->getDefault()); // All data still same
         // d($event->getAlldata()); // Data title changed

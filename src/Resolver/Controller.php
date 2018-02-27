@@ -57,7 +57,7 @@ class Controller extends ControllerResolver
      *
      * @param  Request  $request
      *
-     * @return callable
+     * @return mixed
      */
     public function getController(Request $request)
     {

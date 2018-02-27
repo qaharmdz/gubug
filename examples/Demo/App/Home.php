@@ -15,8 +15,8 @@ class Home extends \Gubug\ServiceContainer
 
     public function post($args = [])
     {
-        !d('Arguments passed to method', $args);
-        d('All request attribute', $this->use('request')->attributes->all());
+        // !d('Arguments passed to method', $args);
+        // d('All request attribute', $this->use('request')->attributes->all());
 
         return $this->use('response')->setContent('Post #' . $args['pid'] . ' Content');
     }
@@ -83,7 +83,10 @@ class Home extends \Gubug\ServiceContainer
         // $this->use('response')->abort(500, 'Oops! Script halted due the internal server error.');
 
         $template = $this->use('config')->get('basePath') . 'View/template.tpl';
+        // return $this->use('response')->render($template, $data);
+
         return $this->use('response')->render($template, $data);
+        // return $this->use('response')->render($template, $data)->setOutput();
     }
 
     public function test($args = [])
@@ -96,6 +99,11 @@ class Home extends \Gubug\ServiceContainer
 
         // === Directly call controller
 
-        return $this->use('dispatcher')->controller('app/home/render/foo/bar', ['baz' => 'world']);
+        // return $this->use('dispatcher')->controller('app/home/render/foo/bar', ['baz' => 'world']);
+
+        // ==================================
+
+        return $this->use('response')->jsonOutput([1, 2, 'foo' => [3, 4]]);
+        // return $this->use('response')->redirect('render');
     }
 }

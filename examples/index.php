@@ -93,9 +93,9 @@ $gubug->event->addSubscriber(new $class());
 $gubug->coreEvent();
 
 // main agent
-$controller = $gubug->container['resolver.controller']->resolve('init');
+$mainController = $gubug->container['resolver.controller']->resolve('init');
 
-$gubug->response = call_user_func([new $controller['class'], $controller['method']]);
+$gubug->response = call_user_func([new $mainController['class'], $mainController['method']]);
 
 $gubug->response->send();
 

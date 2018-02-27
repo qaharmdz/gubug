@@ -115,7 +115,7 @@ class Framework
                     'namespace'     => '',
                     'error'         => 'app/error/handle'
                 ],
-                // Todo: routePath, namespace, errorHandler
+                // Todo: routePath, baseNamespace, errorHandler, mainController
                 'logfile'       => __DIR__ . DIRECTORY_SEPARATOR . 'error.log'
             ],
             $config

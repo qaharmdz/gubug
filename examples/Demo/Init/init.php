@@ -10,10 +10,10 @@ class Init extends \Gubug\ServiceContainer
 
         // Component decide to send own output
         if ($component->hasOutput()) {
-            return $component;
+            return $component->getOutput();
         }
 
-        // Should HTTP error send directly?
+        // Should HTTP error send directly? or wrap them below
         // if ($component->getStatusCode() !== 200) {
         //     return $component;
         // }
@@ -22,7 +22,8 @@ class Init extends \Gubug\ServiceContainer
         $data['component'] = $component->getContent();
 
         // We can use component as part of larger pages
-        $template = $this->use('config')->get('basePath') . 'Init/template.tpl';
-        return $this->use('response')->render($template, $data);
+        return $this->use('response')
+                    ->render($this->use('config')->get('basePath') . 'Init/template.tpl', $data)
+                    ->setStatusCode($component->getStatusCode());
     }
 }

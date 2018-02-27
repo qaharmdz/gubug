@@ -78,9 +78,9 @@ class ServiceProvider implements ServiceProviderInterface
         };
 
         // Response
-        $container['response'] = function () {
+        $container['response'] = $container->factory(function () {
             return new Component\Response();
-        };
+        });
 
         // Misc
         $container['session'] = function () {
