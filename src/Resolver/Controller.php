@@ -97,7 +97,7 @@ class Controller extends ControllerResolver
      */
     public function resolve(string $path, array $args = [], string $namespace = '')
     {
-        $namespace = $namespace ?: $this->param->get('namespace');
+        $namespace = $namespace[0] == '\\' ? $namespace : $this->param->get('namespace') . '\\' . $namespace;
         $segments = explode('/', trim($path, '/'));
 
         if (empty($segments[0])) {
