@@ -13,11 +13,6 @@ class Init extends \Gubug\ServiceContainer
             return $component->getOutput();
         }
 
-        // Should HTTP error send directly? or wrap them below
-        // if ($component->getStatusCode() !== 200) {
-        //     return $component;
-        // }
-
         // Main controller
         $data['component'] = $component->getContent();
 

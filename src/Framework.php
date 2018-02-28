@@ -102,21 +102,17 @@ class Framework
         $this->config = $this->container['config'];
         $this->config->add(array_replace(
             [
-                'locale'        => 'en',                    // Default locale
-                'locales'       => ['en'],                  // Avalaible languages
-                'environment'   => 'live',                  // live, dev, test
-                'session'       => [                        // Key at http://php.net/session.configuration, omit 'session.'
+                'locale'        => 'en',        // Default locale
+                'locales'       => ['en'],      // Avalaible languages
+                'environment'   => 'live',      // live, dev, test
+                'session'       => [            // Key at http://php.net/session.configuration, omit 'session.'
                     'name' => '_gubug'
                 ],
-                'route'         => [
-                    '_path'         => 'app/home',          // Default URL _path for base and dynamic route
-                ],
-                'dispatcher'    => [
-                    'namespace'     => '',
-                    'error'         => 'app/error/handle'
-                ],
-                // Todo: routePath, baseNamespace, errorHandler, mainController
-                'logfile'       => __DIR__ . DIRECTORY_SEPARATOR . 'error.log'
+                'baseNamespace'     => '',
+                'mainController'    => '',
+                'routePath'         => 'app/home',          // Default URL _path for base and dynamic route
+                'errorHandler'      => 'app/error/handle',
+                'logfile'           => __DIR__ . DIRECTORY_SEPARATOR . 'error.log'
             ],
             $config
         ));
@@ -124,7 +120,7 @@ class Framework
 
         // Service parameter
         $this->container['log.output'] = $this->config->get('logfile');
-        $this->container['resolver.controller']->param->set('namespace', $this->config->get('dispatcher.namespace'));
+        $this->container['resolver.controller']->param->set('namespace', $this->config->get('baseNamespace'));
 
         // Services
         $this->request    = $this->container['request'];
@@ -193,7 +189,7 @@ class Framework
 
         $this->event->addSubscriber(
             new EventListener\ExceptionListener(
-                $this->config->get('dispatcher.errorHandler'),
+                $this->config->get('errorHandler'),
                 $this->log,
                 $this->config->get('debug')
             )
@@ -204,7 +200,12 @@ class Framework
     {
         $this->coreEvent();
 
-        $this->response = $this->dispatcher->handle($this->request);
+        if ($this->config->get('mainController')) {
+            $mainController = $this->container['resolver.controller']->resolve($this->config->get('mainController'));
+            $this->response = call_user_func([new $mainController['class'], $mainController['method']]);
+        } else {
+            $this->response = $this->dispatcher->handle($this->request);
+        }
 
         $this->response->send();
 
@@ -216,8 +217,8 @@ class Framework
      */
     public function baseRoute()
     {
-        $this->router->addRoute('base', '/', ['_path' => $this->config->get('route._path')]);
-        $this->router->addRoute('base_locale', '/{_locale}/', ['_path' => $this->config->get('route._path')]);
+        $this->router->addRoute('base', '/', ['_path' => $this->config->get('routePath')]);
+        $this->router->addRoute('base_locale', '/{_locale}/', ['_path' => $this->config->get('routePath')]);
     }
 
     /**
@@ -225,7 +226,7 @@ class Framework
      */
     public function dynamicRoute()
     {
-        $this->router->addRoute('dynamic_locale', '/{_locale}/{_path}', ['_path' => $this->config->get('route._path')], ['_path' => '.*']);
-        $this->router->addRoute('dynamic', '/{_path}', ['_path' => $this->config->get('route._path')], ['_path' => '.*']);
+        $this->router->addRoute('dynamic_locale', '/{_locale}/{_path}', ['_path' => $this->config->get('routePath')], ['_path' => '.*']);
+        $this->router->addRoute('dynamic', '/{_path}', ['_path' => $this->config->get('routePath')], ['_path' => '.*']);
     }
 }

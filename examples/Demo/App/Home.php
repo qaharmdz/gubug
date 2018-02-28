@@ -99,11 +99,11 @@ class Home extends \Gubug\ServiceContainer
 
         // === Directly call controller
 
-        // return $this->use('dispatcher')->controller('app/home/render/foo/bar', ['baz' => 'world']);
+        return $this->use('dispatcher')->controller('app/home/render/foo/bar', ['baz' => 'world']);
 
         // ==================================
 
-        return $this->use('response')->jsonOutput([1, 2, 'foo' => [3, 4]]);
+        // return $this->use('response')->jsonOutput([1, 2, 'foo' => [3, 4]]);
         // return $this->use('response')->redirect('render');
     }
 }

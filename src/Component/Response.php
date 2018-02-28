@@ -37,7 +37,7 @@ class Response extends HttpFoundation\Response
      *
      * @param  HttpFoundation\Response $output
      *
-     * @return $this  Response instance (redirect, json, file etc)
+     * @return $this  Response instance (render, redirect, json, file etc)
      */
     public function setOutput(HttpFoundation\Response $output = null)
     {

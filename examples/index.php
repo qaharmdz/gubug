@@ -15,14 +15,11 @@ $gubug->init([
     'locale'      => 'en',                  // Default locale
     'locales'     => ['en','id','fr'],      // Avalaible languages
     'environment' => 'dev',                 // live, dev, test
-    'route'       => [
-        '_path'         => 'app/home',      // Default _path for base and dynamic route
-    ],
-    'dispatcher'  => [
-        'namespace'     => 'Contoh',            // Match added Psr4 prefix
-        'errorHandler'  => 'app/error/handle'   // Handle error
-    ],
-    'logfile'     => __DIR__ . DIRECTORY_SEPARATOR . 'error.log', // Log filepath
+    'baseNamespace'     => 'Contoh',
+    'mainController'    => 'init',
+    'routePath'         => 'app/home',      // Default URL _path for base and dynamic route
+    'errorHandler'      => 'app/error/handle',
+    'logfile'           => __DIR__ . DIRECTORY_SEPARATOR . 'error.log', // Log filepath
 ]);
 
 
@@ -81,22 +78,13 @@ $gubug->router->addRoute( // http://localhost:8080/closure
 // =========== Register Event Listener
 
 // addListener($eventName, $listener, $priority = 0) The higher priority number, the earlier called
-$gubug->event->addListener('filter.home.renderData', $gubug->config->get('dispatcher.namespace') . '\App\EventListener::onHomeRenderData', 0);
+$gubug->event->addListener('filter.home.renderData', $gubug->config->get('baseNamespace') . '\App\EventListener::onHomeRenderData', 0);
 
 // $gubug->event->addSubscriber(new \Contoh\App\EventSubscriber());
-$class = $gubug->config->get('dispatcher.namespace') . '\App\EventSubscriber';
+$class = $gubug->config->get('baseNamespace') . '\App\EventSubscriber';
 $gubug->event->addSubscriber(new $class());
 
 
 // =========== Start application
 
-$gubug->coreEvent();
-
-// main agent
-$mainController = $gubug->container['resolver.controller']->resolve('init');
-
-$gubug->response = call_user_func([new $mainController['class'], $mainController['method']]);
-
-$gubug->response->send();
-
-$gubug->dispatcher->terminate($gubug->request, $gubug->response);
+$gubug->run();
