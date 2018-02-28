@@ -1,6 +1,6 @@
 {
     "name": "qaharmdz/gubug",
-    "description": "PHP Halfstack Framework",
+    "description": "An experimental PHP micro framework",
     "keywords": ["microframework"],
     "homepage": "https://github.com/qaharmdz/gubug",
     "license": "Apache-2.0",
