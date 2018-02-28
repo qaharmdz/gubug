@@ -111,7 +111,7 @@ class Framework
                 'baseNamespace'     => '',
                 'mainController'    => '',
                 'routePath'         => 'app/home',          // Default URL _path for base and dynamic route
-                'errorHandler'      => 'app/error/handle',
+                'errorHandler'      => '',
                 'logfile'           => __DIR__ . DIRECTORY_SEPARATOR . 'error.log'
             ],
             $config
@@ -187,13 +187,15 @@ class Framework
             )
         );
 
-        $this->event->addSubscriber(
-            new EventListener\ExceptionListener(
-                $this->config->get('errorHandler'),
-                $this->log,
-                $this->config->get('debug')
-            )
-        );
+        if ($this->config->get('errorHandler')) {
+            $this->event->addSubscriber(
+                new EventListener\ExceptionListener(
+                    $this->config->get('errorHandler'),
+                    $this->log,
+                    $this->config->get('debug')
+                )
+            );
+        }
     }
 
     public function run()

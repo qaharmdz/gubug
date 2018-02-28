@@ -104,6 +104,6 @@ class Home extends \Gubug\ServiceContainer
         // ==================================
 
         // return $this->use('response')->jsonOutput([1, 2, 'foo' => [3, 4]]);
-        // return $this->use('response')->redirect('render');
+        // return $this->use('response')->redirect('app/home/render/foo/bar');
     }
 }
