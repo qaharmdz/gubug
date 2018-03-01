@@ -6,3 +6,5 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/qaharmdz/gubug/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/qaharmdz/gubug/?branch=develop)
 
 Gubug is an experimental PHP micro framework. Developed on top of Symfony Components with PAC architecture in mind.
+
+No further info for now, maybe later..
