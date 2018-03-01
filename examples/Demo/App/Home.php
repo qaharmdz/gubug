@@ -91,6 +91,11 @@ class Home extends \Gubug\ServiceContainer
 
     public function test($args = [])
     {
+        // $this->use('session')->addFlash('foo', 'bar');
+        // d($this->use('session')->getFlash('foo'));
+        // d($this->use('session')->getFlash('foo'));
+
+
         // === Sub-request simulates URI request including go through all event middleware
 
         // return $this->use('dispatcher')->subRequest('id/app/home/render/foo/bar');

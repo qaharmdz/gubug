@@ -1,7 +1,7 @@
 {
     "name": "qaharmdz/gubug",
     "description": "An experimental PHP micro framework",
-    "keywords": ["microframework"],
+    "keywords": ["framework","micro"],
     "homepage": "https://github.com/qaharmdz/gubug",
     "license": "Apache-2.0",
     "authors": [
@@ -31,7 +31,7 @@
         "psr-4": { "Gubug\\Tests\\" : "tests/src" }
     },
     "scripts": {
-        "test": "phpunit",
+        "test": "phpunit --stderr",
         "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src",
         "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src"
     },

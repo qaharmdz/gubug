@@ -51,4 +51,14 @@ class Session extends HttpFoundation\Session\Session
     {
         return $this->getFlashBag();
     }
+
+    public function addFlash($type, $message)
+    {
+        $this->flash()->add($type, $message);
+    }
+
+    public function getFlash($type, array $default = array())
+    {
+        return $this->flash()->get($type, $default);
+    }
 }

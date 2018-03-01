@@ -105,7 +105,7 @@ class Controller extends ControllerResolver
         }
 
         $class     = $this->resolveClass($path, $namespace, $segments);
-        $method    = empty($segments[0]) ? 'index' : $this->resolveMethod($segments);
+        $method    = $this->resolveMethod($segments);
         $arguments = $this->resolveArguments($args, $segments);
 
         if (!is_callable([$class, $method])) {
@@ -152,6 +152,8 @@ class Controller extends ControllerResolver
         if (count($segments) % 2 === 1 && !is_numeric($segments[0][0]) && substr($segments[0], 0, 2) !== '__') {
             return array_shift($segments);
         }
+
+        return 'index';
     }
 
     /**
