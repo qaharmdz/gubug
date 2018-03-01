@@ -28,7 +28,7 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $controllerResolver
             ->expects($this->any())
             ->method('resolve')
-            ->will($this->returnValue(['class' => 'Gubug\Test\Component\DispatcherController', 'method' => 'world']));
+            ->will($this->returnValue(['class' => 'Gubug\Test\Component\DispatcherController', 'method' => 'world', 'arguments' => []]));
 
         $argumentResolver = $this->createMock('\Gubug\Resolver\Argument', ['getArguments']);
         $argumentResolver
