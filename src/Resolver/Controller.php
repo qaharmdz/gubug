@@ -61,6 +61,30 @@ class Controller extends ControllerResolver
      */
     public function getController(Request $request)
     {
+        // if ($path = $request->attributes->get('_path')) {
+        //     try {
+        //         $controller = $this->resolve($path, $request->attributes->all());
+
+        //         $request->attributes->replace($controller['arguments']);
+        //         $request->attributes->set('_controller', [$controller['class'], $controller['method']]);
+
+        //         return [new $controller['class'], $controller['method']];
+        //     } catch (\Exception $e) {
+        //         $this->exceptionLog($e->getMessage());
+        //         return false;
+        //     }
+        // } elseif (!$request->attributes->get('_master_request')) {
+        //     try {
+        //         $controller = $this->resolve($request->attributes->get('_controller'));
+
+        //         return [new $controller['class'], $controller['method']];
+        //     } catch (\Exception $e) {
+        //         $this->exceptionLog($e->getMessage());
+        //     }
+        // }
+
+        // return parent::getController($request);
+
         if ($path = $request->attributes->get('_path')) {
             try {
                 $controller = $this->resolve($path, $request->attributes->all());
@@ -71,16 +95,21 @@ class Controller extends ControllerResolver
                 return [new $controller['class'], $controller['method']];
             } catch (\Exception $e) {
                 $this->exceptionLog($e->getMessage());
+
                 return false;
             }
-        } elseif (!$request->attributes->get('_master_request')) {
-            try {
-                $controller = $this->resolve($request->attributes->get('_controller'));
+        }
 
-                return [new $controller['class'], $controller['method']];
-            } catch (\Exception $e) {
-                $this->exceptionLog($e->getMessage());
-            }
+        if (is_callable($request->attributes->get('_controller'))) {
+            return $request->attributes->get('_controller');
+        }
+
+        try {
+            $controller = $this->resolve($request->attributes->get('_controller'));
+
+            return [new $controller['class'], $controller['method']];
+        } catch (\Exception $e) {
+            $this->exceptionLog($e->getMessage());
         }
 
         return parent::getController($request);

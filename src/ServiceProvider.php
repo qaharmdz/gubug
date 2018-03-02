@@ -30,7 +30,6 @@ use Symfony\Component\Routing;
  */
 class ServiceProvider implements ServiceProviderInterface
 {
-
     public function register(Container $container)
     {
         // === Request
@@ -94,7 +93,7 @@ class ServiceProvider implements ServiceProviderInterface
             return new Component\Config();
         };
 
-        $container['log.output'] = '';
+        $container['log.output'] = 'php://stderr';
         $container['log'] = function ($c) {
             return new HttpKernel\Log\Logger(\Psr\Log\LogLevel::DEBUG, $c['log.output']);
         };
