@@ -72,11 +72,11 @@ class Argument implements ArgumentResolverInterface
     {
         $params  = $this->cleanArgs($data);
         $sysinfo = [
-            '_master_request' => $data['_master_request'],
-            '_locale'         => $data['_locale'],
-            '_path'           => $data['_path'],
-            '_route'          => $data['_route'],
-            '_controller'     => $data['_controller'],
+            '_master_request' => $data['_master_request'] ?? false,
+            '_locale'         => $data['_locale'] ?? 'en',
+            '_path'           => $data['_path'] ?? '/',
+            '_route'          => $data['_route'] ?? '',
+            '_controller'     => $data['_controller'] ?? '/',
         ];
 
         return array_replace($params, [
