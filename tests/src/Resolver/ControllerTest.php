@@ -43,7 +43,6 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
     public function testGetControllerPath()
     {
         $this->request->attributes->add([
-            '_master_request' => true, // Todo: remove
             '_path' => 'resolver/controller'
         ]);
 
@@ -55,7 +54,6 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
     public function testGetControllerPathArgs()
     {
         $this->request->attributes->add([
-            '_master_request' => true,
             '_path' => 'resolver/controller/foo/bar/baz'
         ]);
 
@@ -67,7 +65,6 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
     public function testGetControllerSubRequest()
     {
         $this->request->attributes->add([
-            '_master_request' => false,
             '_controller' => 'resolver/controller/foo'
         ]);
 
@@ -79,7 +76,6 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
     public function testGetControllerFallback()
     {
         $this->request->attributes->add([
-            '_master_request' => true,
             '_controller' => 'Gubug\Test\Resolver\Controller::foo'
         ]);
 
@@ -91,7 +87,6 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
     public function testGetControllerPathException()
     {
         $this->request->attributes->add([
-            '_master_request' => true,
             '_path' => 'resolver/controller/boo'
         ]);
 
@@ -105,7 +100,6 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $this->request->attributes->add([
-            '_master_request' => false,
             '_controller' => 'resolver/controller/boo'
         ]);
 
