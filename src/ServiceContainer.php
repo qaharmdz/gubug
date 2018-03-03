@@ -20,7 +20,7 @@ namespace Gubug;
 use Pimple\Container;
 
 /**
- * Contain all services which is good as base controller
+ * Container of all services
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
@@ -33,9 +33,9 @@ abstract class ServiceContainer
      *
      * @param Container $storage
      */
-    public static function setContainer(Container $storage)
+    public static function setContainer(Container $storage, bool $override = true)
     {
-        if (self::$storage === null) {
+        if (self::$storage === null || $override) {
             self::$storage = $storage;
         }
     }
@@ -59,7 +59,7 @@ abstract class ServiceContainer
      *
      * @return mixed
      */
-    protected function use($id)
+    protected function use(string $id)
     {
         return self::$storage[$id];
     }

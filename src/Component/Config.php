@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Gubug\Library;
+namespace Gubug\Component;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -23,8 +23,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * Config is a container for key/value pairs.
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
- *
- * @var \Symfony\Component\HttpFoundation\ParameterBag
  */
 class Config extends ParameterBag
 {
@@ -36,7 +34,7 @@ class Config extends ParameterBag
      *
      * @return mixed
      */
-    public function get($key, $default=null)
+    public function get($key, $default = null)
     {
         return $this->getDot($key, $default);
     }
@@ -70,7 +68,7 @@ class Config extends ParameterBag
      *
      * @return array
      */
-    public function getArray($key, $default=[])
+    public function getArray($key, $default = [])
     {
         return (array)$this->get($key, $default);
     }
@@ -85,7 +83,7 @@ class Config extends ParameterBag
      *
      * @return mixed
      */
-    public function getDot($key, $default=null)
+    public function getDot($key, $default = null)
     {
         $items = $this->parameters;
 
@@ -105,7 +103,7 @@ class Config extends ParameterBag
      *
      * @see   https://github.com/adbario/php-dot-notation
      *
-     * @param string $key   Key in dot-notation
+     * @param string $keys   Key in dot-notation
      * @param mixed  $value The value
      */
     public function setDot($keys, $value)
@@ -134,7 +132,6 @@ class Config extends ParameterBag
     {
         if (isset($this->parameters[$keys])) {
             unset($this->parameters[$keys]);
-
         } else {
             $items = &$this->parameters;
             $segments = explode('.', $keys);

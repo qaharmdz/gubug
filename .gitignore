@@ -1,8 +1,7 @@
 
 vendor/
-
 phpunit.xml
-composer.json
+*.log
 
 
 #--------------------------------------------------
@@ -90,6 +89,7 @@ $RECYCLE.BIN/
 #-------------------------
 
 _dev/
+_report/
 
 # phpenv local config
 .php-version

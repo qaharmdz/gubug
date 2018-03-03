@@ -1,22 +1,24 @@
 <?php
 namespace Contoh\App;
 
-use Gubug\ServiceContainer;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 // Service available through extending ServiceContainer
-class Home extends ServiceContainer
+class Home extends \Gubug\ServiceContainer
 {
     public function index()
     {
-        return $this->use('config')->get('locale') == 'id' ? 'Selamat datang di "Gubug"' : 'Welcome to Gubug';
+        $message = $this->use('request')->getLocale() == 'id' ? 'Selamat datang di "Gubug"' : 'Welcome to Gubug';
+
+        return $this->use('response')->setContent($message);
     }
 
-    public function post($args)
+    public function post($args = [])
     {
-        !d('Arguments passed to method', $args);
-        !d('All request attribute', $this->use('request')->attributes->all());
+        // !d('Arguments passed to method', $args);
+        // d('All request attribute', $this->use('request')->attributes->all());
 
-        return 'Post #' . $args['pid'] . ' Content';
+        return $this->use('response')->setContent('Post #' . $args['pid'] . ' Content');
     }
 
     public function url()
@@ -46,7 +48,7 @@ class Home extends ServiceContainer
             'dynamic'    => $this->use('router')->urlBuild('app/home/render', [], false),
         ];
 
-        // Automatically recognise route name based on path (this is reason why we recommend: $routeName == $param['_path'] )
+        // Automatically recognise route name based on path (reason why we recommend: $routeName == $param['_path'] )
         $data['urlGenerate()'] = [
             // $this->use('router')->urlGenerate($path, $parameters, $extraParam),
 
@@ -59,34 +61,54 @@ class Home extends ServiceContainer
 
         !d($data);
 
-        return 'urlBuild require to know the exact route name or it will fail';
+        return $this->use('response')->setContent('<b>urlGenerate</b> check the path and map automatically, while <b>urlBuild</b> require to know the exact route name or it will fail');
     }
 
 
-    public function render($args)
+    public function render($args = [])
     {
         $data = [];
         $data['baseUri'] = $this->use('request')->getBaseUri();
 
-        $data['title'] = 'Gubug Render Example';
+        $data['title'] = 'Template Render Example';
         $data['param'] = [
             'arguments'     => $args,
             'attributes'    => $this->use('request')->attributes->all()
         ];
-        $data['extraservice'] = [
-            'name'      => $this->use('faker')->name,
-            'address'   => $this->use('faker')->address,
-            'phone'     => $this->use('faker')->tollFreePhoneNumber,
-        ];
 
-        //=== $response->send(true) stop script execution with exit()
-        // $this->use('response')->setContent('Hijack');
-        // $this->use('response')->send(true);
+        // === Uncomment to see 'title' change through filter hook
+        $data = $this->use('event')->filter('home.renderData', $data);
 
-        //=== $response->abort() halt script by throwing HTTP error
+        // === $response->abort() halt script by throwing HTTP error
         // $this->use('response')->abort(500, 'Oops! Script halted due the internal server error.');
 
         $template = $this->use('config')->get('basePath') . 'View/template.tpl';
+        // return $this->use('response')->render($template, $data);
+
         return $this->use('response')->render($template, $data);
+        // return $this->use('response')->render($template, $data)->setOutput();
+    }
+
+    public function test($args = [])
+    {
+        // $this->use('session')->addFlash('foo', 'bar');
+        // d($this->use('session')->getFlash('foo'));
+        // d($this->use('session')->getFlash('foo'));
+
+
+        // === Sub-request simulates URI request including go through all event middleware
+
+        // return $this->use('dispatcher')->subRequest('id/app/home/render/foo/bar');
+
+        // return $this->use('dispatcher')->subRequest('post/56/23_4');
+
+        // === Directly call controller
+
+        return $this->use('dispatcher')->controller('app/home/render/foo/bar', ['baz' => 'world']);
+
+        // ==================================
+
+        // return $this->use('response')->jsonOutput([1, 2, 'foo' => [3, 4]]);
+        // return $this->use('response')->redirect('app/home/render/foo/bar');
     }
 }

@@ -17,6 +17,9 @@
 
 namespace Gubug;
 
+use Symfony\Component\Debug;
+use Symfony\Component\HttpKernel\EventListener;
+
 /**
  * The Gubug framework class.
  *
@@ -26,7 +29,7 @@ namespace Gubug;
  */
 class Framework
 {
-    const VERSION = '1.0.0-beta.0';
+    const VERSION = '1.0.0-beta.2';
 
     /**
      * @var \Pimple\Container
@@ -34,96 +37,196 @@ class Framework
     public $container;
 
     /**
-     * @var \Gubug\Library\Request
+     * @var \Gubug\Component\Request
      */
     public $request;
 
     /**
-     * @var \Gubug\Library\Request
+     * @var \Gubug\Component\Router
      */
     public $router;
 
     /**
-     * @var \Gubug\Library\Dispatcher
+     * @var \Gubug\Component\Dispatcher
      */
     public $dispatcher;
 
     /**
-     * @var \Gubug\Library\Response
+     * @var \Gubug\Component\Response
      */
     public $response;
 
     /**
-     * @var \Gubug\Library\Config
+     * @var \Gubug\Component\Config
      */
     public $config;
 
     /**
-     * @var \Gubug\Library\Event
+     * @var \Gubug\Component\Event
      */
     public $event;
 
     /**
-     * @var \Gubug\Library\Session
+     * @var \Gubug\Component\Session
      */
     public $session;
 
-    public function __construct(bool $init=true)
+    /**
+     * @var \Symfony\Component\HttpKernel\Log\Logger
+     */
+    public $log;
+
+    public function __construct()
     {
         $this->container = new \Pimple\Container;
         $this->container->register(new ServiceProvider());
-
-        if ($init) {
-            $this->init();
-        }
     }
 
-    public function init()
+    /**
+     * Initiialize process section
+     *
+     * Process separated into different method make it easy to use them separately
+     *
+     * @param  array  $config
+     */
+    public function init(array $config = [])
     {
+        $this->initService($config);
+        $this->initSession();
+        $this->initApp();
+    }
+
+    public function initService(array $config = [])
+    {
+        // Configuration
+        $this->config = $this->container['config'];
+        $this->config->add(array_replace(
+            [
+                'locale'        => 'en',        // Default locale
+                'locales'       => ['en'],      // Avalaible languages
+                'environment'   => 'live',      // live, dev, test
+                'session'       => [            // Key at http://php.net/session.configuration, omit 'session.'
+                    'name' => '_gubug'
+                ],
+                'baseNamespace'     => '',
+                'mainController'    => '',
+                'routePath'         => 'app/home',          // Default URL _path for base and dynamic route
+                'errorHandler'      => '',
+                'logfile'           => __DIR__ . DIRECTORY_SEPARATOR . 'error.log'
+            ],
+            $config
+        ));
+        $this->config->set('debug', in_array($this->config->get('environment'), ['dev', 'test']));
+
+        // Service parameter
+        $this->container['log.output'] = $this->config->get('logfile');
+        $this->container['resolver.controller']->param->set('namespace', $this->config->get('baseNamespace'));
+
+        // Services
         $this->request    = $this->container['request'];
         $this->router     = $this->container['router'];
         $this->dispatcher = $this->container['dispatcher'];
         $this->response   = $this->container['response'];
-        $this->config     = $this->container['config'];
+
+        $this->session    = $this->container['session'];
         $this->event      = $this->container['event'];
-
-        // Service configuration
-        $this->container['router.context']->fromRequest($this->request);
-        $this->container['router.context']->setBaseUrl($this->request->getBasePath());
-
-        $this->response->prepare($this->request);
-        $this->response->loadHeaders('html');
-        $this->response->setStatusCode(200);
-
-        // Container as base controller
-        ServiceContainer::setContainer($this->container);
+        $this->log        = $this->container['log'];
     }
 
     /**
-     * Start session with configured options
-     *
-     * @param  array  $options Key at http://php.net/session.configuration, omit 'session.'
+     * Start session
      */
-    public function startSession(array $options=[])
+    public function initSession()
     {
-        $this->session = $this->container['session'];
-
-        $this->session->setOptions($options);
+        $this->session->setOptions($this->config->get('session', []));
         $this->session->start();
     }
 
-    /**
-     * Escapes a text for HTML.
-     *
-     * @param string $text         The input text to be escaped
-     * @param int    $flags        The flags (@see htmlspecialchars)
-     * @param string $charset      The charset
-     * @param bool   $doubleEncode Whether to try to avoid double escaping or not
-     *
-     * @return string Escaped text
-     */
-    public function htmlEscape($text, $flags=ENT_QUOTES, $charset='UTF-8', $doubleEncode=true)
+    public function initApp()
     {
-        return trim(htmlspecialchars($text, $flags, $charset, $doubleEncode));
+        // Converts all errors to exceptions
+        Debug\ErrorHandler::register();
+        Debug\ExceptionHandler::register($this->config->get('debug'));
+
+        // Service setup
+        $this->container['router.context']->fromRequest($this->request);
+        $this->container['router.context']->setBaseUrl($this->request->getBasePath());
+
+        $this->router->param->set('routeDefaults', ['_locale' => $this->config->get('locale')]);
+        $this->router->param->set('routeRequirements', ['_locale' => implode('|', $this->config->get('locales'))]);
+
+        $this->response->prepare($this->request);
+
+        // Access to container
+        ServiceContainer::setContainer($this->container);
+
+        // First citizen of routeCollection
+        $this->baseRoute();
+    }
+
+    public function coreEvent()
+    {
+        // Register last as route fallback
+        $this->dynamicRoute();
+
+        $this->event->addSubscriber(
+            new EventListener\RouterListener(
+                $this->router->urlMatcher,
+                $this->container['request.stack'],
+                $this->container['router.context']
+            )
+        );
+
+        $this->event->addSubscriber(
+            new EventListener\LocaleListener(
+                $this->container['request.stack'],
+                $this->config->get('locale'),
+                $this->container['router.generator']
+            )
+        );
+
+        if ($this->config->get('errorHandler')) {
+            $this->event->addSubscriber(
+                new EventListener\ExceptionListener(
+                    $this->config->get('errorHandler'),
+                    $this->log,
+                    $this->config->get('debug')
+                )
+            );
+        }
+    }
+
+    public function run()
+    {
+        $this->coreEvent();
+
+        if ($this->config->get('mainController')) {
+            $mainController = $this->container['resolver.controller']->resolve($this->config->get('mainController'));
+            $this->response = call_user_func([new $mainController['class'], $mainController['method']]);
+        } else {
+            $this->response = $this->dispatcher->handle($this->request);
+        }
+
+        $this->response->send();
+
+        $this->dispatcher->terminate($this->request, $this->response);
+    }
+
+    /**
+     * Must be first registered into routeCollection
+     */
+    public function baseRoute()
+    {
+        $this->router->addRoute('base', '/', ['_path' => $this->config->get('routePath')]);
+        $this->router->addRoute('base_locale', '/{_locale}/', ['_path' => $this->config->get('routePath')]);
+    }
+
+    /**
+     * Fallback must be last registered at routeCollection
+     */
+    public function dynamicRoute()
+    {
+        $this->router->addRoute('dynamic_locale', '/{_locale}/{_path}', ['_path' => $this->config->get('routePath')], ['_path' => '.*']);
+        $this->router->addRoute('dynamic', '/{_path}', ['_path' => $this->config->get('routePath')], ['_path' => '.*']);
     }
 }

@@ -19,6 +19,8 @@ namespace Gubug;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Symfony\Component\HttpFoundation;
+use Symfony\Component\HttpKernel;
 use Symfony\Component\Routing;
 
 /**
@@ -28,22 +30,26 @@ use Symfony\Component\Routing;
  */
 class ServiceProvider implements ServiceProviderInterface
 {
-
     public function register(Container $container)
     {
-        $container['request'] = function ($c) {
-            return Library\Request::createFromGlobals();
+        // === Request
+        $container['request.stack'] = function () {
+            return new HttpFoundation\RequestStack();
+        };
+        $container['request'] = function () {
+            return Component\Request::createFromGlobals();
         };
 
-        $container['router.collection'] = function ($c) {
+        // === Router
+        $container['router.collection'] = function () {
             return new Routing\RouteCollection();
         };
-        $container['router.route'] = function ($c) {
-            return function (...$params) {
-                return new \Symfony\Component\Routing\Route(...$params);
+        $container['router.route'] = function () {
+            return function ($path, $defaults = [], $requirements = [], $options = [], $host = '', $schemes = [], $methods = [], $condition = '') {
+                return new \Symfony\Component\Routing\Route($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
             };
         };
-        $container['router.context'] = function ($c) {
+        $container['router.context'] = function () {
             return new Routing\RequestContext();
         };
         $container['router.matcher'] = function ($c) {
@@ -53,31 +59,43 @@ class ServiceProvider implements ServiceProviderInterface
             return new Routing\Generator\UrlGenerator($c['router.collection'], $c['router.context']);
         };
         $container['router'] = function ($c) {
-            return new Library\Router($c['router.collection'], $c['router.route'], $c['router.matcher'],
-                $c['router.generator'], $c['config.factory']);
+            return new Component\Router($c['router.collection'], $c['router.route'], $c['router.matcher'], $c['router.generator'], $c['paramBag']);
         };
 
+        // === Dispatcher
+        $container['resolver.controller'] = function ($c) {
+            return new Resolver\Controller($c['log'], $c['paramBag']);
+        };
+        $container['resolver.argument'] = function () {
+            return new Resolver\Argument();
+        };
         $container['dispatcher'] = function ($c) {
-            return new Library\Dispatcher($c['config.factory']);
+            return new Component\Dispatcher($c['event'], $c['resolver.controller'], $c['request.stack'], $c['resolver.argument']);
+        };
+        $container['event'] = function () {
+            return new Component\Event();
         };
 
-        $container['response'] = function ($c) {
-            return new Library\Response();
-        };
-
-        $container['config.factory'] = $container->factory(function ($c) {
-            return new Library\Config();
+        // Response
+        $container['response'] = $container->factory(function () {
+            return new Component\Response();
         });
-        $container['config'] = function ($c) {
-            return $c['config.factory'];
+
+        // Misc
+        $container['session'] = function () {
+            return new Component\Session();
         };
 
-        $container['session'] = function ($c) {
-            return new Library\Session();
+        $container['paramBag'] = $container->factory(function () {
+            return new HttpFoundation\ParameterBag();
+        });
+        $container['config'] = function () {
+            return new Component\Config();
         };
 
-        $container['event'] = function ($c) {
-            return new Library\Event();
+        $container['log.output'] = 'php://stderr';
+        $container['log'] = function ($c) {
+            return new HttpKernel\Log\Logger(\Psr\Log\LogLevel::DEBUG, $c['log.output']);
         };
     }
 }

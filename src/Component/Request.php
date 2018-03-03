@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-namespace Gubug\Library;
+namespace Gubug\Component;
 
 use Symfony\Component\HttpFoundation;
 
 /**
- * Handling HTTP request
+ * Request represents an HTTP request.
  *
  * @author Mudzakkir <qaharmdz@gmail.com>
  */
@@ -33,7 +33,7 @@ class Request extends HttpFoundation\Request
      */
     public $post;
 
-    public function __construct(array $query=[], array $request=[], array $attributes=[], array $cookies=[], array $files=[], array $server=[], $content=null)
+    public function __construct(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)
     {
         parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
 
@@ -58,5 +58,17 @@ class Request extends HttpFoundation\Request
     public function getBaseUri()
     {
         return $this->getSchemeAndHttpHost() . $this->getBasePath() . '/';
+    }
+
+    /**
+     * Generates URI for the given path.
+     *
+     * @param  string $path
+     *
+     * @return string
+     */
+    public function getUriForPath($path)
+    {
+        return $this->getBaseUri() . ltrim($path, '/');
     }
 }

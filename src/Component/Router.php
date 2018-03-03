@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-namespace Gubug\Library;
+namespace Gubug\Component;
 
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Generator\UrlGenerator;
-Use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Wrap Symfony routing under one roof
@@ -54,21 +54,20 @@ class Router
      */
     public $param;
 
-    public function __construct(RouteCollection $collection, $route, UrlMatcher $urlMatcher,
-                                UrlGenerator $urlGenerator, ParameterBag $param)
+    public function __construct(RouteCollection $collection, $route, UrlMatcher $urlMatcher, UrlGenerator $urlGenerator, ParameterBag $param)
     {
-        $this->collection = $collection;
-        $this->route = $route;
-        $this->urlMatcher = $urlMatcher;
+        $this->collection   = $collection;
+        $this->route        = $route;
+        $this->urlMatcher   = $urlMatcher;
         $this->urlGenerator = $urlGenerator;
-        $this->param = $param;
+        $this->param        = $param;
 
         // Default parameter
         $this->param->add([
-            'routeDefaults' => ['_locale' => 'en'],
-            'routeRequirements' => ['_locale' => 'en'],
-            'buildLocale' => false,
-            'buildParameters' => []
+            'routeDefaults'     => ['_locale' => 'en'], // Default addRoute
+            'routeRequirements' => ['_locale' => 'en'], // Requirement addRoute, multi-language en|id|fr
+            'buildLocale'       => false,               // Force urlBuild to use "_locale"
+            'buildParameters'   => []                   // Force urlBuld to add extra parameter
         ]);
     }
 
@@ -85,13 +84,18 @@ class Router
      * @param string|string[] $schemes      A required URI scheme or an array of restricted schemes
      * @param string          $condition    A condition that should evaluate to true for the route to match
      */
-    public function addRoute(string $name, string $path, array $defaults=[], array $requirements=[], $methods=[],
-                             array $options=['utf8'=>true], ?string $host='', $schemes=[], ?string $condition='')
+    public function addRoute(string $name, string $path, array $defaults = [], array $requirements = [], $methods = [], array $options = ['utf8' => true], ?string $host = '', $schemes = [], ?string $condition = '')
     {
-        $route = $this->getRoute($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
-
-        $route->addDefaults($this->param->get('routeDefaults'));
-        $route->addRequirements($this->param->get('routeRequirements'));
+        $route = $this->newRoute(
+            $path,
+            array_replace($defaults, $this->param->get('routeDefaults')),
+            array_replace($requirements, $this->param->get('routeRequirements')),
+            $options,
+            $host,
+            $schemes,
+            $methods,
+            $condition
+        );
 
         $this->collection->add($name, $route);
     }
@@ -103,7 +107,7 @@ class Router
      *
      * @return \Symfony\Component\Routing\Route
      */
-    public function getRoute(...$args)
+    public function newRoute(...$args)
     {
         return call_user_func($this->route, ...$args);
     }
@@ -111,7 +115,7 @@ class Router
     /**
      * Match URL path with a route in collection then extract their attribute.
      *
-     * @return array
+     * @return \Symfony\Component\Routing\Matcher\UrlMatcher
      *
      * @throws \RuntimeException  If routing collection or resource not found
      */
@@ -133,7 +137,7 @@ class Router
      *
      * @return string
      */
-    public function urlBuild(string $name, array $parameters=[], bool $extraParam=true): string
+    public function urlBuild(string $name, array $parameters = [], bool $extraParam = true)
     {
         $result = '';
 
@@ -156,7 +160,7 @@ class Router
      *
      * @return string
      */
-    public function urlGenerate(string $path='', array $parameters=[], bool $extraParam=true): string
+    public function urlGenerate(string $path = '', array $parameters = [], bool $extraParam = true)
     {
         if (!$path) {
             return $this->urlBuild('base', $parameters, $extraParam);

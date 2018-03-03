@@ -1,0 +1,26 @@
+language: php
+
+php:
+  - 7.1
+  - 7.2
+
+# Triggers builds to run on the new TravisCI infrastructure.
+sudo: false
+
+# Cache composer
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+before_script:
+  - composer self-update
+  - composer update --no-interaction --prefer-dist
+
+script:
+  - vendor/bin/phpcs --standard=psr2 -n ./src
+  - vendor/bin/phpunit --stderr --coverage-text --coverage-clover=coverage.clover
+
+# Scruni code-coverage report
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
