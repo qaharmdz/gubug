@@ -9,9 +9,14 @@ Gubug adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) and a
 ## [NEXT] - YYYY-MM-DD
 
 ### Added
+
+
+## [v1.0.0-beta.2] - 2018-03-03
+
+### Added
 - Symfony component HttpKernel, Event, Debug
-- General event hook
-- Logger
+- Add service Session, Logger, Event hook
+- Resolver controller and arguments
 
 ### Changed
 - HttpKernel replace Dispatcher
@@ -24,4 +29,5 @@ Gubug adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) and a
 * Graduated from Alpha version
 
 
-[NEXT]: https://github.com/qaharmdz/gubug/compare/v1.0.0-beta.1...HEAD
+[NEXT]: https://github.com/qaharmdz/gubug/compare/v1.0.0-beta.2...HEAD
+[v1.0.0-beta.2]: https://github.com/qaharmdz/gubug/compare/v1.0.0-beta.1...v1.0.0-beta.2
