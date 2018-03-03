@@ -13,7 +13,7 @@ class Init extends \Gubug\ServiceContainer
             return $component->getOutput();
         }
 
-        // Main controller
+        // Main page
         $data['component'] = $component->getContent();
 
         // We can use component as part of larger pages

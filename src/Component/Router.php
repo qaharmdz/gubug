@@ -156,6 +156,7 @@ class Router
      * Helper to automatically check route $name at urlBuild
      *
      * @param  string $path       Route path
+     * @param  array  $parameters Route parameter
      * @param  bool   $extraParam Append extra parameter?
      *
      * @return string

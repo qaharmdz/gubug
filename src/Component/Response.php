@@ -130,8 +130,9 @@ class Response extends HttpFoundation\Response
     /**
      * Send a file.
      *
-     * @param  string $file Path to file
-     * @param  string $mask Mask filename
+     * @param  string $file     Path to file
+     * @param  string $mask     Mask filename
+     * @param  array  $headers
      *
      * @return $this
      */

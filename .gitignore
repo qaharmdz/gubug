@@ -90,6 +90,7 @@ $RECYCLE.BIN/
 
 _dev/
 _report/
+cache/
 
 # phpenv local config
 .php-version

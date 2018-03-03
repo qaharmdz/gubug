@@ -32,6 +32,7 @@ abstract class ServiceContainer
      * Container setter
      *
      * @param Container $storage
+     * @param bool      $override
      */
     public static function setContainer(Container $storage, bool $override = true)
     {

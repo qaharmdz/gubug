@@ -26,11 +26,27 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class Event extends EventDispatcher
 {
+    /**
+     * Shortcut for dispatchHook action
+     *
+     * @param  string $eventName
+     * @param  array  $data
+     *
+     * @return array
+     */
     public function action(string $eventName, array $data = [])
     {
         return $this->dispatchHook($eventName, $data, 'action');
     }
 
+    /**
+     * Shortcut for dispatchHook filter
+     *
+     * @param  string $eventName
+     * @param  array  $data
+     *
+     * @return array
+     */
     public function filter(string $eventName, array $data = [])
     {
         return $this->dispatchHook($eventName, $data, 'filter');
@@ -41,6 +57,7 @@ class Event extends EventDispatcher
      *
      * @param  string $eventName
      * @param  array  $data
+     * @param  string $type
      *
      * @return array
      */
