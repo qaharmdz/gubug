@@ -54,7 +54,7 @@ abstract class ServiceContainer
     /**
      * Access a service.
      *
-     * It's important for user to aware they use service, thus no __call
+     * It's important for user to aware they use service
      *
      * @param  string $id Service identifier
      *

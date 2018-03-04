@@ -23,6 +23,7 @@ Project vision, scope and an experimental subject.
 #### _Opinionated_ PAC Micro Framework
 - Flow: ```Request - Routing - Main Agent - Dispatcher - Response```.
     - Cons: main agent become immutable from middleware.
+    - Pros: _cons?_ now I know who the boss is. Just call it the ```Outerware```
 - Dynamic route: route _\_path_ into ```folder/file-class/{method|index}/...argsPair[key:value]}```.
 - Additional service: config, session, security, logger, hook.
 

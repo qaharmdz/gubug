@@ -75,6 +75,7 @@ class FrameworkTest extends \PHPUnit\Framework\TestCase
     public function testMainController()
     {
         $config = [
+            'locales'       => ['en', 'id'],
             'baseNamespace'  => 'Gubug',
             'mainController' => 'test/main',
             'routePath'      => 'test/app', // index
