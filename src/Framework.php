@@ -110,7 +110,7 @@ class Framework
                 ],
                 'baseNamespace'     => '',
                 'mainController'    => '',
-                'routePath'         => 'app/home',          // Default URL _path for base and dynamic route
+                'routePath'         => '',      // Default URL _path for base and dynamic route
                 'errorHandler'      => '',
                 'logfile'           => __DIR__ . DIRECTORY_SEPARATOR . 'error.log'
             ],

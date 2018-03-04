@@ -33,10 +33,10 @@ Project vision, scope and an experimental subject.
 ---
 - Support multilanguages route
 - Agent response not necessary output, explicit requirement of _setOutput()_.
-- Main agent must respect setOutput and not try to change anything.
-- Embed controller should be done in upper agent, not in Presenter
-- Silex have awesome group of provider, should we _stole_ it? :innocent:
+- Main agent must respect _setOutput()_ and not try to change anything.
+- Embed agent controller should be done in upper agent, not in Presenter
+- Silex have awesome group of provider, should we _steal_ it? :innocent:
 
 #### Unfeatures
-- No library: database, image, asset, mail, cache
+- No library: database, image, asset, mail, cache, i18n
 
