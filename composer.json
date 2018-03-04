@@ -31,9 +31,13 @@
         "psr-4": { "Gubug\\Tests\\" : "tests/src" }
     },
     "scripts": {
+        "check": [
+            "@test",
+            "@check-style"
+        ],
         "test": "phpunit --stderr",
-        "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src",
-        "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src"
+        "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 ./src",
+        "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 ./src"
     },
     "config": {
         "preferred-install": "dist",

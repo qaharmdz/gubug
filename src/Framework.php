@@ -201,8 +201,8 @@ class Framework
         $this->coreEvent();
 
         if ($this->config->get('mainController')) {
-            $mainController = $this->container['resolver.controller']->resolve($this->config->get('mainController'));
-            $this->response = call_user_func([new $mainController['class'], $mainController['method']]);
+            $mainAgent = $this->container['resolver.controller']->resolve($this->config->get('mainController'));
+            $this->response = call_user_func([new $mainAgent['class'], $mainAgent['method']]);
         } else {
             $this->response = $this->dispatcher->handle($this->request);
         }
@@ -218,7 +218,9 @@ class Framework
     public function baseRoute()
     {
         $this->router->addRoute('base', '/', ['_path' => $this->config->get('routePath')]);
-        $this->router->addRoute('base_locale', '/{_locale}/', ['_path' => $this->config->get('routePath')]);
+        if (count($this->config->get('locales')) > 1) {
+            $this->router->addRoute('base_locale', '/{_locale}/', ['_path' => $this->config->get('routePath')]);
+        }
     }
 
     /**
@@ -226,7 +228,9 @@ class Framework
      */
     public function dynamicRoute()
     {
-        $this->router->addRoute('dynamic_locale', '/{_locale}/{_path}', ['_path' => $this->config->get('routePath')], ['_path' => '.*']);
+        if (count($this->config->get('locales')) > 1) {
+            $this->router->addRoute('dynamic_locale', '/{_locale}/{_path}', ['_path' => $this->config->get('routePath')], ['_path' => '.*']);
+        }
         $this->router->addRoute('dynamic', '/{_path}', ['_path' => $this->config->get('routePath')], ['_path' => '.*']);
     }
 }

@@ -1,3 +1,3 @@
-# Gubug Application Example
+# Gubug Application
 
-Contain one huge mess experimental workaround code
+Example of PAC architecture
