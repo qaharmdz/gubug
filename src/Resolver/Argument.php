@@ -74,9 +74,9 @@ class Argument implements ArgumentResolverInterface
         $sysinfo = [
             '_master_request' => $data['_master_request'] ?? false,
             '_locale'         => $data['_locale'] ?? 'en',
-            '_path'           => $data['_path'] ?? '/',
             '_route'          => $data['_route'] ?? '',
-            '_controller'     => $data['_controller'] ?? '/',
+            '_path'           => $data['_path'] ?? '/',
+            '_controller'     => $data['_controller'] ?? '/'
         ];
 
         return array_replace($params, [

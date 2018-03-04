@@ -76,6 +76,7 @@ class Controller extends ControllerResolver
             }
         }
 
+        // Don't waste resource
         if (is_callable($request->attributes->get('_controller'))) {
             return $request->attributes->get('_controller');
         }
@@ -85,7 +86,7 @@ class Controller extends ControllerResolver
 
             return [new $controller['class'], $controller['method']];
         } catch (\Exception $e) {
-            $this->exceptionLog($e->getMessage());
+            $this->log->info('Unable to resolve path "' . $request->getPathInfo() . '", fallback to default Controller resolver.');
         }
 
         return parent::getController($request);

@@ -14,19 +14,19 @@ No further info for now, maybe later..
 ## Vision
 Project vision, scope and an experimental subject.
 
-#### _Symfony component_ micro framework
+#### _Symfony component_ Micro Framework
 - Flow: ```Request - {Routing % Dispatcher} - Response```.
 - Event based middleware.
 - Preserve the valid callback of route _\_controller_.
 - _ExceptionListener_ is a must.
 
-#### _Opinionated_ PAC micro framework
+#### _Opinionated_ PAC Micro Framework
 - Flow: ```Request - Routing - Main Agent - Dispatcher - Response```.
     - Cons: main agent become immutable from middleware.
 - Dynamic route: route _\_path_ into ```folder/file-class/{method|index}/...argsPair[key:value]}```.
 - Additional service: config, session, security, logger, hook.
 
-#### Brainstorm notes
+#### Brainstorm Notes
 - __Important__: Do not overuse Symfony component, make it KISS! :kiss:
 - Assume agent-level like Joomla extensions taxonomy: component, module, plugin.
 - Custom hook event like Wordpress: _action_ and _filter_.
@@ -38,5 +38,5 @@ Project vision, scope and an experimental subject.
 - Silex have awesome group of provider, should we _stole_ it? :innocent:
 
 #### Unfeatures
-- No library: database, image, asset, mail
+- No library: database, image, asset, mail, cache
 
