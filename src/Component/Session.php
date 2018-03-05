@@ -52,12 +52,23 @@ class Session extends HttpFoundation\Session\Session
         return $this->getFlashBag();
     }
 
+    /**
+     * Set entire flashbag messages
+     *
+     * @param string $type
+     * @param array  $message
+     */
+    public function setFlash($type, array $message)
+    {
+        $this->flash()->set($type, $message);
+    }
+
     public function addFlash($type, $message)
     {
         $this->flash()->add($type, $message);
     }
 
-    public function getFlash($type, array $default = array())
+    public function getFlash($type, array $default = [])
     {
         return $this->flash()->get($type, $default);
     }

@@ -9,7 +9,7 @@ Gubug adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) and a
 ## [NEXT] - YYYY-MM-DD
 
 ### Added
-
+- Session setFlash()
 
 ## [v1.0.0-beta.2] - 2018-03-03
 
