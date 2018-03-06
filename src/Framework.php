@@ -108,7 +108,8 @@ class Framework
                 'session'       => [            // Key at http://php.net/session.configuration, omit 'session.'
                     'name' => '_gubug'
                 ],
-                'baseNamespace'     => '',
+                'baseNamespace'     => '',      // Application namespace prefix
+                'pathNamespace'     => '',      // Namespace prefix for _path route
                 'mainController'    => '',
                 'routePath'         => '',      // Default URL _path for base and dynamic route
                 'errorHandler'      => '',
@@ -120,7 +121,8 @@ class Framework
 
         // Service parameter
         $this->container['log.output'] = $this->config->get('logfile');
-        $this->container['resolver.controller']->param->set('namespace', $this->config->get('baseNamespace'));
+        $this->container['resolver.controller']->param->set('baseNamespace', $this->config->get('baseNamespace'));
+        $this->container['resolver.controller']->param->set('pathNamespace', $this->config->get('pathNamespace'));
 
         // Services
         $this->request    = $this->container['request'];
@@ -201,7 +203,7 @@ class Framework
         $this->coreEvent();
 
         if ($this->config->get('mainController')) {
-            $mainAgent = $this->container['resolver.controller']->resolve($this->config->get('mainController'));
+            $mainAgent = $this->container['resolver.controller']->resolve($this->config->get('mainController'), [], $this->config->get('pathNamespace'));
             $this->response = call_user_func([new $mainAgent['class'], $mainAgent['method']]);
         } else {
             $this->response = $this->dispatcher->handle($this->request);

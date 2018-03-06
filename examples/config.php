@@ -2,7 +2,8 @@
 return [
     'framework' => [
         'environment'    => 'dev', // live, dev, test
-        'baseNamespace'  => 'Contoh\Front\Component',
+        'baseNamespace'  => 'Contoh\Front',
+        'pathNamespace'  => 'Component',
         'mainController' => 'boot/init',
         'errorHandler'   => 'boot/error',
         'routePath'      => 'home', // Default URL _path for base and dynamic route

@@ -18,6 +18,7 @@ $gubug->init($config['framework']);
 // Provide base URL and Path
 $gubug->config->set('baseURL', $gubug->request->getBaseUri());
 $gubug->config->set('basePath', realpath(__DIR__) . DS);
+$gubug->config->set('themePath', $gubug->config->get('basePath') . 'Front/Theme/default/');
 
 // Start to run..
 $gubug->run();

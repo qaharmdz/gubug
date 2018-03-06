@@ -24,7 +24,7 @@ class Init extends \Contoh\Library\BaseController
         // d($data);
 
         // We can use component as part of larger pages
-        $template = $this->use('config')->get('basePath') . 'Front/Theme/default/template/index.tpl';
+        $template = $this->use('config')->get('themePath') . 'template/index.tpl';
 
         return $this->use('response')
                     ->render($template, $data)
@@ -47,7 +47,7 @@ class Init extends \Contoh\Library\BaseController
         ];
 
         foreach ($results as $mod) {
-            $modules[] = $this->dispatcher->controller($mod[0], $mod[1], '\Contoh\Front\Module')->getContent();
+            $modules[] = $this->dispatcher->controller($mod[0], $mod[1], 'Module')->getContent();
         }
 
         return $modules;

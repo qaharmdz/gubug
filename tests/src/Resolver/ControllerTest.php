@@ -22,7 +22,7 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
         $this->request  = Request::create('/');
         $this->resolver = new \Gubug\Resolver\Controller($this->logger, $param);
 
-        $this->resolver->param->set('namespace', 'Gubug\Test');
+        $this->resolver->param->set('baseNamespace', 'Gubug\Test');
     }
 
     protected function tearDown()
@@ -110,7 +110,7 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
     {
         $actual = $this->resolver->resolve('resolver/controller/foo/bar/baz');
         $expect = [
-            'class'     => $this->resolver->param->get('namespace') . '\Resolver\Controller',
+            'class'     => $this->resolver->param->get('baseNamespace') . '\Resolver\Controller',
             'method'    => 'foo',
             'arguments' => [ 'bar' => 'baz']
         ];

@@ -46,9 +46,9 @@ class Controller extends ControllerResolver
         $this->log   = $logger;
         $this->param = $param;
 
-        // Default parameter
         $this->param->add([
-            'namespace' => ''
+            'baseNamespace' => '',
+            'pathNamespace' => ''
         ]);
     }
 
@@ -57,13 +57,13 @@ class Controller extends ControllerResolver
      *
      * @param  Request  $request
      *
-     * @return mixed
+     * @return callable
      */
     public function getController(Request $request)
     {
         if ($path = $request->attributes->get('_path')) {
             try {
-                $controller = $this->resolve($path, $request->attributes->all());
+                $controller = $this->resolve($path, $request->attributes->all(), $this->param->get('pathNamespace'));
 
                 $request->attributes->replace($controller['arguments']);
                 $request->attributes->set('_controller', [$controller['class'], $controller['method']]);
@@ -103,7 +103,7 @@ class Controller extends ControllerResolver
      */
     public function resolve(string $path, array $args = [], string $namespace = '')
     {
-        $namespace = substr($namespace, 0, 1) == '\\' ? $namespace : $this->param->get('namespace') . '\\' . $namespace;
+        $namespace = substr($namespace, 0, 1) == '\\' ? $namespace : $this->param->get('baseNamespace') . '\\' . $namespace;
         $segments = explode('/', trim($path, '/'));
 
         if (empty($segments[0])) {

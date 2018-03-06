@@ -62,7 +62,6 @@ class Router
         $this->urlGenerator = $urlGenerator;
         $this->param        = $param;
 
-        // Default parameter
         $this->param->add([
             'routeDefaults'     => ['_locale' => 'en'], // Default addRoute
             'routeRequirements' => ['_locale' => 'en'], // Requirement addRoute, multi-language en|id|fr
