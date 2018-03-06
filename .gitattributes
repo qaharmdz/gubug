@@ -1,5 +1,6 @@
 * text=auto
 
+/.github                export-ignore
 /api                    export-ignore
 /examples               export-ignore
 /tests                  export-ignore
