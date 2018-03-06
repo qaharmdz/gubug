@@ -188,9 +188,11 @@ class Framework
         );
 
         if ($this->config->get('errorHandler')) {
+            $handlerNamespace = $this->config->get('pathNamespace') ? $this->config->get('pathNamespace') . '\\' : '';
+
             $this->event->addSubscriber(
                 new EventListener\ExceptionListener(
-                    $this->config->get('pathNamespace') . '\\'. $this->config->get('errorHandler'),
+                    $handlerNamespace . $this->config->get('errorHandler'),
                     $this->log,
                     $this->config->get('debug')
                 )
