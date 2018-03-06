@@ -5,6 +5,6 @@ class Nav extends \Contoh\Library\BaseController
 {
     public function index()
     {
-        return $this->use('response')->setContent('Sidebar Nav');
+        return $this->response->setContent('Sidebar Nav');
     }
 }

@@ -190,7 +190,7 @@ class Framework
         if ($this->config->get('errorHandler')) {
             $this->event->addSubscriber(
                 new EventListener\ExceptionListener(
-                    $this->config->get('errorHandler'),
+                    $this->config->get('pathNamespace') . '\\'. $this->config->get('errorHandler'),
                     $this->log,
                     $this->config->get('debug')
                 )

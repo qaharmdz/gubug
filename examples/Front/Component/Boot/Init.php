@@ -47,7 +47,11 @@ class Init extends \Contoh\Library\BaseController
         ];
 
         foreach ($results as $mod) {
-            $modules[] = $this->dispatcher->controller($mod[0], $mod[1], 'Module')->getContent();
+            try {
+                $modules[] = $this->dispatcher->controller($mod[0], $mod[1], 'Module')->getContent();
+            } catch (\Exception $e) {
+                $this->log->warning($e->getMessage());
+            }
         }
 
         return $modules;
