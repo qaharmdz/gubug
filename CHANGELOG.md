@@ -11,6 +11,10 @@ Gubug adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) and a
 ### Added
 - Session setFlash()
 
+### Fixed
+- _locale route active if two or more languages detected
+- Fixed prefixing slash checker for namespace
+
 ## [v1.0.0-beta.2] - 2018-03-03
 
 ### Added

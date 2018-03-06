@@ -35,7 +35,7 @@ class Router
     public $collection;
 
     /**
-     * @var \Symfony\Component\Routing\Route
+     * @var callable \Symfony\Component\Routing\Route
      */
     public $route;
 
