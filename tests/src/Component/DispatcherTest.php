@@ -5,10 +5,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
-use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 
 class DispatcherTest extends \PHPUnit\Framework\TestCase
 {
@@ -20,15 +17,11 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
             return new Response('Hello');
         };
 
-        $controllerResolver = $this->createMock('\Gubug\Resolver\Controller', ['getController', 'resolve']);
+        $controllerResolver = $this->createMock('\Gubug\Resolver\Controller', ['getController']);
         $controllerResolver
             ->expects($this->any())
             ->method('getController')
             ->will($this->returnValue($controller));
-        $controllerResolver
-            ->expects($this->any())
-            ->method('resolve')
-            ->will($this->returnValue(['class' => 'Gubug\Test\Component\DispatcherController', 'method' => 'world', 'arguments' => []]));
 
         $argumentResolver = $this->createMock('\Gubug\Resolver\Argument', ['getArguments']);
         $argumentResolver
@@ -67,14 +60,6 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
     {
         $response = $this->dispatcher->controller('/foo');
 
-        $this->assertEquals('java coffee', $response->getContent());
-    }
-}
-
-class DispatcherController
-{
-    public function world()
-    {
-        return new Response('java coffee');
+        $this->assertEquals('Hello', $response->getContent());
     }
 }

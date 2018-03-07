@@ -76,17 +76,13 @@ class Dispatcher extends HttpKernel
      */
     public function controller(string $path, array $args = [], string $namespace = '')
     {
-        // $controller = $this->resolver->resolve($path, $args, $namespace);
-
-        // return call_user_func([new $controller['class'], $controller['method']], $controller['arguments']);
-
         $request = new HttpFoundation\Request();
         $request->attributes->set('_path', $path);
         $request->attributes->set('_controller', $path);
         $request->attributes->set('_pathNamespace', $namespace);
 
-        list($controller, $arguments) = $this->resolver->getController($request);
+        $controller = $this->resolver->getController($request);
 
-        return call_user_func([$controller, $arguments]);
+        return call_user_func($controller, $args);
     }
 }
