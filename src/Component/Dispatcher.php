@@ -80,12 +80,10 @@ class Dispatcher extends HttpKernel
         $request->attributes->set('_path', $path);
         $request->attributes->set('_pathNamespace', $namespace);
 
-        $controller = $this->resolver->getController($request);
-
-        if (is_callable($controller)) {
-            return call_user_func($controller, $args);
+        if (false === $controller = $this->resolver->getController($request)) {
+            throw new \LogicException($namespace . ' "' . $path . '" is not available.');
         }
 
-        throw new \LogicException($namespace . ' "' . $path . '" is not available.');
+        return call_user_func($controller, $args);
     }
 }
