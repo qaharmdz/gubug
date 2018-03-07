@@ -57,7 +57,10 @@ class Controller extends ControllerResolver
      *
      * @param  Request  $request
      *
-     * @return callable
+     * @return callable|false A PHP callable representing the Controller,
+     *                        or false if this resolver is not able to determine the controller
+     *
+     * @throws \LogicException If the controller can't be found
      */
     public function getController(Request $request)
     {
@@ -70,8 +73,6 @@ class Controller extends ControllerResolver
 
                 return [new $controller['class'], $controller['method']];
             } catch (\Exception $e) {
-                $this->exceptionLog($e->getMessage());
-
                 return false;
             }
         }
@@ -86,7 +87,7 @@ class Controller extends ControllerResolver
 
             return [new $controller['class'], $controller['method']];
         } catch (\Exception $e) {
-            $this->log->info('Unable to resolve path "' . $request->getPathInfo() . '", fallback to default Controller resolver.');
+            return false;
         }
 
         return parent::getController($request);
@@ -107,7 +108,7 @@ class Controller extends ControllerResolver
         $segments = explode('/', trim($path, '/'));
 
         if (empty($segments[0])) {
-            throw new \InvalidArgumentException('The "_path" parameter is empty.');
+            throw new \LogicException('Empty "_path" segments parameter.');
         }
 
         $class     = $this->resolveClass($path, $namespace, $segments);
@@ -115,7 +116,7 @@ class Controller extends ControllerResolver
         $arguments = $this->resolveArguments($args, $segments);
 
         if (!is_callable([$class, $method])) {
-            throw new \InvalidArgumentException(sprintf('The controller "%s" for URI "%s" is not available.', $class . '::' . $method, $path));
+            throw new \LogicException(sprintf('The controller "%s" for URI "%s" is not available.', $class . '::' . $method, $path));
         }
 
         return [
@@ -142,7 +143,7 @@ class Controller extends ControllerResolver
         $class = implode('\\', [rtrim($namespace, '\\'), $folder, $class]);
 
         if (!class_exists($class)) {
-            throw new \InvalidArgumentException(sprintf('Cannot find controller "%s" for path "%s".', $class, $path));
+            throw new \LogicException(sprintf('Cannot find controller "%s" for path "%s".', $class, $path));
         }
 
         return $class;
@@ -181,15 +182,5 @@ class Controller extends ControllerResolver
         }
 
         return $args;
-    }
-
-    /**
-     * @param  string $message
-     */
-    protected function exceptionLog(string $message)
-    {
-        if ($this->log !== null) {
-            $this->log->warning($message);
-        }
     }
 }
