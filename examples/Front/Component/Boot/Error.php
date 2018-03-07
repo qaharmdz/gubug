@@ -16,7 +16,7 @@ class Error extends \Contoh\Library\BaseController
             'sidebar'    => false
         ]);
 
-        return $this->use('response')
+        return $this->response
                     ->setStatusCode($e->getStatusCode())
                     ->setContent('<h1>404 Not Found!</h1> <p>' . $e->getMessage() . '</p>');
     }
@@ -29,7 +29,7 @@ class Error extends \Contoh\Library\BaseController
             'sidebar'    => false
         ]);
 
-        return $this->use('response')
+        return $this->response
                     ->setStatusCode($e->getStatusCode())
                     ->setContent(
                         '<h1>Oops, bad thing happen!</h1><p>Message: <i>' . $e->getMessage() . '</i></p>'

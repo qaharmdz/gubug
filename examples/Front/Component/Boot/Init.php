@@ -6,7 +6,7 @@ class Init extends \Contoh\Library\BaseController
     public function index()
     {
         $data      = [];
-        $component = $this->use('dispatcher')->handle($this->use('request'));
+        $component = $this->dispatcher->handle($this->use('request'));
 
         // Respect component decission to send output
         if ($component->hasOutput()) {
@@ -24,9 +24,9 @@ class Init extends \Contoh\Library\BaseController
         // d($data);
 
         // We can use component as part of larger pages
-        $template = $this->use('config')->get('themePath') . 'template/index.tpl';
+        $template = $this->config->get('themePath') . 'template/index.tpl';
 
-        return $this->use('response')
+        return $this->response
                     ->render($template, $data)
                     ->setStatusCode($component->getStatusCode());
     }
@@ -43,7 +43,8 @@ class Init extends \Contoh\Library\BaseController
         $results = [
             ['nav/nav', []],
             ['custom/text', []],
-            ['custom/text/html', ['text' => 'HTML']],
+            ['custom/html', ['text' => 'HTML']],
+            ['custom/html/list', ['list' => ['Foo', 'Bar', 'Buzz']] ],
         ];
 
         foreach ($results as $mod) {

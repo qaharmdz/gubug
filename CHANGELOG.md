@@ -10,6 +10,7 @@ Gubug adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) and a
 
 ### Added
 - Session setFlash()
+- add pathNamespace to controller resolver
 
 ### Fixed
 - _locale route active if two or more languages detected
