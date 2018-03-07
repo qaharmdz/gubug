@@ -2,6 +2,7 @@
 return [
     'framework' => [
         'environment'    => 'dev', // live, dev, test
+        // 'environment'    => 'live',
         'baseNamespace'  => 'Contoh\Front',
         'pathNamespace'  => 'Component',
         'mainController' => 'boot/init',

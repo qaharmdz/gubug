@@ -51,7 +51,7 @@ class Init extends \Contoh\Library\BaseController
             try {
                 $modules[] = $this->dispatcher->controller($mod[0], $mod[1], 'Module')->getContent();
             } catch (\Exception $e) {
-                $this->log->warning($e->getMessage());
+                $this->log->warning($e->getMessage() . ' in ' . $e->getFile() . ' line ' . $e->getLine());
             }
         }
 
