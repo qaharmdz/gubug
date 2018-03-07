@@ -168,7 +168,7 @@ class Framework
 
     public function coreEvent()
     {
-        // Register last as route fallback
+        // Last citizen of routeCollection as fallback
         $this->dynamicRoute();
 
         $this->event->addSubscriber(

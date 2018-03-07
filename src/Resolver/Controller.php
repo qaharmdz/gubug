@@ -64,7 +64,8 @@ class Controller extends ControllerResolver
     {
         if ($path = $request->attributes->get('_path')) {
             try {
-                $controller = $this->resolve($path, $request->attributes->all(), $this->param->get('pathNamespace'));
+                $pathNamespace = $request->attributes->get('_pathNamespace') ?: $this->param->get('pathNamespace');
+                $controller = $this->resolve($path, $request->attributes->all(), $pathNamespace);
 
                 $request->attributes->replace($controller['arguments']);
                 $request->attributes->set('_controller', [$controller['class'], $controller['method']]);
