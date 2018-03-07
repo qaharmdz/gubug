@@ -59,8 +59,6 @@ class Controller extends ControllerResolver
      *
      * @return callable|false A PHP callable representing the Controller,
      *                        or false if this resolver is not able to determine the controller
-     *
-     * @throws \LogicException If the controller can't be found
      */
     public function getController(Request $request)
     {
@@ -87,10 +85,8 @@ class Controller extends ControllerResolver
 
             return [new $controller['class'], $controller['method']];
         } catch (\Exception $e) {
-            return false;
+            return parent::getController($request);
         }
-
-        return parent::getController($request);
     }
 
     /**
@@ -108,7 +104,7 @@ class Controller extends ControllerResolver
         $segments = explode('/', trim($path, '/'));
 
         if (empty($segments[0])) {
-            throw new \LogicException('Empty "_path" segments parameter.');
+            throw new \InvalidArgumentException('Empty "_path" segments parameter.');
         }
 
         $class     = $this->resolveClass($path, $namespace, $segments);
@@ -116,7 +112,7 @@ class Controller extends ControllerResolver
         $arguments = $this->resolveArguments($args, $segments);
 
         if (!is_callable([$class, $method])) {
-            throw new \LogicException(sprintf('The controller "%s" for URI "%s" is not available.', $class . '::' . $method, $path));
+            throw new \InvalidArgumentException(sprintf('The controller "%s" for URI "%s" is not available.', $class . '::' . $method, $path));
         }
 
         return [
@@ -143,7 +139,7 @@ class Controller extends ControllerResolver
         $class = implode('\\', [rtrim($namespace, '\\'), $folder, $class]);
 
         if (!class_exists($class)) {
-            throw new \LogicException(sprintf('Cannot find controller "%s" for path "%s".', $class, $path));
+            throw new \InvalidArgumentException(sprintf('Cannot find controller "%s" for path "%s".', $class, $path));
         }
 
         return $class;

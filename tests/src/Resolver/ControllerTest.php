@@ -95,6 +95,9 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testGetControllerSubRequestFail()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unable to find controller');
+
         $this->request->attributes->add([
             '_controller' => 'resolver/controller/boo'
         ]);
@@ -115,7 +118,7 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
     }
     public function testResolveEmptyPathSegments()
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Empty "_path" segments parameter.');
 
         $this->resolver->resolve('/');
@@ -123,7 +126,7 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testResolveClassException()
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Cannot find controller');
 
         $this->resolver->resolve('resolver/agent/test');
