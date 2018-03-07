@@ -146,9 +146,8 @@ class Framework
 
     public function initApp()
     {
-        // Converts all errors to exceptions
-        Debug\ErrorHandler::register();
-        Debug\ExceptionHandler::register($this->config->get('debug'));
+        // Handle errors and exceptions
+        Debug\Debug::enable(E_ALL, $this->config->get('debug'));
 
         // Service setup
         $this->container['router.context']->fromRequest($this->request);
@@ -188,11 +187,11 @@ class Framework
         );
 
         if ($this->config->get('errorHandler')) {
-            $handlerNamespace = $this->config->get('pathNamespace') ? $this->config->get('pathNamespace') . '\\' : '';
+            $errorHandler = $this->container['resolver.controller']->resolve($this->config->get('errorHandler'), [], $this->config->get('pathNamespace'));
 
             $this->event->addSubscriber(
                 new EventListener\ExceptionListener(
-                    $handlerNamespace . $this->config->get('errorHandler'),
+                    [new $errorHandler['class'], $errorHandler['method']],
                     $this->log,
                     $this->config->get('debug')
                 )
