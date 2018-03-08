@@ -76,6 +76,8 @@ class Controller extends ControllerResolver
             }
         }
 
+        $this->log->info('No "_path" found for "{path}", attempt to get controller from "_controller" param.', ['path' => $request->getPathinfo()]);
+
         // Don't waste resource
         if (is_callable($request->attributes->get('_controller'))) {
             return $request->attributes->get('_controller');
