@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class DispatcherTest extends \PHPUnit\Framework\TestCase
 {
     protected $dispatcher;
+    protected $argumentResolver;
 
     protected function setUp()
     {
@@ -29,12 +30,15 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
             ->method('getArguments')
             ->will($this->returnValue([]));
 
+        $this->argumentResolver = $argumentResolver;
+
         $this->dispatcher = new \Gubug\Component\Dispatcher(new EventDispatcher(), $controllerResolver, new RequestStack(), $argumentResolver);
     }
 
     protected function tearDown()
     {
         $this->dispatcher = null;
+        $this->argumentResolver = null;
     }
 
     public function testInstance()
@@ -61,5 +65,21 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
         $response = $this->dispatcher->controller('/foo');
 
         $this->assertEquals('Hello', $response->getContent());
+    }
+
+    public function testControllerFail()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('"/foo/bar" is not available');
+
+        $controllerResolver = $this->createMock('\Gubug\Resolver\Controller', ['getController']);
+        $controllerResolver
+            ->expects($this->any())
+            ->method('getController')
+            ->will($this->returnValue(false));
+
+        $this->dispatcher = new \Gubug\Component\Dispatcher(new EventDispatcher(), $controllerResolver, new RequestStack(), $this->argumentResolver);
+
+        $response = $this->dispatcher->controller('/foo/bar');
     }
 }
