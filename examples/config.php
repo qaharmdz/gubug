@@ -5,13 +5,18 @@ return [
         // 'environment'    => 'live',
         'baseNamespace'  => 'Contoh\Front',
         'pathNamespace'  => 'Component',
-        'mainController' => 'boot/init',
-        'errorHandler'   => 'boot/error',
+        'mainController' => 'component/init',
+        'errorHandler'   => 'component/error',
         'routePath'      => 'home', // Default URL _path for base and dynamic route
         'logfile'        => realpath(__DIR__ . '/Library/') . DS . 'error.log',
     ],
-    'listener'  => [],
-    'route'     => [
+    'serviceProvider' => [
+
+    ],
+    'eventSubscriber' => [
+
+    ],
+    'routeCollection' => [
         // @see Gubug\Component\Router::addRoute
     ]
 ];

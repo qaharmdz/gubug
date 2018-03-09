@@ -1,22 +1,26 @@
 <?php
-namespace Contoh\Front\Component\Boot;
+namespace Contoh\Front\Component;
 
 class Init extends \Contoh\Library\BaseController
 {
     public function index()
     {
         $data      = [];
-        $component = $this->dispatcher->handle($this->use('request'));
+        $component = $this->dispatcher->handle($this->request);
 
-        // Respect component decission to send output
+        // Respect component decision to send output
         if ($component->hasOutput()) {
             return $component->getOutput();
         }
 
         // Main page
-        $data['pageInfo']  = $this->session->getFlash('pageInfo');
         $data['baseURL']   = $this->config->get('baseURL');
         $data['basePath']  = $this->config->get('basePath');
+        $data['pageInfo']  = array_replace([
+            'title'      => 'Gubug Micro Framework',
+            'body_class' => '',
+            'sidebar'    => true
+        ], $this->session->getFlash('pageInfo'));
 
         $data['component'] = $component->getContent();
         $data['modules']   = $this->sidebar($data['pageInfo']);
@@ -33,13 +37,11 @@ class Init extends \Contoh\Library\BaseController
 
     public function sidebar($pageInfo)
     {
-        if (isset($pageInfo['sidebar']) && $pageInfo['sidebar'] === false) {
+        if (empty($pageInfo['sidebar'])) {
             return [];
         }
 
-        $modules = [];
-
-        // Lets pretend the modules path & arg provided by config or database
+        // Lets pretend the modules path & arg provided by config or from database
         $results = [
             ['nav/nav', []],
             ['custom/text', []],
@@ -47,11 +49,12 @@ class Init extends \Contoh\Library\BaseController
             ['custom/html/list', ['list' => ['Foo', 'Bar', 'Buzz']] ],
         ];
 
+        $modules = [];
         foreach ($results as $mod) {
             try {
                 $modules[] = $this->dispatcher->controller($mod[0], $mod[1], 'Module')->getContent();
             } catch (\Exception $e) {
-                $this->log->warning($e->getMessage() . ' in ' . $e->getFile() . ' line ' . $e->getLine());
+                $this->log->notice($e->getMessage() . ' in ' . $e->getFile() . ' line ' . $e->getLine());
             }
         }
 

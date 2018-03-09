@@ -1,5 +1,5 @@
 <?php
-namespace Contoh\Front\Component\Boot;
+namespace Contoh\Front\Component;
 
 class Error extends \Contoh\Library\BaseController
 {
@@ -8,7 +8,7 @@ class Error extends \Contoh\Library\BaseController
         return $exception->getStatusCode() == 404 ? $this->notFound($exception) : $this->serviceError($exception);
     }
 
-    public function notFound($e)
+    protected function notFound($e)
     {
         $this->session->setFlash('pageInfo', [
             'title'      => '404 Not Found!',
@@ -21,7 +21,7 @@ class Error extends \Contoh\Library\BaseController
                     ->setContent('<h1>404 Not Found!</h1> <p>' . $e->getMessage() . '</p>');
     }
 
-    public function serviceError($e)
+    protected function serviceError($e)
     {
         $this->session->setFlash('pageInfo', [
             'title'      => $e->getStatusCode() . ' Oops!',

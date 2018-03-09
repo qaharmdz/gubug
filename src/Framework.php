@@ -187,7 +187,7 @@ class Framework
         );
 
         if ($this->config->get('errorHandler')) {
-            $errorHandler = $this->container['resolver.controller']->resolve($this->config->get('errorHandler'), [], $this->config->get('pathNamespace'));
+            $errorHandler = $this->container['resolver.controller']->resolve($this->config->get('errorHandler'), []);
 
             $this->event->addSubscriber(
                 new EventListener\ExceptionListener(
@@ -204,7 +204,7 @@ class Framework
         $this->coreEvent();
 
         if ($this->config->get('mainController')) {
-            $mainAgent = $this->container['resolver.controller']->resolve($this->config->get('mainController'), [], $this->config->get('pathNamespace'));
+            $mainAgent = $this->container['resolver.controller']->resolve($this->config->get('mainController'), []);
             $this->response = call_user_func([new $mainAgent['class'], $mainAgent['method']]);
         } else {
             $this->response = $this->dispatcher->handle($this->request);
