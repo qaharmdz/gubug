@@ -17,15 +17,13 @@ class Init extends \Contoh\Library\BaseController
         $data['baseURL']   = $this->config->get('baseURL');
         $data['basePath']  = $this->config->get('basePath');
         $data['pageInfo']  = array_replace([
-            'title'      => 'Gubug Micro Framework',
+            'title'      => 'Gubug - PHP micro framework',
             'body_class' => '',
             'sidebar'    => true
         ], $this->session->getFlash('pageInfo'));
 
         $data['component'] = $component->getContent();
         $data['modules']   = $this->sidebar($data['pageInfo']);
-
-        // d($data);
 
         // We can use component as part of larger pages
         $template = $this->config->get('themePath') . 'template/index.tpl';

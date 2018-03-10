@@ -10,11 +10,16 @@ Gubug adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) and a
 
 ### Added
 - Session setFlash()
-- add pathNamespace to controller resolver
+- Param pathNamespace to controller resolver
+
+### Changed
+- Dispatcher controller load use request
+- Improve error and exception handler
 
 ### Fixed
+- Fallback controller resolver never reached
+- Prefixing slash checker for namespace
 - _locale route active if two or more languages detected
-- Fixed prefixing slash checker for namespace
 
 ## [v1.0.0-beta.2] - 2018-03-03
 

@@ -14,12 +14,11 @@
         <div class="wrapper">
             <div class="header">
                 <div class="site-name">Gubug</div>
-                <div class="tagline">An experimental PHP micro framework</div>
+                <div class="tagline">An experimental <br>PHP micro framework</div>
             </div>
 
             <div class="content">
                 <div class="main">
-
                     <?php echo $component; ?>
                 </div>
                 <div class="sidebar">

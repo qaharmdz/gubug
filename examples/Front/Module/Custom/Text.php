@@ -5,6 +5,6 @@ class Text extends \Contoh\Library\BaseController
 {
     public function index()
     {
-        return $this->response->setContent('Sidebar Text');
+        return $this->response->setContent('<p style="text-align:center;">Sidebar Text</p>');
     }
 }
