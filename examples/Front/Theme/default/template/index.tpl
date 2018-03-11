@@ -23,9 +23,11 @@
                 </div>
                 <div class="sidebar">
                     <?php foreach ($modules as $module) { ?>
+                    <?php if ($module) { ?>
                         <div class="module">
                             <?php echo $module; ?>
                         </div>
+                    <?php } ?>
                     <?php } ?>
                 </div>
             </div>

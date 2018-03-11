@@ -42,15 +42,26 @@ class Init extends \Contoh\Library\BaseController
         // Lets pretend the modules path & arg provided by config or from database
         $results = [
             ['nav/nav', []],
+            ['custom/html/list', ['list' => ['Foo', 'Bar', 'Buzz']] ],
             ['custom/text', []],
             ['custom/html', ['text' => 'HTML']],
-            ['custom/html/list', ['list' => ['Foo', 'Bar', 'Buzz']] ],
         ];
 
         $modules = [];
         foreach ($results as $mod) {
             try {
-                $modules[] = $this->dispatcher->controller($mod[0], $mod[1], 'Module')->getContent();
+                list($path, $arguments) = $mod;
+
+                // This event allows you to change the arguments that will be passed to the controller.
+                $eventArguments = $this->event->filter('sidebar.module.arguments', $arguments);
+
+                // Dispatch module to get response
+                $response = $this->dispatcher->controller($path, $eventArguments->getAllData(), 'Module');
+
+                // This event allows you to modify or replace the content that will be replied.
+                $eventResponse = $this->event->filter('sidebar.module.content', ['content' => $response->getContent()]);
+
+                $modules[] = $eventResponse->getContent('content');
             } catch (\Exception $e) {
                 $this->log->notice($e->getMessage() . ' in ' . $e->getFile() . ' line ' . $e->getLine());
             }
