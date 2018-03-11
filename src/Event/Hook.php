@@ -27,21 +27,21 @@ use Symfony\Component\EventDispatcher;
 class Hook extends EventDispatcher\Event
 {
     /**
-     * @var \Symfony\Component\HttpFoundation\ParameterBag
-     */
-    public $data;
-
-    /**
      * @var string
      */
     protected $name;
+
+    /**
+     * @var \Symfony\Component\HttpFoundation\ParameterBag
+     */
+    public $data;
 
     /**
      * @var array Readonly initial data passed to event
      */
     protected $defaultData;
 
-    public function __construct(string $eventName, $data = [])
+    public function __construct(string $eventName, array $data = [])
     {
         $this->name = $eventName;
         $this->data = new \Gubug\Component\Config($data);
@@ -80,5 +80,15 @@ class Hook extends EventDispatcher\Event
     public function getAllData()
     {
         return $this->data->all();
+    }
+
+    /**
+     * Special data key "content"
+     *
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->data->get('content');
     }
 }

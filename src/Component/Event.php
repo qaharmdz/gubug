@@ -36,7 +36,7 @@ class Event extends EventDispatcher
      */
     public function action(string $eventName, array $data = [])
     {
-        return $this->dispatchHook($eventName, $data, 'action');
+        $this->dispatchHook($eventName, $data, 'action');
     }
 
     /**
@@ -53,7 +53,7 @@ class Event extends EventDispatcher
     }
 
     /**
-     * Specifically dispatch \Gubug\Event\Hook
+     * Specifically dispatch event \Gubug\Event\Hook to all registered listeners
      *
      * @param  string $eventName
      * @param  array  $data
@@ -66,10 +66,10 @@ class Event extends EventDispatcher
         $eventName = $type . '.' . $eventName;
         $event     = new \Gubug\Event\Hook($eventName, $data);
 
-        $this->dispatch($eventName, $event);
-
-        if ($type === 'filter') {
-            return $event->getAllData();
+        if ($listeners = $this->getListeners($eventName)) {
+            $this->dispatch($eventName, $event);
         }
+
+        return $event;
     }
 }
