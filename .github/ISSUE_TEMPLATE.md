@@ -5,6 +5,8 @@
 - [ ] BC Break report - Report backward compatibility break
 - [ ] Docs report - Bug, missing and improvement suggestion to docs
 
+_Info: replace space with x inside bracket to check._
+
 ### Environment info
 
 - Gubug version: x.y.z
