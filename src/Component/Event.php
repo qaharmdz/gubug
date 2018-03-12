@@ -31,8 +31,6 @@ class Event extends EventDispatcher
      *
      * @param  string $eventName
      * @param  array  $data
-     *
-     * @return array
      */
     public function action(string $eventName, array $data = [])
     {
@@ -59,7 +57,7 @@ class Event extends EventDispatcher
      * @param  array  $data
      * @param  string $type
      *
-     * @return array
+     * @return \Gubug\Event\Hook
      */
     public function dispatchHook(string $eventName, array $data = [], string $type = 'action')
     {
