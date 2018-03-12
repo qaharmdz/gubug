@@ -62,13 +62,9 @@ class Controller extends ControllerResolver
      */
     public function getController(Request $request)
     {
-        if ($path = $request->attributes->get('_path')) {
+        if ($request->attributes->get('_path')) {
             try {
-                $pathNamespace = $request->attributes->get('_pathNamespace') ?: $this->param->get('pathNamespace');
-                $controller = $this->resolve($path, $request->attributes->all(), $pathNamespace);
-
-                $request->attributes->replace($controller['arguments']);
-                $request->attributes->set('_controller', [$controller['class'], $controller['method']]);
+                $controller = $this->resolvePath($request);
 
                 return [new $controller['class'], $controller['method']];
             } catch (\Exception $e) {
@@ -76,15 +72,14 @@ class Controller extends ControllerResolver
             }
         }
 
-        $this->log->info('No "_path" found for "{path}", attempt to get controller from "_controller" param.', ['path' => $request->getPathinfo()]);
-
         // Don't waste resource
-        if (is_callable($request->attributes->get('_controller'))) {
-            return $request->attributes->get('_controller');
+        $controllerParam = $request->attributes->get('_controller');
+        if (is_callable($controllerParam)) {
+            return $controllerParam;
         }
 
         try {
-            $controller = $this->resolve($request->attributes->get('_controller'));
+            $controller = $this->resolve($controllerParam);
 
             return [new $controller['class'], $controller['method']];
         } catch (\Exception $e) {
@@ -92,8 +87,23 @@ class Controller extends ControllerResolver
         }
     }
 
+    protected function resolvePath(Request $request)
+    {
+        $pathNamespace = $this->param->get('pathNamespace');
+        if (!$request->attributes->get('_master_request') && $request->attributes->get('_pathNamespace')) {
+            $pathNamespace = $request->attributes->get('_pathNamespace');
+        }
+
+        $controller = $this->resolve($request->attributes->get('_path'), $request->attributes->all(), $pathNamespace);
+
+        $request->attributes->replace($controller['arguments']);
+        $request->attributes->set('_controller', [$controller['class'], $controller['method']]);
+
+        return $controller;
+    }
+
     /**
-     * Determine controller from '_path' request attribute
+     * Determine controller from given path.
      *
      * @param  string $path
      * @param  array  $args
