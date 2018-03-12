@@ -34,7 +34,7 @@ class Dispatcher extends HttpKernel
     }
 
     /**
-     * Wrap parent handle to get request type
+     * Handles a Request to convert it to a Response.
      *
      * @param  Request  $request
      * @param  int      $type
@@ -52,21 +52,27 @@ class Dispatcher extends HttpKernel
     /**
      * Sub-request simulates URI request, including route parameter and event middleware
      *
-     * @param  string $path [description]
+     * @param  HttpFoundation\Request|string $path
      *
      * @return HttpFoundation\Response
      */
-    public function subRequest(string $path)
+    public function subRequest($path, string $namespace = '')
     {
+        $request = $path;
+        if (!$request instanceof HttpFoundation\Request) {
+            $request = HttpFoundation\Request::create($path);
+            $request->attributes->set('_pathNamespace', $namespace);
+        }
+
         return $this->handle(
-            HttpFoundation\Request::create($path),
+            $request,
             HttpKernelInterface::SUB_REQUEST,
             false
         );
     }
 
     /**
-     * Resolve and call controller directly
+     * Resolve and call controller directly without middleware
      *
      * @param  string $path
      * @param  array  $args
