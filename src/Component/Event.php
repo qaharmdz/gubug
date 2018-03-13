@@ -64,7 +64,7 @@ class Event extends EventDispatcher
         $eventName = $type . '.' . $eventName;
         $event     = new \Gubug\Event\Hook($eventName, $data);
 
-        if ($listeners = $this->getListeners($eventName)) {
+        if ($this->getListeners($eventName)) {
             $this->dispatch($eventName, $event);
         }
 
