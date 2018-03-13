@@ -69,8 +69,8 @@ class DispatcherTest extends \PHPUnit\Framework\TestCase
 
     public function testControllerFail()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('"/foo/bar" is not available');
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('"/foo/bar" is not available.');
 
         $controllerResolver = $this->createMock('\Gubug\Resolver\Controller', ['getController']);
         $controllerResolver

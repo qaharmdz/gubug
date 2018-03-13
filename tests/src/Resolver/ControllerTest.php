@@ -62,7 +62,7 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([new Controller(), 'foo'], $result);
     }
 
-    public function testGetControllerSubRequest()
+    public function testGetControllerParamController()
     {
         $this->request->attributes->add([
             '_controller' => 'resolver/controller/foo'
@@ -73,7 +73,7 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([new Controller(), 'foo'], $result);
     }
 
-    public function testGetControllerFallback()
+    public function testGetControllerCallable()
     {
         $this->request->attributes->add([
             '_controller' => 'Gubug\Test\Resolver\Controller::foo'
@@ -93,13 +93,27 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->resolver->getController($this->request));
     }
 
-    public function testGetControllerSubRequestFail()
+    public function testGetControllerParamControllerFail()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Unable to find controller');
 
         $this->request->attributes->add([
             '_controller' => 'resolver/controller/boo'
+        ]);
+
+        $this->assertFalse($this->resolver->getController($this->request));
+    }
+
+    /**
+     * Used to load subcontroller and take the advantage of middleware
+     */
+    public function testGetControllerNamespaceRequest()
+    {
+        $this->request->attributes->add([
+            '_path'           => 'resolver/controller/boo',
+            '_master_request' => false,
+            '_pathNamespace'  => 'module'
         ]);
 
         $this->assertFalse($this->resolver->getController($this->request));
