@@ -94,18 +94,18 @@
 
             <table class="table table-condensed">
                     <tr>
-                <td class="type" id="property_data">
-                                                                                <abbr title="Symfony\Component\HttpFoundation\ParameterBag">ParameterBag</abbr>
-                </td>
-                <td>$data</td>
-                <td class="last"></td>
-                <td></td>
-            </tr>
-                    <tr>
                 <td class="type" id="property_name">
                                         protected                                        string
                 </td>
                 <td>$name</td>
+                <td class="last"></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_data">
+                                                                                <abbr title="Symfony\Component\HttpFoundation\ParameterBag">ParameterBag</abbr>
+                </td>
+                <td>$data</td>
                 <td class="last"></td>
                 <td></td>
             </tr>
@@ -128,7 +128,7 @@
                     
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method___construct">__construct</a>(string $eventName, $data = [])
+                    <a href="#method___construct">__construct</a>(string $eventName, array $data = [])
         
                                             <p class="no-description">No description</p>
                                     </div>
@@ -164,6 +164,16 @@
                                             <p>Get all changed data by event listener.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getContent">getContent</a>()
+        
+                                            <p>Special data key "content"</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
             </div>
 
 
@@ -174,7 +184,7 @@
                     <h3 id="method___construct">
         <div class="location">at         <a href="https://github.com/qaharmdz/gubug/blob/master/src/Event/Hook.php#L44">line 44</a></div>
         <code>                    
-    <strong>__construct</strong>(string $eventName, $data = [])
+    <strong>__construct</strong>(string $eventName, array $data = [])
         </code>
     </h3>
     <div class="details">
@@ -191,7 +201,7 @@
                 <td></td>
             </tr>
                     <tr>
-                <td></td>
+                <td>array</td>
                 <td>$data</td>
                 <td></td>
             </tr>
@@ -284,6 +294,36 @@
                     <table class="table table-condensed">
         <tr>
             <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getContent">
+        <div class="location">at         <a href="https://github.com/qaharmdz/gubug/blob/master/src/Event/Hook.php#L90">line 90</a></div>
+        <code>                    string
+    <strong>getContent</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Special data key "content"</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
             <td></td>
         </tr>
     </table>

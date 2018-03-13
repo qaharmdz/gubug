@@ -112,7 +112,7 @@
                 <div class="col-md-8 type">
                     <a href="#method_handle">handle</a>(<abbr title="Symfony\Component\HttpFoundation\Request">Request</abbr> $request, int $type = HttpKernelInterface::MASTER_REQUEST, boolean $catch = true)
         
-                                            <p>Wrap parent handle to get request type</p>                </div>
+                                            <p>Handles a Request to convert it to a Response.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -120,7 +120,7 @@
                     <abbr title="Symfony\Component\HttpFoundation\Response">Response</abbr>
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_subRequest">subRequest</a>(string $path)
+                    <a href="#method_subRequest">subRequest</a>(<abbr title="Symfony\Component\HttpFoundation\Request">Request</abbr>|string $path, string $namespace = &#039;&#039;)
         
                                             <p>Sub-request simulates URI request, including route parameter and event middleware</p>                </div>
                 <div class="col-md-2"></div>
@@ -132,7 +132,7 @@
                 <div class="col-md-8 type">
                     <a href="#method_controller">controller</a>(string $path, array $args = [], string $namespace = &#039;&#039;)
         
-                                            <p>Resolve and call controller directly</p>                </div>
+                                            <p>Resolve and call controller directly without middleware</p>                </div>
                 <div class="col-md-2"></div>
             </div>
             </div>
@@ -197,7 +197,7 @@
     
 
                     <div class="method-description">
-                                    <p>Wrap parent handle to get request type</p>                                                </div>
+                                    <p>Handles a Request to convert it to a Response.</p>                                                </div>
                 <div class="tags">
                             <h4>Parameters</h4>
 
@@ -237,9 +237,9 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_subRequest">
-        <div class="location">at         <a href="https://github.com/qaharmdz/gubug/blob/master/src/Component/Dispatcher.php#L59">line 59</a></div>
+        <div class="location">at         <a href="https://github.com/qaharmdz/gubug/blob/master/src/Component/Dispatcher.php#L60">line 60</a></div>
         <code>                    <abbr title="Symfony\Component\HttpFoundation\Response">Response</abbr>
-    <strong>subRequest</strong>(string $path)
+    <strong>subRequest</strong>(<abbr title="Symfony\Component\HttpFoundation\Request">Request</abbr>|string $path, string $namespace = &#039;&#039;)
         </code>
     </h3>
     <div class="details">
@@ -253,9 +253,14 @@
 
                     <table class="table table-condensed">
                     <tr>
-                <td>string</td>
+                <td><abbr title="Symfony\Component\HttpFoundation\Request">Request</abbr>|string</td>
                 <td>$path</td>
-                <td>[description]</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$namespace</td>
+                <td></td>
             </tr>
             </table>
 
@@ -277,7 +282,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_controller">
-        <div class="location">at         <a href="https://github.com/qaharmdz/gubug/blob/master/src/Component/Dispatcher.php#L77">line 77</a></div>
+        <div class="location">at         <a href="https://github.com/qaharmdz/gubug/blob/master/src/Component/Dispatcher.php#L84">line 84</a></div>
         <code>                    mixed
     <strong>controller</strong>(string $path, array $args = [], string $namespace = &#039;&#039;)
         </code>
@@ -287,7 +292,7 @@
     
 
                     <div class="method-description">
-                                    <p>Resolve and call controller directly</p>                                                </div>
+                                    <p>Resolve and call controller directly without middleware</p>                                                </div>
                 <div class="tags">
                             <h4>Parameters</h4>
 
