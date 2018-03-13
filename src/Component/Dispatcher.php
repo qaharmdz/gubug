@@ -53,6 +53,7 @@ class Dispatcher extends HttpKernel
      * Sub-request simulates URI request, including route parameter and event middleware
      *
      * @param  HttpFoundation\Request|string $path
+     * @param  string                        $namespace
      *
      * @return HttpFoundation\Response
      */
