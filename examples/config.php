@@ -14,7 +14,7 @@ return [
 
     ],
     'eventSubscriber' => [
-
+        'Nav'
     ],
     'routeCollection' => [
         // @see Gubug\Component\Router::addRoute

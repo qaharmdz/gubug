@@ -1,7 +1,7 @@
 <?php
 namespace Contoh\Front\Component;
 
-class Error extends \Contoh\Library\BaseController
+class Error extends \Contoh\Library\Controller
 {
     public function index($exception)
     {

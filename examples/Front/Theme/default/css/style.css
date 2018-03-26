@@ -57,6 +57,9 @@ p {
 b {
     font-weight: 500;
 }
+a {
+    text-decoration: none;
+}
 
 .container {
     margin: 0 auto;
@@ -67,7 +70,7 @@ b {
     margin: 50px 15px;
     padding: 2.5rem 3.14159rem;
     background: #fff;
-    box-shadow: 0 1px 4px rgba(0,0,0,.5);
+    box-shadow: 0 1px 4px rgba(0,0,0,.4);
 }
 
 .header {
@@ -82,6 +85,9 @@ b {
     line-height: 1.2em;
     display: inline-block;
 }
+.header .site-name a {
+    color: #444;
+}
 .header .tagline {
     color: #bbb;
     font-size: 12px;
@@ -89,6 +95,27 @@ b {
     font-style: italic;
     display: inline-block;
     line-height: 1.25em;
+}
+.main-nav {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    float: right;
+    margin-top: 25px;
+    font-size: 13px;
+}
+.main-nav li {
+    display: inline-block;
+}
+.main-nav li + li {
+    margin-left: 12px;
+}
+.main-nav li a {
+    color: #1c69da;
+}
+.main-nav li a:hover {
+    color: #961D55;
 }
 
 .content {

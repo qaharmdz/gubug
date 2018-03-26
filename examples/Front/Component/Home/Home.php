@@ -1,7 +1,7 @@
 <?php
 namespace Contoh\Front\Component\Home;
 
-class Home extends \Contoh\Library\BaseController
+class Home extends \Contoh\Library\Controller
 {
     public function index()
     {

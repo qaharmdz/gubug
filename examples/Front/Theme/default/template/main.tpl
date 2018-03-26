@@ -13,8 +13,14 @@
     <div class="container">
         <div class="wrapper">
             <div class="header">
-                <div class="site-name">Gubug</div>
+                <div class="site-name">
+                    <a href="<?php echo $url_home; ?>">
+                        Gubug
+                    </a>
+                </div>
                 <div class="tagline">An experimental <br>PHP micro framework</div>
+
+                <?php echo $nav; ?>
             </div>
 
             <div class="content">

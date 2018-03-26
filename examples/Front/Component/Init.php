@@ -1,12 +1,12 @@
 <?php
 namespace Contoh\Front\Component;
 
-class Init extends \Contoh\Library\BaseController
+class Init extends \Contoh\Library\Controller
 {
     public function index()
     {
         $data      = [];
-        $component = $this->dispatcher->handle($this->request);
+        $component = $this->dispatcher->handle($this->request); // automatically wrapped by event Middleware
 
         // Respect component decision to send output
         if ($component->hasOutput()) {
@@ -14,23 +14,21 @@ class Init extends \Contoh\Library\BaseController
         }
 
         // Main page
-        $data['baseURL']   = $this->config->get('baseURL');
-        $data['basePath']  = $this->config->get('basePath');
-        $data['pageInfo']  = array_replace([
+        $data['baseURL']    = $this->config->get('baseURL');
+        $data['basePath']   = $this->config->get('basePath');
+        $data['pageInfo']   = array_replace([
             'title'      => 'Gubug - PHP micro framework',
             'body_class' => '',
             'sidebar'    => true
         ], $this->session->getFlash('pageInfo'));
 
-        $data['component'] = $component->getContent();
-        $data['modules']   = $this->sidebar($data['pageInfo']);
+        $data['component']  = $component->getContent();
+        $data['modules']    = $this->sidebar($data['pageInfo']);
+        $data['nav']        = $this->load('nav/nav', [], 'Module')->getContent();
 
-        // We can use component as part of larger pages
-        $template = $this->config->get('themePath') . 'template/index.tpl';
+        $data['url_home']   = $this->router->urlGenerate();
 
-        return $this->response
-                    ->render($template, $data)
-                    ->setStatusCode($component->getStatusCode());
+        return $this->render('main', $data)->setStatusCode($component->getStatusCode());
     }
 
     public function sidebar($pageInfo)
@@ -39,9 +37,8 @@ class Init extends \Contoh\Library\BaseController
             return [];
         }
 
-        // Lets pretend the modules path & arg provided by config or from database
+        // Lets pretend the modules path & arg provided by config or database
         $results = [
-            ['nav/nav', []],
             ['custom/html/list', ['list' => ['Foo', 'Bar', 'Buzz']] ],
             ['custom/text', []],
             ['custom/html', ['text' => 'HTML']],
@@ -52,16 +49,7 @@ class Init extends \Contoh\Library\BaseController
             try {
                 list($path, $arguments) = $mod;
 
-                // This event allows you to change the arguments that will be passed to the controller.
-                $eventArguments = $this->event->filter('sidebar.module.arguments', $arguments);
-
-                // Dispatch module to get response
-                $response = $this->dispatcher->controller($path, $eventArguments->getAllData(), 'Module');
-
-                // This event allows you to modify or replace the content that will be replied.
-                $eventResponse = $this->event->filter('sidebar.module.content', ['content' => $response->getContent()]);
-
-                $modules[] = $eventResponse->getContent('content');
+                $modules[] = $this->load($path, $arguments, 'Module')->getContent();
             } catch (\Exception $e) {
                 $this->log->notice($e->getMessage() . ' in ' . $e->getFile() . ' line ' . $e->getLine());
             }

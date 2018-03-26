@@ -1,10 +1,10 @@
 <?php
 namespace Contoh\Front\Module\Custom;
 
-class Text extends \Contoh\Library\BaseController
+class Text extends \Contoh\Library\Controller
 {
     public function index()
     {
-        return $this->response->setContent('<p style="text-align:center;">Sidebar Text</p>');
+        return $this->render('module/custom/text', ['content' => 'Sidebar Text']);
     }
 }
