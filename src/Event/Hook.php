@@ -83,12 +83,12 @@ class Hook extends EventDispatcher\Event
     }
 
     /**
-     * Special data key "content"
+     * Special data key "_content"
      *
      * @return string
      */
     public function getContent()
     {
-        return $this->data->get('content');
+        return $this->data->get('_content');
     }
 }

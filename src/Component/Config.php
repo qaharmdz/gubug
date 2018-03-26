@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class Config extends ParameterBag
 {
     /**
-     * Override default getter to use dot-notation
+     * Returns a parameter by name (dot-notation).
      *
      * @param string $key     The key
      * @param mixed  $default The default value if the parameter key does not exist
@@ -40,7 +40,7 @@ class Config extends ParameterBag
     }
 
     /**
-     * Override default setter to use dot-notation
+     * Sets a parameter by name (dot-notation).
      *
      * @param string $key   The key
      * @param mixed  $value The value
