@@ -124,10 +124,6 @@ class Controller extends ControllerResolver
         $method    = $this->resolveMethod($segments);
         $arguments = $this->resolveArguments($args, $segments);
 
-        if (!is_callable([$class, $method])) {
-            throw new \InvalidArgumentException(sprintf('The controller "%s" for URI "%s" is not available.', $class . '::' . $method, $path));
-        }
-
         return [
             'class'     => $class,
             'method'    => $method,
