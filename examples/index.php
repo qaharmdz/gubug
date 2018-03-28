@@ -5,22 +5,26 @@
 
 defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 
-// Autoload
+//========= Autoload
+
 $loader = require realpath(__DIR__ . '/../vendor/') . DS . 'autoload.php';
 $loader->addPsr4('Contoh\\', realpath(__DIR__));
 
 $config = require 'config.php';
 
-// Micro framework
+//========= Micro Framework
+
 $gubug = new Gubug\Framework();
 $gubug->init($config['framework']);
 
-// Provide base URL and Path
+//=== Set base URL and Path
 $gubug->config->set('baseURL', $gubug->request->getBaseUri());
 $gubug->config->set('basePath', realpath(__DIR__) . DS);
 $gubug->config->set('themePath', $gubug->config->get('basePath') . 'Front/Theme/default/');
 
-// Setup app from config (or database)
+
+//========= Application Setup
+
 foreach ($config['serviceProvider'] as $provider) {
     # code...
 }
@@ -33,5 +37,5 @@ foreach ($config['eventSubscriber'] as $subscriber) {
 foreach ($config['routeCollection'] as $route) {
 }
 
-// Start to run..
+//=== Start to run..
 $gubug->run();

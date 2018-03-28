@@ -8,7 +8,7 @@ class Init extends \Contoh\Library\Controller
         $data      = [];
         $component = $this->dispatcher->handle($this->request); // automatically wrapped by event Middleware
 
-        // Respect component decision to send output
+        // Component direct output
         if ($component->hasOutput()) {
             return $component->getOutput();
         }
@@ -37,7 +37,7 @@ class Init extends \Contoh\Library\Controller
             return [];
         }
 
-        // Lets pretend the modules path & arg provided by config or database
+        // Lets pretend the modules data from database
         $results = [
             ['custom/html/list', ['list' => ['Foo', 'Bar', 'Buzz']] ],
             ['custom/text', []],
