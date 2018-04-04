@@ -120,7 +120,7 @@ class Framework
         ));
 
         // Environment config
-        $this->dotenv($this->config->get('envPath'));
+        $this->config->load($this->config->get('envPath'), 'env');
 
         $this->config->set('debug', $this->config->getBoolean(
             'debug',
@@ -156,6 +156,11 @@ class Framework
     {
         // Handle errors and exceptions
         Debug\Debug::enable(E_ALL, $this->config->get('debug'));
+
+        // !d($this->config->all());
+        // $test1 = $this->config->load($this->config->get('test_array'), 'array');
+        // $test2 = $this->config->load($this->config->get('test_json'), 'json');
+        // !d($this->config->all());
 
         // Service setup
         $this->container['router.context']->fromRequest($this->request);
@@ -243,35 +248,5 @@ class Framework
             $this->router->addRoute('dynamic_locale', '/{_locale}/{_path}', ['_path' => $this->config->get('routePath')], ['_path' => '.*']);
         }
         $this->router->addRoute('dynamic', '/{_path}', ['_path' => $this->config->get('routePath')], ['_path' => '.*']);
-    }
-
-    /**
-     * Load environment (.env) setting to config and global $_ENV, $_SERVER
-     *
-     * @param  string $file
-     */
-    public function dotenv(string $file)
-    {
-        if (file_exists($file)) {
-            $getenv = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            $dotenv = array_map(function ($v) {
-                return explode('=', $v);
-            }, $getenv);
-
-            foreach ($dotenv as $envs) {
-                if (substr($envs[0], 0, 1) != '#') {
-                    list($name, $value) = array_map('trim', $envs);
-
-                    $this->config->set($name, $value);
-
-                    if (function_exists('putenv')) {
-                        putenv($name . '=' . $value);
-                    }
-
-                    $_ENV[$name]    = $value;
-                    $_SERVER[$name] = $value;
-                }
-            }
-        }
     }
 }

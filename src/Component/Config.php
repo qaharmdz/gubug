@@ -103,7 +103,7 @@ class Config extends ParameterBag
      *
      * @see   https://github.com/adbario/php-dot-notation
      *
-     * @param string $keys   Key in dot-notation
+     * @param string $keys  Key in dot-notation
      * @param mixed  $value The value
      */
     public function setDot($keys, $value)
@@ -124,7 +124,7 @@ class Config extends ParameterBag
     /**
      * Remove a parameter by dot-notation keys.
      *
-     * @see   https://github.com/adbario/php-dot-notation
+     * @see    https://github.com/adbario/php-dot-notation
      *
      * @param  string $keys String key in dot-notation
      */
@@ -145,5 +145,79 @@ class Config extends ParameterBag
             }
             unset($items[$lastSegment]);
         }
+    }
+
+    public function load(string $file, $type = 'array')
+    {
+        if (!is_file($file)) {
+            throw new \RuntimeException(sprintf('File "%s" not found.', $file));
+        }
+
+        switch ($type) {
+            case 'array':
+                return $this->loadArray($file);
+                break;
+
+            case 'json':
+                return $this->loadJson($file);
+                break;
+
+            case 'env':
+                return $this->loadEnv($file);
+                break;
+
+            default:
+                throw new \InvalidArgumentException(sprintf('Config type "%s" not recognized.', $type));
+                break;
+        }
+    }
+
+    protected function loadArray(string $file)
+    {
+        $bags = include $file;
+
+        $this->add((array)$bags);
+
+        return $bags;
+    }
+
+    protected function loadJson(string $file)
+    {
+        $bags = json_decode(file_get_contents($file), true);
+
+        $this->add((array)$bags);
+
+        return $bags;
+    }
+
+    /**
+     * Load .env file content to config, $_ENV and $_SERVER
+     *
+     * @param  string $file
+     *
+     * @return array
+     */
+    protected function loadEnv(string $file)
+    {
+        $bags = [];
+
+        $getenv = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $dotenv = array_map(function ($v) {
+            return explode('=', $v);
+        }, $getenv);
+
+        foreach ($dotenv as $envs) {
+            if (substr($envs[0], 0, 1) != '#') {
+                list($name, $value) = array_map('trim', $envs);
+
+                $bags[$name]    = $value;
+                $_ENV[$name]    = $value;
+                $_SERVER[$name] = $value;
+                putenv($name . '=' . $value);
+                $this->set($name, $value);
+            }
+        }
+
+        return $bags;
     }
 }
