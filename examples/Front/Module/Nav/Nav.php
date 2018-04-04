@@ -7,8 +7,8 @@ class Nav extends \Contoh\Library\Controller
     {
         $data = [];
         $data['navs'][] = ['Home', $this->router->urlGenerate(), 'Title link'];
-        $data['navs'][] = ['Page x', $this->router->urlGenerate('page/2'), 'Title link'];
-        $data['navs'][] = ['Redirect Home', $this->router->urlGenerate('page/301'), 'Title link'];
+        $data['navs'][] = ['Page', $this->router->urlGenerate('page', ['pid' => 4]), 'Title link'];
+        $data['navs'][] = ['Post', $this->router->urlGenerate('page/post', ['pid' => 8, 'cid' => '9_10']), 'Title link'];
 
         return $this->render('module/nav/nav', $data);
     }

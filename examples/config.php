@@ -5,6 +5,9 @@ return [
         'envPath'        => realpath(__DIR__ . '/') . DS . '.env',
         'logPath'        => realpath(__DIR__ . '/Library/') . DS . 'error.log',
 
+        'test_array'     => realpath(__DIR__ . '/') . DS . 'test.php',
+        'test_json'      => realpath(__DIR__ . '/') . DS . 'test.json',
+
         'baseNamespace'  => 'Contoh\Front',
         'pathNamespace'  => 'Component',
         'mainController' => 'component/init',

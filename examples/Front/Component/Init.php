@@ -6,7 +6,7 @@ class Init extends \Contoh\Library\Controller
     public function index()
     {
         $data      = [];
-        $component = $this->dispatcher->handle($this->request); // automatically wrapped by event Middleware
+        $component = $this->dispatcher->handle($this->request); // wrapped by event Middleware
 
         // Component direct output
         if ($component->hasOutput()) {

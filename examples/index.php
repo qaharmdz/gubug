@@ -26,7 +26,7 @@ $gubug->config->set('themePath', $gubug->config->get('basePath') . 'Front/Theme/
 //========= Application Setup
 
 foreach ($config['serviceProvider'] as $provider) {
-    # code...
+    $gubug->container->register(new $provider());
 }
 
 foreach ($config['eventSubscriber'] as $subscriber) {
@@ -35,6 +35,7 @@ foreach ($config['eventSubscriber'] as $subscriber) {
 }
 
 foreach ($config['routeCollection'] as $route) {
+    $gubug->router->addRoute(...$route);
 }
 
 //=== Start to run..
