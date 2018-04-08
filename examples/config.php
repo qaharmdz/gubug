@@ -21,6 +21,19 @@ return [
         'Nav'
     ],
     'routeCollection' => [
-        // @see Gubug\Component\Router::addRoute
+        ['page', '/page/{pid}', ['pid' => 0, '_path' => 'page'], ['pid' => '\d+']],
+        [
+            'page/post',                            // Route name. Recommended same as "_path".
+            '/post/{pid}/{cid}',                    // Path format.
+            [
+                'pid' => 0,
+                'cid' => '0_0',
+                '_path' => 'page/post'
+            ],
+            [
+                'pid' => '\d+',
+                'cid' => '^\d+[_\d+]*[^-_\D]+$'
+            ]
+        ]
     ]
 ];
