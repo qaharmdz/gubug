@@ -30,11 +30,6 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 class Controller extends ControllerResolver
 {
     /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $log;
-
-    /**
      * @var \Symfony\Component\HttpFoundation\ParameterBag
      */
     public $param;
@@ -43,9 +38,7 @@ class Controller extends ControllerResolver
     {
         parent::__construct($logger);
 
-        $this->log   = $logger;
         $this->param = $param;
-
         $this->param->add([
             'baseNamespace' => '',
             'pathNamespace' => ''

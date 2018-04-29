@@ -110,9 +110,9 @@ class Framework
                 ],
                 'baseNamespace'     => '',      // Application namespace prefix
                 'pathNamespace'     => '',      // Namespace prefix for _path route
-                'mainController'    => '',
+                'mainController'    => '',      // Class as main agent of PAC
+                'errorController'   => '',      // Class handle error page
                 'routePath'         => '',      // Default URL _path for base and dynamic route
-                'errorHandler'      => '',
                 'envPath'           => __DIR__ . DIRECTORY_SEPARATOR . '.env',
                 'logPath'           => __DIR__ . DIRECTORY_SEPARATOR . 'error.log'
             ],
@@ -154,13 +154,9 @@ class Framework
 
     public function initApp()
     {
-        // Handle errors and exceptions
-        Debug\Debug::enable(E_ALL, $this->config->get('debug'));
-
-        // !d($this->config->all());
-        // $test1 = $this->config->load($this->config->get('test_array'), 'array');
-        // $test2 = $this->config->load($this->config->get('test_json'), 'json');
-        // !d($this->config->all());
+        if ($this->config->get('debug')) {
+            Debug\Debug::enable(E_ALL, true);
+        }
 
         // Service setup
         $this->container['router.context']->fromRequest($this->request);
@@ -199,12 +195,12 @@ class Framework
             )
         );
 
-        if ($this->config->get('errorHandler')) {
-            $errorHandler = $this->container['resolver.controller']->resolve($this->config->get('errorHandler'), []);
+        if ($this->config->get('errorController')) {
+            $errorController = $this->container['resolver.controller']->resolve($this->config->get('errorController'), []);
 
             $this->event->addSubscriber(
                 new EventListener\ExceptionListener(
-                    [new $errorHandler['class'], $errorHandler['method']],
+                    [new $errorController['class'], $errorController['method']],
                     $this->log,
                     $this->config->get('debug')
                 )
