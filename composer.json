@@ -1,7 +1,7 @@
 {
     "name": "qaharmdz/gubug",
     "description": "An experimental PHP micro framework",
-    "keywords": ["framework","micro"],
+    "keywords": ["framework","micro","pac"],
     "homepage": "https://github.com/qaharmdz/gubug",
     "license": "Apache-2.0",
     "authors": [
