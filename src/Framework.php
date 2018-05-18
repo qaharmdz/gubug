@@ -100,27 +100,31 @@ class Framework
     {
         // Configuration
         $this->config = $this->container['config'];
-        $this->config->add(array_replace(
+        $this->config->add(array_replace_recursive(
             [
                 'environment'   => 'live',      // live, dev, test
+                'path'          => [
+                    'env'   => '',
+                    'log'   => __DIR__ . DIRECTORY_SEPARATOR . 'error.log'
+                ],
                 'locale'        => 'en',        // Default locale
                 'locales'       => ['en'],      // Avalaible languages
                 'session'       => [            // Key at http://php.net/session.configuration, omit 'session.'
-                    'name' => '_gubug'
+                    'name'  => '_gubug'
                 ],
                 'baseNamespace'     => '',      // Application namespace prefix
                 'pathNamespace'     => '',      // Namespace prefix for _path route
                 'mainController'    => '',      // Class as main agent of PAC
                 'errorController'   => '',      // Class handle error page
-                'routePath'         => '',      // Default URL _path for base and dynamic route
-                'envPath'           => __DIR__ . DIRECTORY_SEPARATOR . '.env',
-                'logPath'           => __DIR__ . DIRECTORY_SEPARATOR . 'error.log'
+                'defaultComponent'  => ''       // Default controller component
             ],
             $config
         ));
 
         // Environment config
-        $this->config->load($this->config->get('envPath'), 'env');
+        if ($this->config->get('path.env')) {
+            $this->config->load($this->config->get('path.env'), 'env');
+        }
 
         $this->config->set('debug', $this->config->getBoolean(
             'debug',
@@ -128,7 +132,7 @@ class Framework
         ));
 
         // Service parameter
-        $this->container['log.output'] = $this->config->get('logPath');
+        $this->container['log.output'] = $this->config->get('path.log');
         $this->container['resolver.controller']->param->set('baseNamespace', $this->config->get('baseNamespace'));
         $this->container['resolver.controller']->param->set('pathNamespace', $this->config->get('pathNamespace'));
 
@@ -154,6 +158,7 @@ class Framework
 
     public function initApp()
     {
+        ini_set('display_errors', 0);
         if ($this->config->get('debug')) {
             Debug\Debug::enable(E_ALL, true);
         }
@@ -170,13 +175,11 @@ class Framework
         // Access to container
         ServiceContainer::setContainer($this->container);
 
-        // First citizen of routeCollection
         $this->baseRoute();
     }
 
     public function coreEvent()
     {
-        // Last citizen of routeCollection as fallback
         $this->dynamicRoute();
 
         $this->event->addSubscriber(
@@ -229,9 +232,9 @@ class Framework
      */
     public function baseRoute()
     {
-        $this->router->addRoute('base', '/', ['_path' => $this->config->get('routePath')]);
+        $this->router->addRoute('base', '/', ['_path' => $this->config->get('defaultComponent')]);
         if (count($this->config->get('locales')) > 1) {
-            $this->router->addRoute('base_locale', '/{_locale}/', ['_path' => $this->config->get('routePath')]);
+            $this->router->addRoute('base_locale', '/{_locale}/', ['_path' => $this->config->get('defaultComponent')]);
         }
     }
 
@@ -241,8 +244,8 @@ class Framework
     public function dynamicRoute()
     {
         if (count($this->config->get('locales')) > 1) {
-            $this->router->addRoute('dynamic_locale', '/{_locale}/{_path}', ['_path' => $this->config->get('routePath')], ['_path' => '.*']);
+            $this->router->addRoute('dynamic_locale', '/{_locale}/{_path}', ['_path' => $this->config->get('defaultComponent')], ['_path' => '.*']);
         }
-        $this->router->addRoute('dynamic', '/{_path}', ['_path' => $this->config->get('routePath')], ['_path' => '.*']);
+        $this->router->addRoute('dynamic', '/{_path}', ['_path' => $this->config->get('defaultComponent')], ['_path' => '.*']);
     }
 }

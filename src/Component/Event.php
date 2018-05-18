@@ -51,7 +51,7 @@ class Event extends EventDispatcher
     }
 
     /**
-     * Specifically dispatch event \Gubug\Event\Hook to all registered listeners
+     * Dispatch event \Gubug\Event\Hook to all registered listeners
      *
      * @param  string $eventName
      * @param  array  $data
