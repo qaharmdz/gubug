@@ -19,7 +19,7 @@ class Controller extends \Gubug\ServiceContainer
      *
      * @return \Gubug\Event\Hook
      */
-    protected function load(string $path, array $arguments, string $namespace)
+    protected function load(string $path, array $arguments = [], string $namespace = 'Module')
     {
         /**
          * This event allows you to change the arguments that will be passed to the controller.

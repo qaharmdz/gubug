@@ -15,7 +15,7 @@ $config = require 'config.php';
 //========= Micro Framework
 
 $gubug = new Gubug\Framework();
-$gubug->init($config['framework']);
+$gubug->init($config['app']);
 
 //=== Set base URL and Path
 $gubug->config->set('baseURL', $gubug->request->getBaseUri());

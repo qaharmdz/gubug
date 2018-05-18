@@ -24,7 +24,7 @@ class Init extends \Contoh\Library\Controller
 
         $data['component']  = $component->getContent();
         $data['modules']    = $this->sidebar($data['pageInfo']);
-        $data['nav']        = $this->load('nav/nav', [], 'Module')->getContent();
+        $data['nav']        = $this->load('nav/nav')->getContent();
 
         $data['url_home']   = $this->router->urlGenerate();
 
@@ -49,7 +49,7 @@ class Init extends \Contoh\Library\Controller
             try {
                 list($path, $arguments) = $mod;
 
-                $modules[] = $this->load($path, $arguments, 'Module')->getContent();
+                $modules[] = $this->load($path, $arguments)->getContent();
             } catch (\Exception $e) {
                 $this->log->notice($e->getMessage() . ' in ' . $e->getFile() . ' line ' . $e->getLine());
             }
