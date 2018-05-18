@@ -71,13 +71,11 @@ class Controller extends ControllerResolver
             return $controllerParam;
         }
 
+        // Last try fallback to parent resolver
         try {
-            $controller = $this->resolve($controllerParam);
-            $object = [new $controller['class'], $controller['method']];
-            return is_callable($object) ? $object : false;
-        } catch (\Exception $e) {
-            // Last effort fallback to Symfony controller resolver
             return parent::getController($request);
+        } catch (\Exception $e) {
+            return false;
         }
     }
 
