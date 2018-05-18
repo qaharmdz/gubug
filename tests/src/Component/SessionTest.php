@@ -27,37 +27,37 @@ class SessionTest extends \PHPUnit\Framework\TestCase
 
     public function testFlash()
     {
-        // $this->expectException(\RuntimeException::class);
-
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Flash\FlashBag', $this->session->flash());
     }
 
     public function testSetFlash()
     {
-        // $this->expectException(\RuntimeException::class);
-
         $this->assertNull($this->session->setFlash('notice', ['foo' => 'bar']));
     }
 
     public function testAddFlash()
     {
-        // $this->expectException(\RuntimeException::class);
-
         $this->assertNull($this->session->addFlash('notice', 'cool'));
     }
 
     public function testGetFlash()
     {
-        // $this->expectException(\RuntimeException::class);
-
         $this->session->addFlash('notice', 'world');
 
-        $actual = [
+        $expect = [
             'cool',
             'world',
             'foo' => 'bar'
         ];
 
-        $this->assertEquals($actual, $this->session->getFlash('notice'));
+        $this->assertEquals($expect, $this->session->getFlash('notice'));
+    }
+
+    public function testHasFlash()
+    {
+        $this->session->addFlash('foo', 'bar');
+
+        $this->assertFalse($this->session->hasFlash('notice'));
+        $this->assertTrue($this->session->hasFlash('foo'));
     }
 }

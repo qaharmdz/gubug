@@ -40,7 +40,7 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf('Gubug\Resolver\Controller', $this->resolver);
     }
 
-    public function testGetControllerPath()
+    public function testRequestPath()
     {
         $this->request->attributes->add([
             '_path' => 'resolver/controller'
@@ -51,7 +51,7 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([new Controller(), 'index'], $result);
     }
 
-    public function testGetControllerPathArgs()
+    public function testRequestPathMethod()
     {
         $this->request->attributes->add([
             '_path' => 'resolver/controller/foo/bar/baz'
@@ -62,18 +62,7 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([new Controller(), 'foo'], $result);
     }
 
-    public function testGetControllerParamController()
-    {
-        $this->request->attributes->add([
-            '_controller' => 'resolver/controller/foo'
-        ]);
-
-        $result = $this->resolver->getController($this->request);
-
-        $this->assertEquals([new Controller(), 'foo'], $result);
-    }
-
-    public function testGetControllerCallable()
+    public function testRequestControllerCallable()
     {
         $this->request->attributes->add([
             '_controller' => 'Gubug\Test\Resolver\Controller::foo'
@@ -84,22 +73,19 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Gubug\Test\Resolver\Controller::foo', $result);
     }
 
-    public function testGetControllerPathFail()
+    public function testRequestPathFail()
     {
         $this->request->attributes->add([
-            '_path' => 'resolver/controller/boo'
+            '_path' => 'resolver/controller/bar'
         ]);
 
         $this->assertFalse($this->resolver->getController($this->request));
     }
 
-    public function testGetControllerParamControllerFail()
+    public function testRequestControllerFail()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unable to find controller');
-
         $this->request->attributes->add([
-            '_controller' => 'resolver/controller/boo'
+            '_controller' => 'resolver/controller/bar'
         ]);
 
         $this->assertFalse($this->resolver->getController($this->request));
@@ -108,10 +94,10 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
     /**
      * Used to load subcontroller and take the advantage of middleware
      */
-    public function testGetControllerNamespaceRequest()
+    public function testControllerNamespaceRequest()
     {
         $this->request->attributes->add([
-            '_path'           => 'resolver/controller/boo',
+            '_path'           => 'resolver/controller/bar',
             '_master_request' => false,
             '_pathNamespace'  => 'module'
         ]);
@@ -133,7 +119,7 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
     public function testResolveEmptyPathSegments()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Empty "_path" segments parameter.');
+        $this->expectExceptionMessage('Empty route path parameter.');
 
         $this->resolver->resolve('/');
     }
@@ -146,10 +132,10 @@ class ControllerTest extends \PHPUnit\Framework\TestCase
         $this->resolver->resolve('resolver/agent/test');
     }
 
-    protected function getLogs()
-    {
-        return file($this->tmpFile, FILE_IGNORE_NEW_LINES);
-    }
+    // protected function getLogs()
+    // {
+    //     return file($this->tmpFile, FILE_IGNORE_NEW_LINES);
+    // }
 }
 
 class Controller

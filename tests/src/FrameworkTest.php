@@ -35,10 +35,11 @@ class FrameworkTest extends \PHPUnit\Framework\TestCase
     public function testFramework()
     {
         $config = [
-            'baseNamespace' => 'Gubug',
-            'routePath'     => 'test/app', // index
-            'errorHandler'  => 'test/error/handle',
-            'logfile'       => $this->tmpFile
+            'baseNamespace'    => 'Gubug',
+            'defaultComponent' => 'test/app', // index
+            'path'             => [
+                'log'   => $this->tmpFile
+            ],
         ];
 
         $this->gubug->init($config);
@@ -52,13 +53,63 @@ class FrameworkTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('java coffee', $response);
     }
 
-    public function testFrameworkError()
+    public function testConfigEnv()
+    {
+        $envFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . '.env';
+        file_put_contents($envFile, 'environment=test');
+
+        $config = [
+            'baseNamespace'    => 'Gubug',
+            'defaultComponent' => 'test/app', // index
+            'path'             => [
+                'env'   => $envFile,
+                'log'   => $this->tmpFile
+            ],
+        ];
+
+        $this->gubug->init($config);
+
+        ob_start();
+
+        $this->gubug->run();
+
+        $response = ob_get_clean();
+
+        $this->assertEquals('java coffee', $response);
+        unlink($envFile);
+    }
+
+    public function testMainController()
     {
         $config = [
-            'baseNamespace' => 'Gubug',
-            'routePath'     => 'test/app/world',
-            'errorHandler'  => 'test/error/handle',
-            'logfile'       => $this->tmpFile
+            'locales'          => ['en', 'id'], // test baseRoute() dynamicRoute() multiple locales
+            'baseNamespace'    => 'Gubug',
+            'mainController'   => 'test/main',
+            'path'             => [
+                'log'   => $this->tmpFile
+            ],
+        ];
+
+        $this->gubug->init($config);
+
+        ob_start();
+
+        $this->gubug->run();
+
+        $response = ob_get_clean();
+
+        $this->assertEquals('main response: coffee world', $response);
+    }
+
+    public function testErrorController()
+    {
+        $config = [
+            'baseNamespace'    => 'Gubug',
+            'errorController'  => 'test/error',
+            'defaultComponent' => 'test/app/none',
+            'path'             => [
+                'log'   => $this->tmpFile
+            ],
         ];
 
         $this->gubug->init($config);
@@ -71,28 +122,6 @@ class FrameworkTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('error response', $response);
     }
-
-    public function testMainController()
-    {
-        $config = [
-            'locales'       => ['en', 'id'],
-            'baseNamespace'  => 'Gubug',
-            'mainController' => 'test/main',
-            'routePath'      => 'test/app', // index
-            'errorHandler'   => 'test/error/handle',
-            'logfile'        => $this->tmpFile
-        ];
-
-        $this->gubug->init($config);
-
-        ob_start();
-
-        $this->gubug->run();
-
-        $response = ob_get_clean();
-
-        $this->assertEquals('main response: java coffee', $response);
-    }
 }
 
 class App
@@ -101,13 +130,10 @@ class App
     {
         return new Response('java coffee');
     }
-}
 
-class Error
-{
-    public function handle()
+    public function sub()
     {
-        return new Response('error response');
+        return new Response('coffee world');
     }
 }
 
@@ -116,6 +142,14 @@ class Main {
     {
         $app = new App();
 
-        return new Response('main response: ' . $app->index()->getContent());
+        return new Response('main response: ' . $app->sub()->getContent());
+    }
+}
+
+class Error
+{
+    public function index()
+    {
+        return new Response('error response');
     }
 }

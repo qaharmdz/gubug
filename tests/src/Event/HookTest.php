@@ -46,7 +46,7 @@ class HookTest extends \PHPUnit\Framework\TestCase
 
     public function testGetContent()
     {
-        $this->hook->data->set('content', 'world');
+        $this->hook->data->set('_content', 'world');
 
         $this->assertEquals('world', $this->hook->getContent());
     }
