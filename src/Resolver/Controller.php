@@ -58,14 +58,14 @@ class Controller extends ControllerResolver
         if ($request->attributes->get('_path')) {
             try {
                 $controller = $this->resolvePath($request);
-
-                return [new $controller['class'], $controller['method']];
+                $object = [new $controller['class'], $controller['method']];
+                return is_callable($object) ? $object : false;
             } catch (\Exception $e) {
                 return false;
             }
         }
 
-        // Don't waste resource
+        // Return if _controller is callable
         $controllerParam = $request->attributes->get('_controller');
         if (is_callable($controllerParam)) {
             return $controllerParam;
@@ -73,9 +73,10 @@ class Controller extends ControllerResolver
 
         try {
             $controller = $this->resolve($controllerParam);
-
-            return [new $controller['class'], $controller['method']];
+            $object = [new $controller['class'], $controller['method']];
+            return is_callable($object) ? $object : false;
         } catch (\Exception $e) {
+            // Last effort fallback to Symfony controller resolver
             return parent::getController($request);
         }
     }
@@ -110,7 +111,7 @@ class Controller extends ControllerResolver
         $segments = explode('/', trim($path, '/'));
 
         if (empty($segments[0])) {
-            throw new \InvalidArgumentException('Empty "_path" segments parameter.');
+            throw new \InvalidArgumentException('Empty route path parameter.');
         }
 
         $class     = $this->resolveClass($path, $namespace, $segments);
