@@ -204,7 +204,7 @@ class Config extends ParameterBag
         $getenv = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         $dotenv = array_map(function ($v) {
             return explode('=', $v);
-        }, $getenv);
+        }, (array)$getenv);
 
         foreach ($dotenv as $envs) {
             if (substr($envs[0], 0, 1) != '#') {
