@@ -199,15 +199,18 @@ class Framework
         );
 
         if ($this->config->get('errorController')) {
-            $errorController = $this->container['resolver.controller']->resolve($this->config->get('errorController'), []);
+            $controller = $this->container['resolver.controller']->resolve($this->config->get('errorController'), []);
+            $object = [new $controller['class'], $controller['method']];
 
-            $this->event->addSubscriber(
-                new EventListener\ExceptionListener(
-                    [new $errorController['class'], $errorController['method']],
-                    $this->log,
-                    $this->config->get('debug')
-                )
-            );
+            if (is_callable($object)) {
+                $this->event->addSubscriber(
+                    new EventListener\ExceptionListener(
+                        $object,
+                        $this->log,
+                        $this->config->get('debug')
+                    )
+                );
+            }
         }
     }
 
