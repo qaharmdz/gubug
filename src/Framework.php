@@ -115,7 +115,7 @@ class Framework
         ));
 
         // Environment config
-        if ($this->config->get('path.env')) {
+        if (is_file($this->config->get('path.env'))) {
             $this->config->load($this->config->get('path.env'), 'env');
         }
 
