@@ -9,12 +9,18 @@ Gubug adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) and a
 ## [NEXT] - YYYY-MM-DD
 
 ### Added
-- Session setFlash()
+- Config loader
+- Controller fallback to parent resolver
+- Session setFlash() and hasFlash()
 - Param pathNamespace to controller resolver
 
 ### Changed
+- Move hardcoded param to $config
 - Dispatcher controller load use request
 - Improve error and exception handler
+
+### Removed
+- Error log in controller resolver
 
 ### Fixed
 - Fallback controller resolver never reached
