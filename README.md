@@ -11,7 +11,6 @@ Gubug is an experimental opinionated micro framework developed on top of Symfony
 
 ## Scenario
 - Support multiple apps (Admin, Front etc is different app)
-- Apps controller 
 
 ## Challenge
 - Dynamic route automatically locate controller at app component
