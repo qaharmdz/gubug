@@ -7,37 +7,16 @@
 
 ---
 
-Gubug is an experimental PHP micro framework. Developed on top of Symfony Components with [PAC architecture](https://en.wikipedia.org/wiki/Presentation-abstraction-control) in mind.
+Gubug is an experimental opinionated micro framework developed on top of Symfony 4 components with [PAC architecture](https://en.wikipedia.org/wiki/Presentation-abstraction-control) in mind.
 
-No further info for now, maybe later..
+## Scenario
+- Support multiple apps (Admin, Front etc is different app)
+- Apps controller 
 
-## Vision
-Project vision, scope and an experimental subject.
-
-#### _Symfony component_ Micro Framework
-- Flow: ```Request - {Routing % Dispatcher} - Response```.
-- Event based middleware.
-- Preserve the valid callback of route _\_controller_.
-- _ExceptionListener_ is a must.
-
-#### _Opinionated_ PAC Micro Framework
-- Flow: ```Request - Routing - Main Agent - Dispatcher - Response```.
-    - Cons: main agent become immutable from middleware.
-    - Pros: _cons?_ now I know who the boss is. Just call it the ```Outerware```
-- Dynamic route: route _\_path_ into ```folder/file-class/{method|index}/...argsPair[key:value]```.
-- Additional service: config, session, security, logger, hook.
-
-#### Brainstorm Notes
-- __Important__: Do not overuse Symfony component, make it KISS! :kiss:
-- Assume agent-level like Joomla extensions taxonomy: component, module, plugin.
-- Custom hook event like Wordpress: _action_ and _filter_.
----
-- Support multilanguages route
-- Agent response not necessary output, explicit requirement of _setOutput()_.
-- Main agent must respect _setOutput()_ and not try to change anything.
-- Embed agent controller should be done in upper agent, not in Presenter
-- Silex have awesome group of provider, should we _steal_ it? :innocent:
-
-#### Unfeatures
-- No library: database, image, asset, mail, cache, i18n
-
+## Challenge
+- Dynamic route automatically locate controller at app component
+    - Able to setup base namespace to cover different app base
+- A resolver to map required file per app
+    - Resolver can be used to map child controller, module, language etc
+- Main component covered by event middleware, while other call use before/ after event
+- Log all error, optionaly display on screen
