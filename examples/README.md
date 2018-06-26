@@ -1,5 +1,3 @@
-# Gubug Application
+# Gubug Example
 
-Example that show Gubug PAC micro framework concept.
-
-> ..and it's just an example, a bit serious example; but it's still not project architecture skeleton.
+> It's just an example, not project architecture skeleton.

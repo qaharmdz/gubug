@@ -8,6 +8,12 @@ Gubug adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) and a
 
 ## [NEXT] - YYYY-MM-DD
 
+### Important!
+- Refactored
+
+
+## [v1.0.0-alpha.3] - 2018-05-28
+
 ### Added
 - Config loader
 - Controller fallback to parent resolver
@@ -27,7 +33,7 @@ Gubug adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) and a
 - Prefixing slash checker for namespace
 - _locale route active if two or more languages detected
 
-## [v1.0.0-beta.2] - 2018-03-03
+## [v1.0.0-alpha.2] - 2018-03-03
 
 ### Added
 - Symfony component HttpKernel, Event, Debug
@@ -39,11 +45,12 @@ Gubug adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) and a
 - Component folder replace Library
 
 
-## v1.0.0-beta.1 - 2018-02-18
+## v1.0.0-alpha.1 - 2018-02-18
 
 ### Added
-* Graduated from Alpha version
+* Initial
 
 
-[NEXT]: https://github.com/qaharmdz/gubug/compare/v1.0.0-beta.2...HEAD
-[v1.0.0-beta.2]: https://github.com/qaharmdz/gubug/compare/v1.0.0-beta.1...v1.0.0-beta.2
+[NEXT]: https://github.com/qaharmdz/gubug/compare/v1.0.0-alpha.3...HEAD
+[v1.0.0-alpha.2]: https://github.com/qaharmdz/gubug/compare/v1.0.0-alpha.1...v1.0.0-alpha.2
+[v1.0.0-alpha.3]: https://github.com/qaharmdz/gubug/compare/v1.0.0-alpha.2...v1.0.0-alpha.3
