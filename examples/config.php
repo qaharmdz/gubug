@@ -1,37 +1,42 @@
 <?php
 return [
-    'app' => [
-        'environment'       => 'live', // live, dev, test
-        'path'              => [
-            'env'   => realpath(__DIR__ . '/') . DS . '.env',
-            'log'   => realpath(__DIR__ . '/Library/') . DS . 'error.log'
-        ],
-        'baseNamespace'     => 'Contoh\Front',
-        'pathNamespace'     => 'Component',
-        'mainController'    => 'component/init',
-        'errorController'   => 'component/error',
-        'defaultComponent'  => 'home', // Default URL _path for base and dynamic route
-    ],
-    'serviceProvider' => [
+    // App configuration
+    'app'           => [],
 
-    ],
-    'eventSubscriber' => [
-        'Nav'
-    ],
-    'routeCollection' => [
-        ['page', '/page/{pid}', ['pid' => 0, '_path' => 'page'], ['pid' => '\d+']],
-        [
-            'page/post',                            // Route name. Recommended same as "_path".
-            '/post/{pid}/{cid}',                    // Path format.
+    // Framework configuration
+    'system'        => [
+        'namespace'     => [
+            'component' => 'Contoh\App\Component',
+            // 'module'    => 'Contoh\App\Module',
+            // 'plugin'    => 'Contoh\App\Plugin',
+            // 'theme'     => 'Contoh\App\Theme',
+        ],
+        'controller'    => [
+            'main'      => 'Contoh\App\Component\Main::index',
+            'error'     => 'Contoh\App\Component\Error::index',
+            'default'   => 'Home' // 'Contoh\App\Component\Home\Home::index'
+        ],
+        'path'          => [
+            'env'       => realpath(__DIR__ . '/') . DS . '.env',
+            'log'       => realpath(__DIR__ . '/') . DS . 'error.log'
+        ],
+        'serviceProvider'   => [],
+        'routeCollection'   => [
+            // Parameter info available at "\Gubug\Component\Router::addRoute"
             [
-                'pid'   => 0,
-                'cid'   => '0_0',
-                '_path' => 'page/post'
+                'page',                             // Route name
+                '/page/{pid}/{cid}',                // Path format, ex. "example.com/page/11/21"
+                [ // Default parameter
+                    'pid' => 0,
+                    'cid' => '0',
+                    '_controller' => 'page'         // Controller for the path
+                ],
+                [ // Parameter requirement
+                    'pid' => '\d+',                 // Second segment must digits
+                    'cid' => '^\d+[_\d+]*[^-_\D]+$' // Third segment must digits in format "digit" or "digit_digit_*"
+                ]
             ],
-            [
-                'pid' => '\d+',
-                'cid' => '^\d+[_\d+]*[^-_\D]+$'
-            ]
-        ]
+        ],
+        'eventSubscriber'   => [],
     ]
 ];

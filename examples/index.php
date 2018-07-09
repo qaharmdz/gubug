@@ -1,42 +1,52 @@
 <?php
-/**
- * Example that show Gubug PAC micro framework, not project skeleton.
- */
 
+// ini_set('display_errors', 0);
 defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 
-//========= Autoload
+// ========= Autoload
 
 $loader = require realpath(__DIR__ . '/../vendor/') . DS . 'autoload.php';
 $loader->addPsr4('Contoh\\', realpath(__DIR__));
 
 $config = require 'config.php';
 
-//========= Micro Framework
+if (!$config) {
+    // Installation
+}
+
+// ========= Micro Framework
 
 $gubug = new Gubug\Framework();
-$gubug->init($config['app']);
+// $gubug->init($config)->run();
 
-//=== Set base URL and Path
-$gubug->config->set('baseURL', $gubug->request->getBaseUri());
-$gubug->config->set('basePath', realpath(__DIR__) . DS);
-$gubug->config->set('themePath', $gubug->config->get('basePath') . 'Front/Theme/default/');
-
-
-//========= Application Setup
-
-foreach ($config['serviceProvider'] as $provider) {
-    $gubug->container->register(new $provider());
-}
-
-foreach ($config['eventSubscriber'] as $subscriber) {
-    $controller = $gubug->container['resolver.controller']->resolve($subscriber, [], 'Plugin');
-    $gubug->event->addSubscriber(new $controller['class']());
-}
-
-foreach ($config['routeCollection'] as $route) {
-    $gubug->router->addRoute(...$route);
-}
-
-//=== Start to run..
+$gubug->init($config);
 $gubug->run();
+
+// ==================== TEST CODE ======================
+
+// d($gubug::VERSION);
+// d($gubug->container);
+
+// d($gubug->config->get('namespace.plugin', ''));
+d($gubug->config->all());
+
+// d($gubug->request);
+// d($gubug->request->getPathInfo());
+// d($gubug->request->getBaseUrl());
+// d($gubug->request->getBasePath());
+// // ---
+// d($gubug->request->query->all()); // $_GET
+// d($gubug->request->post->all()); // $_POST
+// d($gubug->request->isSecure());
+// d($gubug->request->isMethod('GET'));
+// // ---
+// d($gubug->request->attributes->all());
+// d($gubug->request->attributes->get('_controller'));
+
+
+// !d([
+//     'key1' => $val1 = 'value 1',
+//     'key2' => $val2 = 'value 2',
+//     'key3' => $config['key1'] . ' - ' . $config['key2'],
+//     'key4' => $val1 . ' - ' . $val2,
+// ]);
