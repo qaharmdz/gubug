@@ -1,5 +1,5 @@
 <?php
-namespace Contoh\App\Component\Home;
+namespace Contoh\App\Component\Home\Controller;
 
 class Home extends \Gubug\Base\Controller
 {
@@ -21,11 +21,10 @@ class Home extends \Gubug\Base\Controller
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus doloribus, quod repellat atque dolore tempore aliquid, nesciunt facere pariatur quo quaerat eveniet esse. Praesentium atque, unde sint velit obcaecati nemo!</p>
         ';
 
-        // Use Main controller layout
+        // Use main component for Main controller
         return $this->response->setContent($content);
 
-        // Set own output
-        $response = $this->response->setContent($content);
-        return $this->response->setOutput($response);
+        // Have own output
+        // return $this->response->setContent($content)->setOutput();
     }
 }

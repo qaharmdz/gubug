@@ -110,7 +110,7 @@ class Controller extends ControllerResolver
             $class = ucwords(array_shift($segments));
         }
 
-        $class = implode('\\', [rtrim($namespace, '\\'), $folder, $class]);
+        $class = implode('\\', [rtrim($namespace, '\\'), $folder, 'Controller', $class]);
 
         if (!class_exists($class)) {
             throw new \InvalidArgumentException(sprintf('Cannot locate expected controller "%s" for path "%s"', $class, $path));
