@@ -165,7 +165,6 @@ class Response extends HttpFoundation\Response
      */
     public function render(string $template, array $variables)
     {
-        // TODO: should accept full path or relative path
         if (is_file($template)) {
             extract($variables, EXTR_SKIP);
 
