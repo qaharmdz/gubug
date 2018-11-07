@@ -17,10 +17,14 @@ if (!$config) {
 // ========= Micro Framework
 
 $gubug = new Gubug\Framework();
-// $gubug->init($config)->run();
-
 $gubug->init($config);
+
+$gubug->config->set('setting', [
+    'theme' => 'Basic'
+]);
+
 $gubug->run();
+
 
 // ==================== TEST CODE ======================
 
@@ -28,7 +32,7 @@ $gubug->run();
 // d($gubug->container);
 
 // d($gubug->config->get('namespace.plugin', ''));
-d($gubug->config->all());
+// d($gubug->config->all());
 
 // d($gubug->request);
 // d($gubug->request->getPathInfo());

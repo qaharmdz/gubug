@@ -1,7 +1,7 @@
 <?php
-namespace Contoh\App\Component\Page;
+namespace Contoh\App\Component\Page\Controller;
 
-class Page extends \Gubug\Base\Controller
+class Page extends \Contoh\System\Base\Controller
 {
     /**
      * For example.com/page/11/21_31?foo=bar

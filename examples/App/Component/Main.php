@@ -1,7 +1,7 @@
 <?php
 namespace Contoh\App\Component;
 
-class Main extends \Gubug\Base\Controller
+class Main extends \Contoh\System\Base\Controller
 {
     public function index()
     {
@@ -22,11 +22,15 @@ class Main extends \Gubug\Base\Controller
 
         $output = $component->hasContent() ? $component->getContent() : 'Global Layout';
 
-        return $this->response->setContent('<div style="background:#eee;padding:40px 20px;margin-bottom:50px;">' . $output . '</div>');
+        // d($this->template('Component/Main'));
 
-        // $variables = $this->event->filter($eventName, $variables)->getAllData();
-        // $template = $this->config->get('themePath') . 'template/' . $variables['_template'] . '.tpl';
+        return $this->response
+                    ->setStatusCode($component->getStatusCode())
+                    ->setContent('<div style="background:#eee;padding:40px 20px;margin-bottom:50px;">' . $output . '</div>');
 
-        // return $this->response->render($template, $variables);
+        $variables = [];
+        $template = $this->config->get('themePath') . 'template/' . $variables['_template'] . '.tpl';
+
+        return $this->response->render($template, $variables);
     }
 }

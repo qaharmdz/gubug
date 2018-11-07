@@ -17,6 +17,7 @@ return [
             'default'   => 'Home' // 'Contoh\App\Component\Home\Home::index'
         ],
         'path'          => [
+            'theme'     => realpath(__DIR__ . '/') . DS . 'App' . DS . 'Theme' . DS,
             'env'       => realpath(__DIR__ . '/') . DS . '.env',
             'log'       => realpath(__DIR__ . '/') . DS . 'error.log'
         ],

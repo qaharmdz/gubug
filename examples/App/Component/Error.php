@@ -1,7 +1,7 @@
 <?php
 namespace Contoh\App\Component;
 
-class Error extends \Gubug\Base\Controller
+class Error extends \Contoh\System\Base\Controller
 {
     public function index($exception)
     {
@@ -10,7 +10,7 @@ class Error extends \Gubug\Base\Controller
         return $exception->getStatusCode() == 404 ? $this->notFound($exception) : $this->serviceError($exception);
     }
 
-    protected function notFound($e)
+    protected function notFound($exception)
     {
         $this->session->flash->set('pageInfo', [
             'title'      => '404 Not Found!',
@@ -19,11 +19,11 @@ class Error extends \Gubug\Base\Controller
         ]);
 
         return $this->response
-                    ->setStatusCode($e->getStatusCode())
-                    ->setContent('<h1>404 Not Found!</h1> <p>' . $e->getMessage() . '</p>');
+            ->setStatusCode($exception->getStatusCode())
+            ->setContent('<h1>404 Not Found!</h1> <p>' . $exception->getMessage() . '</p>');
     }
 
-    protected function serviceError($e)
+    protected function serviceError($exception)
     {
         $this->session->flash->set('pageInfo', [
             'title'      => $e->getStatusCode() . ' Oops!',
@@ -32,9 +32,10 @@ class Error extends \Gubug\Base\Controller
         ]);
 
         return $this->response
-                    ->setStatusCode($e->getStatusCode())
-                    ->setContent(
-                        '<h1>Oops, bad thing happen!</h1><p>Message: <i>' . $e->getMessage() . '</i></p>'
-                    );
+            ->setStatusCode($exception->getStatusCode())
+            ->setContent(
+                '<h1>Oops, bad thing happen!</h1><p>Message: <i>' . $exception->getMessage() . '</i></p>'
+            )
+            ->setOutput();
     }
 }

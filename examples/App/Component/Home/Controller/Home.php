@@ -1,7 +1,7 @@
 <?php
 namespace Contoh\App\Component\Home\Controller;
 
-class Home extends \Gubug\Base\Controller
+class Home extends \Contoh\System\Base\Controller
 {
     /**
      * Can be accessed through:
